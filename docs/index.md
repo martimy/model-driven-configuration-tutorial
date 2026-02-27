@@ -6,7 +6,8 @@ Configure Nokia SR Linux and Arista cEOS via model-driven APIs.
 
 - [Motivation](motivation.md)
 - [Lab Environment](environment.md)
-- [YANG Overview](yang.md)
-- [NETCONF & gNMI overview](netconf_gnmi.md)
-
-
+- Overview
+  - [YANG](yang.md)
+  - [NETCONF](netconf.md)
+  - [RESTCONF](restconf.md)
+  - [gNMI](gnmi.md)
