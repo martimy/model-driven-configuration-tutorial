@@ -1,0 +1,36 @@
+name: lab
+prefix: ""
+
+mgmt:
+  network: api-lab
+  ipv4-subnet: 192.168.100.0/24
+
+topology:
+  nodes:
+    # Arista
+    ceos-01:
+      kind: arista_ceos
+      image: ceos:image
+      env:
+        CLAB_MGMT_VRF: MGMT
+      mgmt-ipv4: 192.168.100.11
+
+    # Nokia SR Linux
+    srl-01:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux
+      type: ixr-d1
+      mgmt-ipv4: 192.168.100.12
+
+    # FRR
+    srl-02:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux
+      type: ixr-d1
+      mgmt-ipv4: 192.168.100.13
+
+  links:
+    # Router connections
+    - endpoints: ["ceos-01:eth1", "srl-01:e1-1"]
+    - endpoints: ["ceos-01:eth2", "srl-02:e1-1"]
+    - endpoints: ["srl-01:e1-2", "srl-02:e1-2"]
