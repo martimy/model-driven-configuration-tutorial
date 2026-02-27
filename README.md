@@ -1,12 +1,9 @@
 # Tutorial: 
 
-Configure Nokia SR Linux and Arista cEOS via model-driven APIs.
+This tutorial teaches you how to configure network devices using YANG data models. The tutorial is built on Containerlab, an open-source network emulation platform that spins up virtual instances of Nokia SR-Linux and Arista cEOS on your laptop. 
 
-## Sections
+# Objectives
 
-- [Motivation](motivation.md)
-- [Lab Environment](environment.md)
-- [YANG Overview](yang.md)
-- [NETCONF & gNMI overview](netconf_gnmi.md)
 
+# Environment
 
