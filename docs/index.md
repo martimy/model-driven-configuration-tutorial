@@ -1,17 +1,18 @@
-# Welcome to MkDocs
+# Model-Driven Network Configuration Tutorial
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+This tutorial teaches you how to configure network devices using YANG data models. The tutorial is built on Containerlab, an open-source network emulation platform that spins up virtual instances of Nokia SR-Linux and Arista cEOS routers on your laptop. 
 
-## Commands
+## Prerequisites
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+- Familiarity with networking fundamentals: IP addressing, routing protocols, etc.
+- Comfort with the Linux command line and a text editor
 
-## Project layout
+ 
+## Objectives
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+--to be completed--
+
+
+# Tasks
+
+Each task introduces a concept, and then provides a set of instructions to explore or implement the concept. Complete the tasks in order as eah taks build upon the previous one.
