@@ -17,10 +17,10 @@ This tutorial teaches you how to configure network devices using YANG data model
 
 ### Docker images
 
-To deploy this lab, the following two Docker images are required:
+To deploy this lab, you will need these two Docker images:
 
-- `ceos:image`**: This image is required for the **Arista cEOS** node (`ceos-01`).
-- `ghcr.io/nokia/srlinux`**: This image is required for both **Nokia SR Linux** nodes (`srl-01` and `srl-02`).
+- `ceos:image`: This image is required for the Arista cEOS node (`ceos-01`).
+- `ghcr.io/nokia/srlinux`: This image is required for both Nokia SR Linux nodes (`srl-01` and `srl-02`).
 
 **Getting Arista cEOS image**
 
@@ -46,7 +46,7 @@ docker pull ghcr.io/nokia/srlinux
 
 ### Tools
 
-You will need a the following tools:
+You will need a the following tools (but not all at once):
 
 **1. Infrastructure**
 
@@ -83,9 +83,7 @@ These are used for manual exploration and "reverse engineering" before writing c
   
 ## Network Environment
 
-This tutorial is based on a simple three-node multi-vendor network arranged in a ring topology. The topology consists of the following components and connections:
-
-The lab environment includes three routers from two different vendors connected to management network named `api-lab` using the IPv4 subnet `192.168.100.0/24`. Here are the details:
+This tutorial is based on a simple three-node multi-vendor network arranged in a ring topology. The three routers are connected to management network named `api-lab` using the IPv4 subnet `192.168.100.0/24`.
 
 Node | Model | Management IP
 :---:|---|---
@@ -93,4 +91,43 @@ ceos-01 | Arista cEOS | 192.168.100.11
 srl-01  | Nokia SR Linux node | 192.168.100.12
 srl-02  | Nokia SR Linux node | 192.168.100.13
 
+
+# Tasks
+
+Each task introduces a concept, and then provides a set of instructions to explore or implement the concept. Complete the tasks in order as eah taks build upon the previous one.
+
+## Task 1: Starting Containerlab
+
+A Containerlab topology is described in a YAML file. If you are not familier with Conatinerlab, here are the basic steps to deploy the topology and interact with the nodes:  
+
+1. Start the lab with:
+
+```bash
+# The name of the topology file is optinal if there is only file with this name format in the current folder
+sudo containerlab deploy [-t tutroial.clab.yml]
+```
+
+You will see the summary table with the deployed lab nodes.
+
+```bash
+╭─────────┬───────────────────────┬─────────┬────────────────╮
+│   Name  │       Kind/Image      │  State  │ IPv4/6 Address │
+├─────────┼───────────────────────┼─────────┼────────────────┤
+│ ceos-01 │ arista_ceos           │ running │ 192.168.100.11 │
+│         │ ceos:image            │         │ N/A            │
+├─────────┼───────────────────────┼─────────┼────────────────┤
+│ srl-01  │ nokia_srlinux         │ running │ 192.168.100.12 │
+│         │ ghcr.io/nokia/srlinux │         │ N/A            │
+├─────────┼───────────────────────┼─────────┼────────────────┤
+│ srl-02  │ nokia_srlinux         │ running │ 192.168.100.13 │
+│         │ ghcr.io/nokia/srlinux │         │ N/A            │
+╰─────────┴───────────────────────┴─────────┴────────────────╯
+```
+
+You can list the nodes of the lab anytime with containerlab inspect command.
+
+```bash
+# clab == containerlab
+sudo clab inspect [-t tutroial.clab.yml]
+```
 
