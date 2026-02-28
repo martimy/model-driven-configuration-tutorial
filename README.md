@@ -18,11 +18,10 @@ Clone the repository and deploy the lab topology:
 
 ```bash
 git clone https://github.com/martimy/model-driven-configuration-tutorial.git
-cd model-driven-configuration-tutorial/topology
-sudo containerlab deploy
+cd model-driven-configuration-tutorial
 ```
 
-You will need [Docker](https://docs.docker.com/engine/install/) and [Containerlab](https://containerlab.dev/install/) installed, as well as the Arista cEOS and Nokia SR Linux container images. See the [Setup guide](https://martimy.github.io/model-driven-configuration-tutorial/setup) in the tutorial for details.
+You will need [Docker](https://docs.docker.com/engine/install/) and [Containerlab](https://containerlab.dev/install/) installed, as well as the Arista cEOS and Nokia SR Linux container images. See the [Setup](https://martimy.github.io/model-driven-configuration-tutorial/setup/docker-images/) in the tutorial for details.
 
 ## Repository Structure
 
