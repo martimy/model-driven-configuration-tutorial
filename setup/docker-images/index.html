@@ -111,13 +111,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h2 id="docker-images">Docker images</h2>
+                <h1 id="docker-images">Docker images</h1>
 <p>To deploy this lab, you will need these two Docker images:</p>
 <ul>
 <li><code>ceos:image</code>: This image is required for the Arista cEOS node (<code>ceos-01</code>).</li>
 <li><code>ghcr.io/nokia/srlinux</code>: This image is required for both Nokia SR Linux nodes (<code>srl-01</code> and <code>srl-02</code>).</li>
 </ul>
-<h3 id="getting-arista-ceos-image">Getting Arista cEOS image</h3>
+<h2 id="getting-arista-ceos-image">Getting Arista cEOS image</h2>
 <p>To obtain Arista cEOS images:</p>
 <ul>
 <li>Register/Login: Create an account on the <a href="https://www.arista.com/en/login">Arista website</a>.</li>
@@ -128,7 +128,7 @@
 </ul>
 <pre><code class="language-bash">docker import  cEOS-lab-4.35.1F.tar.xz ceos:image
 </code></pre>
-<h3 id="getting-sr-linux-image">Getting SR Linux image</h3>
+<h2 id="getting-sr-linux-image">Getting SR Linux image</h2>
 <p>Nokia SR Linux follows a free and open distribution model. You can pull SR Linux container from a public registry:</p>
 <pre><code>docker pull ghcr.io/nokia/srlinux
 </code></pre>
