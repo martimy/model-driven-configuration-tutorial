@@ -1,17 +1,4 @@
-# Tutorial: 
-
-Configure Nokia SR Linux and Arista cEOS via model-driven APIs.
-
-## Sections
-
-- [Motivation](motivation.md)
-- [Lab Environment](environment.md)
-- [YANG Overview](yang.md)
-- [NETCONF & gNMI overview](netconf_gnmi.md)
-
-
-
-## Motivation
+# Motivation
 
 Modern networks are no longer small, static environments managed primarily through manual configuration. Today’s infrastructures are large-scale, multi-vendor, automated, and continuously changing, which requires management interfaces that are reliable, structured, and programmatically accessible.
 

@@ -12,6 +12,7 @@ nav:
     - Docker Images: setup/docker-images.md
     - Tools: setup/tools.md
   - Concepts:
+    - Motivation: concepts/motivation.md
     - YANG: concepts/yang.md
     - NETCONF: concepts/netconf.md
     - RESTCONF: concepts/restconf.md
