@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>RESTCONF - Model-Driven Network Configuration Tutorial</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "RESTCONF";
+        var mkdocs_page_input_path = "concepts/restconf.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Model-Driven Network Configuration Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/prerequisites/">Prerequisites</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/tools/">Tools</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Concepts</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../motivation/">Motivation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../yang/">YANG</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../netconf/">NETCONF</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">RESTCONF</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#key-characteristics">Key Characteristics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#main-operations-http-methods">Main Operations (HTTP Methods)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration-vs-operational-data">Configuration vs Operational Data</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#advantages">Advantages</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#comparison-to-netconf">Comparison to NETCONF</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gnmi/">gNMI</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tasks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/start-containerlab/">1. Start Containerlab</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/verify-netconf/">2. Verify NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/verify-gnmi/">3. Verify gNMI</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Model-Driven Network Configuration Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Concepts</li>
+      <li class="breadcrumb-item active">RESTCONF</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="restconf">RESTCONF</h1>
+<p>RESTCONF is an IETF-standardized HTTP-based protocol (RFC 8040, January 2017) that provides a programmatic RESTful interface for accessing, configuring, and managing data on network devices (routers, switches, firewalls, etc.). It enables CRUD operations (Create, Read, Update, Delete) on YANG-modeled configuration data, operational state data, RPC operations, and event notifications using standard HTTP methods.</p>
+<p>It was designed as a RESTful evolution/complement to NETCONF, addressing the need for a more developer-friendly, web-oriented API that leverages familiar HTTP/REST principles while remaining compatible with NETCONF's YANG datastores and models : making it easier to integrate into modern automation tools, web apps, and orchestration systems.</p>
+<h2 id="key-characteristics">Key Characteristics</h2>
+<ul>
+<li>Uses HTTP/HTTPS (typically TLS-secured) for transport → stateless, request-response model.</li>
+<li>Encoding → Primarily JSON (preferred for simplicity and web compatibility); also supports XML; content types like <code>application/yang-data+json</code> or <code>application/yang-data+xml</code>.</li>
+<li>Paths/URIs → Resource-oriented, hierarchical paths derived from YANG models (e.g., <code>/restconf/data/openconfig-interfaces:interfaces/interface=eth0</code>); supports query parameters for filtering, pagination, content selection (e.g., <code>?content=config</code>, <code>?depth=</code>, <code>?fields=</code> : device-dependent).</li>
+<li>Relies on YANG data models (RFC 7950) for structure, semantics, and validation; exposes both configuration ("config true") and state/operational data.</li>
+<li>Stateless → Each HTTP request is independent; no built-in sessions or locks like NETCONF (though some implementations may add extensions).</li>
+<li>Supports notifications via Server-Sent Events (SSE) or other mechanisms for asynchronous event streams.</li>
+<li>Security → Mandatory HTTPS/TLS; supports standard HTTP authentication (Basic, Token, OAuth, etc.).</li>
+</ul>
+<h2 id="main-operations-http-methods">Main Operations (HTTP Methods)</h2>
+<ul>
+<li>GET : Retrieve data (configuration, state, or lists); supports filtering and partial responses.</li>
+<li>POST : Create new resources (e.g., add interface, user); also used for YANG RPC invocation.</li>
+<li>PUT : Replace entire resource/subtree (full overwrite).</li>
+<li>PATCH : Partial update/merge (often with YANG-Patch media type per RFC 8072).</li>
+<li>DELETE : Remove resources.</li>
+<li>OPTIONS / HEAD : Discovery and metadata.</li>
+<li>Additional: Access to /.well-known/restconf or monitoring paths for capabilities discovery; event streams via <code>/restconf/streams</code>.</li>
+</ul>
+<h2 id="configuration-vs-operational-data">Configuration vs Operational Data</h2>
+<ul>
+<li>Configuration → Writable data stored in device's conceptual datastore(s); supports access to running config (and sometimes candidate/startup via extensions like RFC 8527 for NMDA).</li>
+<li>Operational/State → Read-only runtime data (e.g., interface counters, BGP neighbors).</li>
+<li>No native candidate datastore or atomic multi-operation transactions like NETCONF : changes are direct and immediate (non-transactional by default); suitable for simpler or incremental updates.</li>
+</ul>
+<h2 id="advantages">Advantages</h2>
+<ul>
+<li>RESTful &amp; familiar → Uses standard HTTP tools/libraries (curl, Postman, Python requests) → low barrier for developers and DevOps teams.</li>
+<li>Web-friendly → Easy integration with web apps, APIs, CI/CD pipelines, cloud orchestration (Ansible, Terraform, etc.).</li>
+<li>Lightweight &amp; scalable → Lower overhead than XML/RPC-based NETCONF for many use cases; stateless design suits distributed systems.</li>
+<li>Vendor-neutral → YANG + RESTCONF promotes consistency across multi-vendor environments.</li>
+<li>Better for rapid prototyping, monitoring, and simple config changes than CLI scraping or full NETCONF stacks.</li>
+</ul>
+<h2 id="comparison-to-netconf">Comparison to NETCONF</h2>
+<ul>
+<li>Transport/Encoding → RESTCONF: HTTP/HTTPS + JSON/XML; NETCONF: SSH/TLS + XML RPCs.</li>
+<li>Operations → RESTCONF: HTTP methods (CRUD); NETCONF: Structured RPCs (<code>&lt;edit-config&gt;</code>, etc.).</li>
+<li>Transactions → NETCONF: Supports candidate datastore, locks, commit/rollback (ACID-like); RESTCONF: Lightweight, no native transactions.</li>
+<li>Use Cases → RESTCONF excels at web/automation integration and quick queries; NETCONF better for complex, safe, batched configuration changes.</li>
+</ul>
+<p>RESTCONF has seen growing adoption (Cisco, Juniper, Huawei, Nokia, Arista, etc.), especially in SDN, intent-based networking, and automation ecosystems : often used alongside NETCONF (for config) and gNMI (for telemetry) to provide a modern, API-driven management plane.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../netconf/" class="btn btn-neutral float-left" title="NETCONF"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../gnmi/" class="btn btn-neutral float-right" title="gNMI">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../netconf/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../gnmi/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

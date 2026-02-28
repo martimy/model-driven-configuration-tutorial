@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Tools - Model-Driven Network Configuration Tutorial</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Tools";
+        var mkdocs_page_input_path = "setup/tools.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Model-Driven Network Configuration Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../prerequisites/">Prerequisites</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../docker-images/">Docker Images</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Tools</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#infrastructure">Infrastructure</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#protocol-transport-libraries-python">Protocol Transport Libraries (Python)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#interactive-cli-tools-for-discovery">Interactive CLI Tools for Discovery</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#yang-modeling-validation-tools">YANG Modeling &amp; Validation Tools</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#development-automation-tools">Development &amp; Automation Tools</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/motivation/">Motivation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/yang/">YANG</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/netconf/">NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/restconf/">RESTCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/gnmi/">gNMI</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tasks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/start-containerlab/">1. Start Containerlab</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/verify-netconf/">2. Verify NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/verify-gnmi/">3. Verify gNMI</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Model-Driven Network Configuration Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Setup</li>
+      <li class="breadcrumb-item active">Tools</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="tools">Tools</h1>
+<p>You will need a the following tools (but not all at once):</p>
+<h2 id="infrastructure">Infrastructure</h2>
+<ul>
+<li>Linux Environment: A native Linux system or WSL2 on Windows is necessary to run Containerlab and Docker.</li>
+<li><a href="https://docs.docker.com/engine/install/">Docker</a>: Required to run the containerized router images.</li>
+<li><a href="https://containerlab.dev/install/">Containerlab</a>: This is esential to create the lab environment.</li>
+</ul>
+<h2 id="protocol-transport-libraries-python">Protocol Transport Libraries (Python)</h2>
+<p>These libraries allow your automation scripts to communicate with the devices:</p>
+<ul>
+<li>ncclient: A Python library for NETCONF transport.</li>
+<li>pygnmi: A Python client library for gNMI.</li>
+</ul>
+<h2 id="interactive-cli-tools-for-discovery">Interactive CLI Tools for Discovery</h2>
+<p>These are used for manual exploration and "reverse engineering" before writing code:</p>
+<ul>
+<li>gnmic: A CLI client for gNMI. It is used to explore device capabilities, retrieve state, and test telemetry subscriptions.</li>
+<li>netconf-console2: A CLI clients for NETCONF. They are useful for checking connectivity, retrieving schemas, and testing XML filters without writing Python code.</li>
+</ul>
+<h2 id="yang-modeling-validation-tools">YANG Modeling &amp; Validation Tools</h2>
+<ul>
+<li>pyang: The essential tool for YANG visualization. It converts verbose YANG source files into a readable tree format (<code>pyang -f tree</code>), which acts as your map for constructing configuration paths.</li>
+<li>yanglint (libyang2-tools): A command-line utility used for offline validation. It checks your XML or JSON payloads against the YANG schema to catch errors before they ever touch a live device.</li>
+<li>yangson: A Python library used for programmatic validation and data manipulation within automation scripts.</li>
+</ul>
+<h2 id="development-automation-tools">Development &amp; Automation Tools</h2>
+<ul>
+<li>Python 3 &amp; venv: Used for writing the automation logic; virtual environments (<code>venv</code>) are recommended to isolate dependencies.</li>
+<li>Jinja2: A templating engine used to separate the structure of YANG-modeled payloads from the variable data (e.g., IP addresses), making the code more modular.</li>
+<li>xmltodict: Useful for converting XML-based NETCONF responses into Python dictionaries for easier processing.</li>
+<li>VSCode with YANG extension: Provides syntax highlighting and tree navigation for YANG files, which is critical when browsing large vendor model repositories.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../docker-images/" class="btn btn-neutral float-left" title="Docker Images"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../concepts/motivation/" class="btn btn-neutral float-right" title="Motivation">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../docker-images/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../concepts/motivation/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

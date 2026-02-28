@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>NETCONF - Model-Driven Network Configuration Tutorial</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "NETCONF";
+        var mkdocs_page_input_path = "concepts/netconf.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Model-Driven Network Configuration Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/prerequisites/">Prerequisites</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/tools/">Tools</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Concepts</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../motivation/">Motivation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../yang/">YANG</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">NETCONF</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#key-characteristics">Key Characteristics</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#main-operations">Main Operations</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration-datastores">Configuration Datastores</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#advantages">Advantages</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../restconf/">RESTCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gnmi/">gNMI</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tasks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/start-containerlab/">1. Start Containerlab</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/verify-netconf/">2. Verify NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/verify-gnmi/">3. Verify gNMI</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Model-Driven Network Configuration Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Concepts</li>
+      <li class="breadcrumb-item active">NETCONF</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="netconf">NETCONF</h1>
+<p>NETCONF (Network Configuration Protocol) is an IETF-standardized network management protocol (RFC 6241, RFC 4741) designed to securely install, manipulate, modify, and delete configuration data on network devices such as routers, switches, and firewalls.</p>
+<p>It was created to overcome limitations of older approaches like SNMP (which lacks robust configuration control) and manual/automated CLI scripting (which can be insecure, inconsistent, and hard to automate reliably).</p>
+<h2 id="key-characteristics">Key Characteristics</h2>
+<ul>
+<li>Uses XML for encoding both protocol messages and configuration data → structured, hierarchical, and machine-readable.</li>
+<li>Follows a client-server model with Remote Procedure Call (RPC) communication.</li>
+<li>Runs over secure, connection-oriented transports, most commonly SSH (port 830), but also supports TLS and others.</li>
+<li>
+<p>Organized in four conceptual layers:</p>
+<ol>
+<li>Content layer (configuration data, often modeled with YANG).</li>
+<li>Operations layer (core RPC operations).</li>
+<li>Messages layer (framing RPCs and notifications).</li>
+<li>Secure transport layer.</li>
+</ol>
+</li>
+</ul>
+<h2 id="main-operations">Main Operations</h2>
+<ul>
+<li><code>&lt;get&gt;</code> : Retrieve running state and configuration data.</li>
+<li><code>&lt;get-config&gt;</code> : Retrieve configuration from a specific datastore.</li>
+<li><code>&lt;edit-config&gt;</code> : Load or modify configuration data.</li>
+<li><code>&lt;copy-config&gt;</code> : Replace entire datastore contents.</li>
+<li><code>&lt;delete-config&gt;</code> : Remove a non-running datastore.</li>
+<li><code>&lt;lock&gt;</code> / <code>&lt;unlock&gt;</code> : Prevent concurrent modifications.</li>
+<li><code>&lt;close-session&gt;</code> / <code>&lt;kill-session&gt;</code> : End sessions gracefully or forcefully.</li>
+<li>Supports notifications (e.g., RFC 5277) for asynchronous event reporting.</li>
+</ul>
+<h2 id="configuration-datastores">Configuration Datastores</h2>
+<p>Devices maintain separate datastores (e.g., running, candidate, startup), allowing changes to be staged, validated, and committed atomically : a major improvement for safe automation.</p>
+<h2 id="advantages">Advantages</h2>
+<ul>
+<li>Secure by design (strong transport encryption + authentication).</li>
+<li>Transaction-like behavior and rollback support.</li>
+<li>Programmable and automation-friendly, especially when combined with YANG data models.</li>
+<li>Better suited for large-scale, programmatic network management than SNMP or CLI scraping.</li>
+</ul>
+<p>NETCONF has become a foundational protocol for modern network automation, SDN, and intent-based networking, widely supported by vendors like Cisco, Juniper, Nokia, Huawei, and others.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../yang/" class="btn btn-neutral float-left" title="YANG"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../restconf/" class="btn btn-neutral float-right" title="RESTCONF">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../yang/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../restconf/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

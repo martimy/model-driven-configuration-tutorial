@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>YANG - Model-Driven Network Configuration Tutorial</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "YANG";
+        var mkdocs_page_input_path = "concepts/yang.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Model-Driven Network Configuration Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/prerequisites/">Prerequisites</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/tools/">Tools</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Concepts</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../motivation/">Motivation</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">YANG</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#purpose-and-benefits">Purpose and Benefits</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#how-yang-models-work">How YANG Models Work</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#standard-vs-vendor-specific-models">Standard vs. Vendor-Specific Models</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#key-features-augmentations-and-deviations">Key Features: Augmentations and Deviations</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#practical-mapping-and-tools">Practical Mapping and Tools</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../netconf/">NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../restconf/">RESTCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../gnmi/">gNMI</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tasks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/start-containerlab/">1. Start Containerlab</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/verify-netconf/">2. Verify NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/verify-gnmi/">3. Verify gNMI</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Model-Driven Network Configuration Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Concepts</li>
+      <li class="breadcrumb-item active">YANG</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="yang">YANG</h1>
+<p>YANG (Yet Another Next Generation) is a data modeling language used to programmatically represent both configuration and operational state data on network devices. It is defined in RFC 6020 and serves as the foundation for modern, model-driven network management and automation.</p>
+<h2 id="purpose-and-benefits">Purpose and Benefits</h2>
+<p>YANG promotes unification in networking by enabling structured, programmatic interfaces to devices (e.g., routers and switches) using protocols like NETCONF, RESTCONF, or gNMI. It replaces traditional unstructured CLI outputs or legacy protocols like SNMP with vendor-neutral, hierarchical data models that map directly to programmable entities (like JSON structures). Key advantages include:</p>
+<ul>
+<li>Vendor-neutral modeling for consistency across devices.</li>
+<li>Structured data for easier automation and integration with tools/languages.</li>
+<li>Extensibility through augmentations and deviations.</li>
+<li>Better support for DevOps/NetDevOps workflows (e.g., Ansible, pyATS, Terraform).</li>
+</ul>
+<h2 id="how-yang-models-work">How YANG Models Work</h2>
+<p>YANG organizes data hierarchically as a tree, where each element is a node with a name and either a value or child nodes. Models are written in modules, which include:</p>
+<ul>
+<li>Header statements (name, namespace, prefix, imports).</li>
+<li>Revision statements (version history).</li>
+<li>Definition statements (the core data model).</li>
+</ul>
+<p>YANG defines four main node types:</p>
+<ul>
+<li>Leaf : A single value (no children), e.g., interface name (string) or enabled status (boolean).</li>
+<li>Leaf-list : An ordered sequence of leaf values.</li>
+<li>Container : Groups related nodes (no value itself); can be configuration (<code>config true</code>, read-write) or operational state (<code>config false</code>, read-only).</li>
+<li>List : A sequence of entries (like a list of interfaces), each identified by a key (e.g., interface name).</li>
+</ul>
+<h2 id="standard-vs-vendor-specific-models">Standard vs. Vendor-Specific Models</h2>
+<ul>
+<li>Industry-standard models : Developed by IETF (e.g., <code>ietf-interfaces.yang</code>, <code>ietf-ip.yang</code>) or OpenConfig for broad compatibility.</li>
+<li>Vendor-specific (native) models : Tailored to a specfic platform. These are often required when standard models lack coverage for vendor-unique features.</li>
+</ul>
+<p>All models are publicly available on GitHub:</p>
+<ul>
+<li>https://github.com/YangModels/yang/ </li>
+<li>https://github.com/openconfig/public/.</li>
+</ul>
+<h2 id="key-features-augmentations-and-deviations">Key Features: Augmentations and Deviations</h2>
+<ul>
+<li>Augmentations : Extend base models (e.g., <code>ietf-ip.yang</code> adds IPv4/IPv6 details to <code>ietf-interfaces.yang</code> using <code>augment</code> and conditional <code>when</code> statements).</li>
+<li>Deviations : Handle implementation differences (e.g., marking a feature as <code>not-supported</code> in a specific OS release).</li>
+</ul>
+<h2 id="practical-mapping-and-tools">Practical Mapping and Tools</h2>
+<p>YANG structures map naturally to programming concepts, especially Python:</p>
+<table>
+<thead>
+<tr>
+<th>YANG Element</th>
+<th>Python Equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Container</td>
+<td>Dictionary</td>
+</tr>
+<tr>
+<td>Leaf name</td>
+<td>Dictionary key</td>
+</tr>
+<tr>
+<td>Leaf</td>
+<td>Dictionary value</td>
+</tr>
+<tr>
+<td>List</td>
+<td>List</td>
+</tr>
+<tr>
+<td>String/Boolean/Integer</td>
+<td>Corresponding types</td>
+</tr>
+<tr>
+<td>Empty</td>
+<td>None</td>
+</tr>
+</tbody>
+</table>
+<p>Tools like Pyang (<code>pip install pyang</code>) let you validate models and visualize them as trees (e.g., <code>pyang -f tree ietf-interfaces.yang</code>).</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../motivation/" class="btn btn-neutral float-left" title="Motivation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../netconf/" class="btn btn-neutral float-right" title="NETCONF">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../motivation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../netconf/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
