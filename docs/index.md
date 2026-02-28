@@ -1,13 +1,17 @@
-# Tutorial: 
+# Welcome to MkDocs
 
-Configure Nokia SR Linux and Arista cEOS via model-driven APIs.
+For full documentation visit [mkdocs.org](https://www.mkdocs.org).
 
-## Sections
+## Commands
 
-- [Motivation](motivation.md)
-- [Lab Environment](environment.md)
-- Overview
-  - [YANG](yang.md)
-  - [NETCONF](netconf.md)
-  - [RESTCONF](restconf.md)
-  - [gNMI](gnmi.md)
+* `mkdocs new [dir-name]` - Create a new project.
+* `mkdocs serve` - Start the live-reloading docs server.
+* `mkdocs build` - Build the documentation site.
+* `mkdocs -h` - Print help message and exit.
+
+## Project layout
+
+    mkdocs.yml    # The configuration file.
+    docs/
+        index.md  # The documentation homepage.
+        ...       # Other markdown pages, images and other files.
