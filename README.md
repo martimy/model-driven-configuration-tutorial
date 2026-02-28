@@ -96,7 +96,7 @@ srl-02  | Nokia SR Linux node | 192.168.100.13
 
 Each task introduces a concept, and then provides a set of instructions to explore or implement the concept. Complete the tasks in order as eah taks build upon the previous one.
 
-## Task 1: Starting Containerlab
+## Task 1 - Starting Containerlab
 
 A Containerlab topology is described in a YAML file. If you are not familier with Conatinerlab, here are the basic steps to deploy the topology and interact with the nodes:  
 
@@ -172,4 +172,44 @@ sudo clab destroy [--cleanup]
 
 
 Containerlab CLI has a large set of commands and flags. Check out the [Command reference](https://containerlab.dev/cmd/deploy/) section to get familiar with all the commands and their usage.
+
+## Task 2 - Verifying NETCONF Connectivity
+
+The goal of this task is to initiate a connection to each device and retrieve the HELLO message exchanged at the start of a NETCONF session. This message advertises the device capabilities (such as supported YANG models and protocol features). The NETCONF protocol is designed to run securely over SSH, and port 830 is assigned as the standard default port for this connection.
+
+
+Once the lab is running, verify that NETCONF is reachable on port 830 using netconf-console2:
+
+```bash
+netconf-console2 --host=srl-01 --port 830 -u admin -p NokiaSrl1! --hello
+```
+
+> Install netconf-console2 using `pip install netconf-console2`
+
+Alternatively, you may use raw ssh connection:
+
+```bash
+ssh admin@ceos-01 -p 830 -s netconf
+```
+
+> **What Both Commands Are Actually Doing**  
+`netconf-console2` is a dedicated NETCONF client. It handles the SSH transport internally, sends a proper NETCONF <hello> message with its own capabilities, waits for the device's <hello> in response, and then presents the result to you cleanly. It understands the NETCONF framing protocol (the ]]>]]> end-of-message marker in NETCONF 1.0, or chunked framing in 1.1).  
+`ssh -s netconf` is raw SSH. It opens the subsystem channel but does nothing after that. You are dropped directly into the NETCONF session at the XML layer. The device sends its <hello> message immediately, and then waits for yours. If you just sit there, nothing further happens — you would need to type raw XML to continue. It is useful for confirming the port is open and the device is responding, but it is not a practical way to send operations.
+
+
+## Task 3 - Verifying gNMI Connectivity
+
+Verify that `gNMI` is reachable (typically on port 57400) using the gnmic client:
+
+```bash
+gnmic -a ceos-01:6030 -u admin -p admin --insecure capabilities
+```
+
+You will need a different port number and flag for SR Linux routers
+
+```bash
+gnmic -a srl-01:57400 -u admin -p NokiaSrl1! --skip-verify capabilities
+```
+
+> Install gnmic using: `bash -c "$(curl -sL https://get-gnmic.openconfig.net)"`
 
