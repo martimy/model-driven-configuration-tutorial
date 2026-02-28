@@ -1,0 +1,22 @@
+site_name: Model-Driven Network Configuration Tutorial
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+nav:
+  - Home: index.md
+  - Setup:
+    - Prerequisites: setup/prerequisites.md
+    - Docker Images: setup/docker-images.md
+    - Tools: setup/tools.md
+  - Concepts:
+    - YANG Models: concepts/yang-models.md
+    - NETCONF: concepts/netconf.md
+    - gNMI: concepts/gnmi.md
+  - Tasks:
+    - "1. Start Containerlab": tasks/start-containerlab.md
+    - "2. Verify NETCONF": tasks/verify-netconf.md
+    - "3. Verify gNMI": tasks/verify-gnmi.md
+  - Reference: reference/network-topology.md
