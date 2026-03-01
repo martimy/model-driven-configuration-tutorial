@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>1. Start Containerlab - Model-Driven Network Configuration Tutorial</title>
+    <title>5. Automation Scripts - Model-Driven Network Configuration Tutorial</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "1. Start Containerlab";
-        var mkdocs_page_input_path = "tasks/01-start-containerlab.md";
+        var mkdocs_page_name = "5. Automation Scripts";
+        var mkdocs_page_input_path = "tasks/05-scripts.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -69,15 +69,7 @@
               </ul>
               <p class="caption"><span class="caption-text">Tasks</span></p>
               <ul class="current">
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">1. Start Containerlab</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#1-start-the-lab">1. Start the lab</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#2-access-the-nodes">2. Access the nodes</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#3-end-the-lab">3. End the lab</a>
-    </li>
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../01-start-containerlab/">1. Start Containerlab</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../02-verify-netconf/">2. Verify NETCONF</a>
                   </li>
@@ -85,7 +77,15 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../04-capabilities/">4. Inspect Capabilities</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">5. Automation Scripts</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">5. Automation Scripts</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-using-the-netconf-tool-netconf_toolpy">1. Using the NETCONF Tool (netconf_tool.py)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-using-the-gnmi-tool-gnmi_toolpy">2. Using the gNMI Tool (gnmi_tool.py)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#summary-table">Summary Table</a>
+    </li>
+    </ul>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
@@ -110,7 +110,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Tasks</li>
-      <li class="breadcrumb-item active">1. Start Containerlab</li>
+      <li class="breadcrumb-item active">5. Automation Scripts</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -119,85 +119,93 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="task-1-starting-containerlab">Task 1 - Starting Containerlab</h1>
-<p>A Containerlab topology is described in a YAML file. If you are not familier with Conatinerlab, here are the basic steps to deploy the topology and interact with the nodes:  </p>
-<h2 id="1-start-the-lab">1. Start the lab</h2>
-<p>You deploy the lab using the <code>deploy</code> command from the main tutorial folder:</p>
-<pre><code class="language-bash">sudo containerlab deploy -t topology/tutorial.clab.yml
+                <h1 id="automation-scripts">Automation Scripts</h1>
+<p>Besides <code>netconf-console2</code> and <code>gnmic</code>, we can use Python scripts to interact with the routers. These scripts could simplify some complex tasks and ultimately help automate the network configuration.</p>
+<p>Ensure your Containerlab environment is running and your Python virtual environment is activated:</p>
+<pre><code class="language-bash"># Start the lab (if not already running)
+sudo containerlab deploy -t topology/tutorial.clab.yml
+
+# Activate the virtual environment
+source .pyenv/bin/activate
 </code></pre>
-<p>or from the topology folder:</p>
-<pre><code class="language-bash">cd topology
-sudo containerlab deploy [-t tutorial.clab.yml]
-</code></pre>
-<blockquote>
-<p>The name of the topology file is optional if there is only one file with this name format in the current folder</p>
-</blockquote>
-<p>You will see the summary table with the deployed lab nodes.</p>
-<pre><code class="language-bash">╭─────────┬───────────────────────┬─────────┬────────────────╮
-│   Name  │       Kind/Image      │  State  │ IPv4/6 Address │
-├─────────┼───────────────────────┼─────────┼────────────────┤
-│ ceos-01 │ arista_ceos           │ running │ 192.168.100.11 │
-│         │ ceos:image            │         │ N/A            │
-├─────────┼───────────────────────┼─────────┼────────────────┤
-│ srl-01  │ nokia_srlinux         │ running │ 192.168.100.12 │
-│         │ ghcr.io/nokia/srlinux │         │ N/A            │
-├─────────┼───────────────────────┼─────────┼────────────────┤
-│ srl-02  │ nokia_srlinux         │ running │ 192.168.100.13 │
-│         │ ghcr.io/nokia/srlinux │         │ N/A            │
-╰─────────┴───────────────────────┴─────────┴────────────────╯
-</code></pre>
-<p>You can list the nodes of the lab anytime with containerlab <code>inspect</code> command.</p>
-<pre><code class="language-bash">clab inspect -t topology
-</code></pre>
-<blockquote>
-<p><code>clab</code> is an alias of <code>containerlab</code></p>
-</blockquote>
-<h2 id="2-access-the-nodes">2. Access the nodes</h2>
-<p>You can use <code>ssh</code> to access the routers' CLI using the default username/password.</p>
+<h2 id="1-using-the-netconf-tool-netconf_toolpy">1. Using the NETCONF Tool (<code>netconf_tool.py</code>)</h2>
+<p>The NETCONF tool allows you to explore capabilities, retrieve configurations, and download YANG schemas.</p>
+<p>Usage: <code>python scripts/netconf_tool.py &lt;device&gt; &lt;action&gt; [schema-name]</code></p>
+<ul>
+<li>
+<p>List Capabilities: See which YANG modules the router supports.</p>
+<p><code>bash
+python scripts/netconf_tool.py ceos-01 capabilities</code></p>
+</li>
+<li>
+<p>Get Configuration: Retrieve the current <code>network-instance</code> configuration in XML format.</p>
+<p><code>bash
+python scripts/netconf_tool.py srl-02 config '&lt;network-instance/&gt;'</code></p>
+</li>
+<li>
+<p>Download a Schema (e.g. <code>openconfig-interfaces</code>): Save a specific YANG model to a file for inspection.</p>
+<p><code>bash
+python scripts/netconf_tool.py ceos-01 schema openconfig-interfaces</code></p>
+</li>
+</ul>
+<h2 id="2-using-the-gnmi-tool-gnmi_toolpy">2. Using the gNMI Tool (<code>gnmi_tool.py</code>)</h2>
+<p>The gNMI tool provides a modern way to interact with the device's state and configuration using gRPC.</p>
+<p>Usage: <code>python scripts/gnmi_tool.py &lt;device&gt; &lt;action&gt;</code></p>
+<ul>
+<li>
+<p>List Capabilities: Retrieve the supported gNMI versions and models.</p>
+<p><code>bash
+python scripts/gnmi_tool.py srl-01 capabilities</code></p>
+</li>
+<li>
+<p>Get Configuration: Retrieve the current configuration (e.g. interfaces). The output is formatted in JSON.
+    <code>bash
+    python scripts/gnmi_tool.py ceos-01 config 'interfaces'</code></p>
+</li>
+</ul>
+<h2 id="summary-table">Summary Table</h2>
 <table>
 <thead>
 <tr>
-<th>Node</th>
-<th>username</th>
-<th>password</th>
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">Description</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>ceos-01</td>
-<td>admin</td>
-<td>admin</td>
+<td style="text-align: left;"><code>netconf_tool.py</code></td>
+<td style="text-align: left;"><code>capabilities</code></td>
+<td style="text-align: left;">Lists supported NETCONF/YANG modules.</td>
 </tr>
 <tr>
-<td>srl-01, srl-02</td>
-<td>admin</td>
-<td>NokiaSrl1!</td>
+<td style="text-align: left;"><code>netconf_tool.py</code></td>
+<td style="text-align: left;"><code>config</code></td>
+<td style="text-align: left;">Shows running XML configuration.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>netconf_tool.py</code></td>
+<td style="text-align: left;"><code>schema</code></td>
+<td style="text-align: left;">Saves a <code>.yang</code> file for a specific model.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>gnmi_tool.py</code></td>
+<td style="text-align: left;"><code>capabilities</code></td>
+<td style="text-align: left;">Lists gNMI supported models and versions.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>gnmi_tool.py</code></td>
+<td style="text-align: left;"><code>config</code></td>
+<td style="text-align: left;">Shows configuration in JSON format via gNMI.</td>
 </tr>
 </tbody>
 </table>
-<p>For example:</p>
-<pre><code class="language-bash">ssh admin@ceos-01
-</code></pre>
-<p>Since the nodes are Docker containers, you can also connect to them through Docker:</p>
-<pre><code class="language-bash"># access CLI
-docker exec -it srl-01 sr_cli
-# access bash
-docker exec -it srl-01 bash
-</code></pre>
-<h2 id="3-end-the-lab">3. End the lab</h2>
-<p>You can end the lab using the <code>destroy</code> command:</p>
-<pre><code class="language-bash">sudo clab destroy [--cleanup]
-</code></pre>
-<blockquote>
-<p>The local <code>--cleanup | -c</code> flag instructs containerlab to remove the lab directory <code>topology/clab-lab</code> and all its content. Without this flag present, containerlab will keep the lab directory. Do not use this flag if you want to keep the configuration you saved in the routers.</p>
-</blockquote>
-<p>Containerlab CLI has a large set of commands and flags. Check out the <a href="https://containerlab.dev/cmd/deploy/">Command reference</a> section to get familiar with all the commands and their usage.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../../concepts/gnmi/" class="btn btn-neutral float-left" title="gNMI"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../02-verify-netconf/" class="btn btn-neutral float-right" title="2. Verify NETCONF">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../04-capabilities/" class="btn btn-neutral float-left" title="4. Inspect Capabilities"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../reference/network-topology/" class="btn btn-neutral float-right" title="Topology">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -220,10 +228,10 @@ docker exec -it srl-01 bash
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../../concepts/gnmi/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../04-capabilities/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../02-verify-netconf/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../../reference/network-topology/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
