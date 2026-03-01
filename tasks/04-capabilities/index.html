@@ -122,7 +122,7 @@
                 <h1 id="task-4-inspect-device-capabilities">Task 4 - Inspect Device Capabilities</h1>
 <p>Both NETCONF and gNMI provide a way for a client to discover what a device supports before performing configuration or telemetry operations. </p>
 <h2 id="netconf-capabilities">NETCONF Capabilities</h2>
-<p>In <a href="../tasks/verify-netconf.md">Task 2</a>, When you run:</p>
+<p>In <a href="../02-verify-netconf/">Task 2</a>, When you run:</p>
 <pre><code class="language-bash">netconf-console2 --host=srl-01 --port 830 -u admin -p 'NokiaSrl1!' --hello
 </code></pre>
 <p>the device returns the following in XML format:</p>
@@ -153,7 +153,7 @@
     ....
 </code></pre>
 <h2 id="gnmi-capabilities">gNMI Capabilities</h2>
-<p>In <a href="../tasks/verify-gnmi.md">Task 3</a>, When you run:</p>
+<p>In <a href="../03-verify-gnmi/">Task 3</a>, When you run:</p>
 <pre><code class="language-bash">gnmic -a srl-01:57400 -u admin -p NokiaSrl1! --skip-verify capabilities
 </code></pre>
 <p>the device returns the following in plain text:</p>
