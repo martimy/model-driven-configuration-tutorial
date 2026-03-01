@@ -4,7 +4,7 @@ Both NETCONF and gNMI provide a way for a client to discover what a device suppo
 
 ## NETCONF Capabilities
 
-In [Task 2](../tasks/verify-netconf.md), When you run:
+In [Task 2](../tasks/02-verify-netconf.md), When you run:
 
 ```bash
 netconf-console2 --host=srl-01 --port 830 -u admin -p 'NokiaSrl1!' --hello
@@ -44,7 +44,7 @@ Example:
 
 ## gNMI Capabilities
 
-In [Task 3](../tasks/verify-gnmi.md), When you run:
+In [Task 3](../tasks/03-verify-gnmi.md), When you run:
 
 ```bash
 gnmic -a srl-01:57400 -u admin -p NokiaSrl1! --skip-verify capabilities
