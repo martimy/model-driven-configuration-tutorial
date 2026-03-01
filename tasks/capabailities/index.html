@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Task 4 - Inspect Device Capabilities - Model-Driven Network Configuration Tutorial</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Task 4 - Inspect Device Capabilities";
+        var mkdocs_page_input_path = "tasks/capabailities.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Model-Driven Network Configuration Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/prerequisites/">Prerequisites</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/tools/">Tools</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/motivation/">Motivation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/yang/">YANG</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/netconf/">NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/restconf/">RESTCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/gnmi/">gNMI</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tasks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../start-containerlab/">1. Start Containerlab</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../verify-netconf/">2. Verify NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../verify-gnmi/">3. Verify gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../capabilities.md">4. Inspect Capabilities</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Model-Driven Network Configuration Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Task 4 - Inspect Device Capabilities</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="task-4-inspect-device-capabilities">Task 4 - Inspect Device Capabilities</h1>
+<p>Both NETCONF and gNMI provide a way for a client to discover what a device supports before performing configuration or telemetry operations. </p>
+<h2 id="netconf-capabilities">NETCONF Capabilities</h2>
+<p>In <a href="../verify-netconf/">Task 2</a>, When you run:</p>
+<pre><code class="language-bash">netconf-console2 --host=srl-01 --port 830 -u admin -p 'NokiaSrl1!' --hello
+</code></pre>
+<p>the device returns the following in XML format:</p>
+<ul>
+<li>NETCONF versions (1.0, 1.1) and optional features like candidate, confirmed-commit, validate, etc.</li>
+<li>A detailed list of supported modules, including their URNs, names, revision dates, supported features, deviations, augmentations, and explicitly lists multiple modules per URN.</li>
+</ul>
+<p>The key characteristics of the output:</p>
+<ul>
+<li>Includes rich metadata such as feature support, deviations, augmentations, and dependencies.</li>
+<li>Each YANG module is individually listed, often with query strings for module details.</li>
+<li>IETF, OpenConfig and vendor-specific modules are included.</li>
+<li>Supports NMDA (Network Management Datastore Architecture) capabilities.</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-bash">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;nc:hello xmlns:nc=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;nc:capabilities&gt;
+    &lt;nc:capability&gt;urn:ietf:params:netconf:base:1.0&lt;/nc:capability&gt;
+    &lt;nc:capability&gt;urn:ietf:params:netconf:base:1.1&lt;/nc:capability&gt;
+    &lt;nc:capability&gt;urn:ietf:params:netconf:capability:candidate:1.0&lt;/nc:capability&gt;
+    &lt;nc:capability&gt;urn:ietf:params:netconf:capability:confirmed-commit:1.1&lt;/nc:capability&gt;
+    ....
+    &lt;nc:capability&gt;urn:ietf:params:xml:ns:yang:ietf-yang-library?module=ietf-yang-library&amp;amp;revision=2019-01-04&lt;/nc:capability&gt;
+    &lt;nc:capability&gt;urn:nokia.com:srlinux:aaa:aaa?module=srl_nokia-aaa&amp;amp;revision=2025-10-31&lt;/nc:capability&gt;
+    &lt;nc:capability&gt;urn:nokia.com:srlinux:aaa:aaa-password?module=srl_nokia-aaa-password&amp;amp;revision=2025-07-31&lt;/nc:capability&gt;
+    &lt;nc:capability&gt;urn:nokia.com:srlinux:aaa:aaa-types?module=srl_nokia-aaa-types&amp;amp;revision=2023-03-31&lt;/nc:capability&gt;
+    ....
+</code></pre>
+<h2 id="gnmi-capabilities">gNMI Capabilities</h2>
+<p>In <a href="../verify-gnmi/">Task 3</a>, When you run:</p>
+<pre><code class="language-bash">gnmic -a srl-01:57400 -u admin -p NokiaSrl1! --skip-verify capabilities
+</code></pre>
+<p>the device returns the following in plain text:</p>
+<ul>
+<li>gNMI version (e.g., 0.10.0).</li>
+<li>List of YANG models by URN, including module name, publisher, and revision date.</li>
+<li>Supported encodings: Lists encoding formats such as JSON_IETF, PROTO, ASCII, and related numeric codes.</li>
+</ul>
+<p>The key characteristics of the output:</p>
+<ul>
+<li>Provides only the essential details for a gNMI client: supported models and encodings.</li>
+<li>Does not specify per-module features or deviations.</li>
+<li>Models are listed solely by URNs, without feature flags or module breakdowns.</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-bash">gNMI version: 0.10.0
+supported models:
+  - urn:ietf:params:xml:ns:yang:ietf-netconf-monitoring:ietf-netconf-monitoring, IETF NETCONF (Network Configuration) Working Group, 2010-10-04
+  - urn:ietf:params:xml:ns:yang:ietf-yang-library:ietf-yang-library, IETF NETCONF (Network Configuration) Working Group, 2019-01-04
+  - urn:nokia.com:srlinux:aaa:aaa:srl_nokia-aaa, Nokia, 2025-10-31
+  ...
+  - http://openconfig.net/yang/aaa:openconfig-aaa, OpenConfig working group, 2022-07-29
+  - http://openconfig.net/yang/acl:openconfig-acl, OpenConfig working group, 2023-02-06
+  - http://openconfig.net/yang/aft/ni:openconfig-aft-network-instance, OpenConfig working group, 2023-04-25
+  ...
+</code></pre>
+<p>In the examples above, the distinction between lines starting with <code>urn:</code> and those starting with <code>http:</code> reflects the naming authority and origin of the YANG models:</p>
+<ul>
+<li><code>urn:</code> prefixes indicate Nokia proprietary models (e.g., <code>urn:nokia.com:srlinux:aaa:aaa</code>). These are internal, vendor-specific schemas defined by Nokia for their SRLinux implementation. They follow a URN format using the <code>nokia.com</code> domain.</li>
+<li><code>http://</code> prefixes indicate IETF or OpenConfig models (e.g., <code>http://openconfig.net/yang/interfaces</code>). These are industry-standard models defined by OpenConfig working group.</li>
+<li><code>https://</code> prefixes (seen in NETCONF output) indicate OpenConfig gNSI models (e.g., <code>https://github.com/openconfig/yang/gnsi/authz</code>), though these appear as <code>http://</code> in the gNMI output for simplicity.</li>
+</ul>
+<p>This dual-namespace approach allows the device to support both:
+1. <strong>Standardized models</strong> (<code>http://</code>) for multi-vendor compatibility
+2. <strong>Vendor-specific extensions</strong> (<code>urn:</code>) for advanced Nokia features not covered by standards</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The gNMI and NETCONF capabilities responses differ in both format and the type of information they convey. NETCONF exposes protocol workflow features while gNMI exposes data model and encoding features. This reflects the different philosophies of the two protocols:</p>
+<ul>
+<li>NETCONF is designed for transactional, configuration-oriented management with deep model introspection.</li>
+<li>gNMI is designed for lightweight, high-frequency streaming and minimal overhead.</li>
+</ul>
+<h2 id="exercise">Exercise</h2>
+<p>Compare the capabilities returned by <code>ceo-01</code> for both NETCONF and gNMI. Does cEOS support the same NETCONF capabilities as SR Linux? Explain the difference in the format of the capabilities returned by gNMI?</p>
+<p>The differences you notice in both the capabilities, supported models, and formatting, highlight one of the challenges in managing the network via data models in multi-vendor environment.</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
