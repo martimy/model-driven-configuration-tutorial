@@ -1,0 +1,4 @@
+address: "srl-01:57400"
+username: admin
+password: NokiaSrl1!
+skip-verify: true

@@ -1,0 +1,4 @@
+address: "ceos-01:6030"
+username: admin
+password: admin
+insecure: true
