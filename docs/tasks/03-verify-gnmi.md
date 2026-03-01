@@ -32,7 +32,7 @@ gnmic --config ceos-gnmic.yml capabilities
 gnmic --config srl-gnmic.yml capabilities
 ```
 
-Use To override the target device in the configuration file: 
+To override the target device in the configuration file: 
 
 ```bash
 gnmic --config srl-gnmic.yml -a srl-02 capabilities
