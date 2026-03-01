@@ -26,6 +26,6 @@ ssh admin@ceos-01 -p 830 -s netconf
 
 Moving forwards, you can avoid adding credentials to the `netconf-console2` command line by using a wrapper script. For example:
 
-``bash
+```bash
 ./nc_wrapper.sh ceos-01 --hello
 ```
