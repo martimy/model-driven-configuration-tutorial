@@ -13,7 +13,7 @@
       <script>
         // Current page data
         var mkdocs_page_name = "4. Inspect Capabilities";
-        var mkdocs_page_input_path = "tasks/capabilities.md";
+        var mkdocs_page_input_path = "tasks/04-capabilities.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -49,6 +49,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/pyvirtual/">Python</a>
+                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../setup/tools/">Tools</a>
                   </li>
               </ul>
@@ -67,11 +69,11 @@
               </ul>
               <p class="caption"><span class="caption-text">Tasks</span></p>
               <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../start-containerlab/">1. Start Containerlab</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../01-start-containerlab/">1. Start Containerlab</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../verify-netconf/">2. Verify NETCONF</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../02-verify-netconf/">2. Verify NETCONF</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../verify-gnmi/">3. Verify gNMI</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">4. Inspect Capabilities</a>
     <ul class="current">
@@ -120,7 +122,7 @@
                 <h1 id="task-4-inspect-device-capabilities">Task 4 - Inspect Device Capabilities</h1>
 <p>Both NETCONF and gNMI provide a way for a client to discover what a device supports before performing configuration or telemetry operations. </p>
 <h2 id="netconf-capabilities">NETCONF Capabilities</h2>
-<p>In <a href="../verify-netconf/">Task 2</a>, When you run:</p>
+<p>In <a href="../tasks/verify-netconf.md">Task 2</a>, When you run:</p>
 <pre><code class="language-bash">netconf-console2 --host=srl-01 --port 830 -u admin -p 'NokiaSrl1!' --hello
 </code></pre>
 <p>the device returns the following in XML format:</p>
@@ -151,7 +153,7 @@
     ....
 </code></pre>
 <h2 id="gnmi-capabilities">gNMI Capabilities</h2>
-<p>In <a href="../verify-gnmi/">Task 3</a>, When you run:</p>
+<p>In <a href="../tasks/verify-gnmi.md">Task 3</a>, When you run:</p>
 <pre><code class="language-bash">gnmic -a srl-01:57400 -u admin -p NokiaSrl1! --skip-verify capabilities
 </code></pre>
 <p>the device returns the following in plain text:</p>
@@ -200,7 +202,7 @@ supported models:
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../verify-gnmi/" class="btn btn-neutral float-left" title="3. Verify gNMI"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../03-verify-gnmi/" class="btn btn-neutral float-left" title="3. Verify gNMI"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../../reference/network-topology/" class="btn btn-neutral float-right" title="Topology">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
@@ -224,7 +226,7 @@ supported models:
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../verify-gnmi/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../03-verify-gnmi/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
       <span><a href="../../reference/network-topology/" style="color: #fcfcfc">Next &raquo;</a></span>
