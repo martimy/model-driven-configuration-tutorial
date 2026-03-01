@@ -66,6 +66,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../concepts/gnmi/">gNMI</a>
                   </li>
+                  <li class="toctree-l1"><a class="" href="../../concepts/xml-anatomy.md">XML Anatomy</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Tasks</span></p>
               <ul class="current">
@@ -131,9 +133,8 @@
 <code>ssh -s netconf</code> is raw SSH. It opens the subsystem channel but does nothing after that. You are dropped directly into the NETCONF session at the XML layer. The device sends its <hello> message immediately, and then waits for yours. If you just sit there, nothing further happens — you would need to type raw XML to continue. It is useful for confirming the port is open and the device is responding, but it is not a practical way to send operations.</p>
 </blockquote>
 <p>Moving forwards, you can avoid adding credentials to the <code>netconf-console2</code> command line by using a wrapper script. For example:</p>
-<p>``bash
-./nc_wrapper.sh ceos-01 --hello
-```</p>
+<pre><code class="language-bash">./nc_wrapper.sh ceos-01 --hello
+</code></pre>
               
             </div>
           </div><footer>

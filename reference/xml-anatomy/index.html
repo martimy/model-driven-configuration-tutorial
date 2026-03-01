@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Anatomy of the XML file - Model-Driven Network Configuration Tutorial</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Anatomy of the XML file";
+        var mkdocs_page_input_path = "reference/xml-anatomy.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Model-Driven Network Configuration Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/prerequisites/">Prerequisites</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/pyvirtual/">Python</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/tools/">Tools</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/motivation/">Motivation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/yang/">YANG</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/netconf/">NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/restconf/">RESTCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/gnmi/">gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../../concepts/xml-anatomy.md">XML Anatomy</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tasks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/01-start-containerlab/">1. Start Containerlab</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/02-verify-netconf/">2. Verify NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/03-verify-gnmi/">3. Verify gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/04-capabilities/">4. Inspect Capabilities</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/05-scripts/">5. Automation Scripts</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../network-topology/">Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Model-Driven Network Configuration Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Anatomy of the XML file</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="anatomy-of-the-xml-file">Anatomy of the XML file</h1>
+<p>When you retrieve configuration from a device using NETCONF <code>&lt;get-config&gt;</code>, the reply is an XML-encoded instance of a YANG data model.</p>
+<p>Below is a structured breakdown of the anatomy of that XML, using examples aligned with:</p>
+<ul>
+<li>Arista cEOS</li>
+<li>Nokia SR Linux</li>
+</ul>
+<h2 id="high-level-netconf-envelope">High-Level NETCONF Envelope</h2>
+<p>A devices receives (see how to replicate this below):</p>
+<pre><code class="language-xml">&lt;rpc message-id=&quot;101&quot;
+     xmlns=&quot;urn:ietf:params:netconf:base:1.0&quot;&gt;
+  &lt;get-config&gt;
+    &lt;source&gt;
+      &lt;running/&gt;
+    &lt;/source&gt;
+  &lt;/get-config&gt;
+&lt;/rpc&gt;
+</code></pre>
+<p>The device replies with:</p>
+<pre><code class="language-xml">&lt;rpc-reply message-id=&quot;101&quot;
+           xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;data&gt;
+      ...
+  &lt;/data&gt;
+&lt;/rpc-reply&gt;
+</code></pre>
+<p>The the XML includes the NETCONF response container <code>&lt;rpc-reply&gt;</code>, the <code>message-id</code>, which correlates requests and responses and <code>&lt;data&gt;</code>, which contains YANG-modeled configuration data. Everything inside <code>&lt;data&gt;</code> is structured according to YANG.</p>
+<h2 id="yang-to-xml-mapping">YANG-to-XML Mapping</h2>
+<p>Here is the YANG-to-XML mapping:</p>
+<table>
+<thead>
+<tr>
+<th>YANG Concept</th>
+<th>XML Representation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>container</td>
+<td>XML element</td>
+</tr>
+<tr>
+<td>list</td>
+<td>Repeated XML elements</td>
+</tr>
+<tr>
+<td>list key</td>
+<td>Child element inside list</td>
+</tr>
+<tr>
+<td>leaf</td>
+<td>XML element with text</td>
+</tr>
+<tr>
+<td>leaf-list</td>
+<td>Repeated XML elements</td>
+</tr>
+<tr>
+<td>namespace</td>
+<td><code>xmlns="..."</code> attribute</td>
+</tr>
+</tbody>
+</table>
+<h3 id="example-arista-ceos-openconfig-interfaces">Example: Arista cEOS (OpenConfig Interfaces)</h3>
+<p>cEOS commonly supports OpenConfig YANG models.</p>
+<p>Example YANG structure (simplified OpenConfig):</p>
+<pre><code class="language-yang">container interfaces {
+  list interface {
+    key &quot;name&quot;;
+    leaf name { type string; }
+    container config {
+      leaf name { type string; }
+      ...
+    }
+  }
+}
+</code></pre>
+<p>XML returned by <code>&lt;get-config&gt;</code></p>
+<pre><code class="language-xml">&lt;data&gt;
+  &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+    &lt;interface&gt;
+      &lt;interface&gt;
+        &lt;name&gt;Management0&lt;/name&gt;
+        &lt;config&gt;
+          &lt;name&gt;Management0&lt;/name&gt;
+          ...
+        &lt;/config&gt;
+  &lt;/interfaces&gt;
+&lt;/data&gt;
+</code></pre>
+<p><strong>Anatomy Breakdown</strong></p>
+<ol>
+<li>
+<p>Namespace</p>
+<p><code>xml
+&lt;interfaces xmlns="http://openconfig.net/yang/interfaces"&gt;</code></p>
+<ul>
+<li>Tells us which YANG module this data belongs to</li>
+<li>Prevents name collisions</li>
+<li>Critical for XML parsing</li>
+</ul>
+</li>
+<li>
+<p>Container</p>
+<p><code>xml
+&lt;interfaces&gt;</code></p>
+<p>Maps directly to:</p>
+<p><code>yang
+container interfaces</code></p>
+</li>
+<li>
+<p>List</p>
+<p><code>xml
+&lt;interface&gt;</code></p>
+<p>Maps to:</p>
+<p><code>yang
+list interface</code></p>
+<p>Each <code>&lt;interface&gt;</code> is one list entry.</p>
+</li>
+<li>
+<p>List Key</p>
+<p><code>xml
+&lt;name&gt;Management0&lt;/name&gt;</code></p>
+<ul>
+<li>This is the key leaf</li>
+<li>Identifies the list instance</li>
+<li>Required for uniqueness</li>
+</ul>
+<p>Equivalent to:</p>
+<p><code>yang
+key "name";</code></p>
+</li>
+<li>
+<p>Nested Container</p>
+<p><code>xml
+&lt;config&gt;</code></p>
+<p>Maps to:</p>
+<p><code>yang
+container config</code></p>
+</li>
+<li>
+<p>Leaf Nodes</p>
+<p><code>xml
+&lt;name&gt;Management0&lt;/name&gt;
+...</code></p>
+</li>
+</ol>
+<h2 id="understanding-config-vs-state">Understanding Config vs State</h2>
+<p>Often you'll see:</p>
+<pre><code class="language-xml">&lt;interfaces&gt;
+  &lt;interface&gt;
+    &lt;config&gt;...&lt;/config&gt;
+    &lt;state&gt;...&lt;/state&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</code></pre>
+<p>This is because OpenConfig separates:</p>
+<ul>
+<li><code>config</code>  for intended configuration</li>
+<li><code>state</code> for operational values (read-only)</li>
+</ul>
+<p>If you use <code>&lt;get-config&gt;</code>, you usually retrieve only <code>config</code>. If you use <code>&lt;get&gt;</code>, you retrieve both.</p>
+<h2 id="namespaces-in-detail">Namespaces in Detail</h2>
+<p>You may also see prefixed namespaces:</p>
+<pre><code class="language-xml">&lt;oc-if:interfaces
+   xmlns:oc-if=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+</code></pre>
+<p>This happens when:</p>
+<ul>
+<li>Multiple YANG modules are used in one payload</li>
+<li>The device includes augmentations</li>
+</ul>
+<p>Example:</p>
+<pre><code class="language-xml">&lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+  &lt;interface&gt;
+    &lt;name&gt;Ethernet1&lt;/name&gt;
+    &lt;ethernet xmlns=&quot;http://openconfig.net/yang/interfaces/ethernet&quot;&gt;
+      &lt;config&gt;
+        &lt;port-speed&gt;SPEED_100GB&lt;/port-speed&gt;
+      &lt;/config&gt;
+    &lt;/ethernet&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</code></pre>
+<p>Different namespace results in a different YANG module.</p>
+<h2 id="how-to-read-any-get-config-xml">How to Read Any <code>&lt;get-config&gt;</code> XML</h2>
+<p>When teaching or analyzing, follow this order:</p>
+<ol>
+<li>Identify the namespace → which YANG module?</li>
+<li>Identify top-level container</li>
+<li>Identify lists and their keys</li>
+<li>Separate config vs state</li>
+<li>Map XML elements back to YANG definitions</li>
+<li>Check for augmentations (extra namespaces)</li>
+</ol>
+<h2 id="debugging-using-ssh">Debugging using SSH</h2>
+<p>The first section shows a raw NETONF command <code>get-config</code> being sent to a device. Typically, tools such as <code>ncclient</code> or 'netconf-console2<code>hide the details of the exchanges between the device and the client. To exchanges raw messages, you can use</code>ssh`:</p>
+<pre><code class="language-bash">ssh -s -p 830 admin@srl-01 netconf
+</code></pre>
+<p>SR Linux immediately sends you its <code>&lt;hello&gt;</code>, so you will need to send your <code>&lt;hello&gt;</code> message as well. Copy and paste this:</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;hello xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;capabilities&gt;
+    &lt;capability&gt;urn:ietf:params:netconf:base:1.0&lt;/capability&gt;
+  &lt;/capabilities&gt;
+&lt;/hello&gt;
+]]&gt;]]&gt;
+</code></pre>
+<p>Then copy and paste the <code>&lt;get-config&gt;</code> command:</p>
+<pre><code class="language-xml">&lt;rpc message-id=&quot;101&quot; xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;get-config&gt;
+    &lt;source&gt;
+      &lt;running/&gt;
+    &lt;/source&gt;
+  &lt;/get-config&gt;
+&lt;/rpc&gt;
+]]&gt;]]&gt;
+</code></pre>
+<p>The device will reply with its running configuration.</p>
+<blockquote>
+<p>Note that the correct XML namespace is <code>urn:ietf:params:xml:ns:netconf:base:1.0</code>, which is what's defined in RFC 4741 (NETCONF 1.0) and is what SR Linux actually validates against. The URN returned in the capabilities <code>urn:ietf:params:netconf:base:1.0</code> is an abbreviated version of the namespace.</p>
+</blockquote>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
