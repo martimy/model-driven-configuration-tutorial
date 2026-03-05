@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>2. Verify NETCONF - Model-Driven Network Configuration Tutorial</title>
+    <title>07 configure interfaces - Model-Driven Network Configuration Tutorial</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "2. Verify NETCONF";
-        var mkdocs_page_input_path = "tasks/02-verify-netconf.md";
+        var mkdocs_page_name = "07 configure interfaces";
+        var mkdocs_page_input_path = "tasks/07-configure-interfaces.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -70,12 +70,10 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Tasks</span></p>
-              <ul class="current">
+              <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../01-start-containerlab/">1. Start Containerlab</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">2. Verify NETCONF</a>
-    <ul class="current">
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../02-verify-netconf/">2. Verify NETCONF</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
@@ -107,8 +105,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Tasks</li>
-      <li class="breadcrumb-item active">2. Verify NETCONF</li>
+      <li class="breadcrumb-item active">07 configure interfaces</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -117,33 +114,21 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="task-2-verify-netconf-connectivity">Task 2 - Verify NETCONF Connectivity</h1>
-<p>The goal of this task is to initiate a connection to each device and retrieve the HELLO message exchanged at the start of a NETCONF session. This message advertises the device capabilities (such as supported YANG models and protocol features). The NETCONF protocol is designed to run securely over SSH, and port 830 is assigned as the standard default port for this connection.</p>
-<p>If you have not done so already, install <code>netconf-console2</code>, preferably in <a href="../../setup/pyvirtual/">Python virtual environment</a>.</p>
-<p>Once the lab is running, verify that NETCONF is reachable on port 830 using netconf-console2:</p>
-<pre><code class="language-bash">netconf-console2 --host=srl-01 --port 830 -u admin -p NokiaSrl1! --hello
+                <h2 id="step-5-construct-the-xml-file">Step 5: Construct the xml file</h2>
+<pre><code>netconf-console2 --host=&lt;device-ip&gt; --port=&lt;port-number&gt; --user=&lt;username&gt; --ssh --edit-config=&lt;config-file.xml&gt; --db=candidate
 </code></pre>
+<pre><code>netconf-console2 --host=&lt;device-ip&gt; --port=&lt;port-number&gt; --user=&lt;username&gt; --ssh --commit
+</code></pre>
+<h3 id="lab-exercise-1-discover-the-interface-model">Lab Exercise 1: Discover the Interface Model</h3>
+<p>Deploy your <code>Containerlab</code> topology. Configure one interface with an IP address manually using the device CLI. Then perform a <code>get-config</code> and locate the interface configuration in the XML output. Cross-reference it with the <code>pyang</code> tree for <em>ietf-interfaces</em> and <em>openconfig-if-ip</em>. Document the exact YANG path and namespace you will need to construct a payload for this interface.</p>
 <blockquote>
-<p>Install netconf-console2 using <code>pip install netconf-console2</code></p>
+<p>Note that SR-Linux requires that you you configure at least one sub-interface and the sub-interface must be associated with a network-instance (i.e. VRF). cEOS creates the subinterface 0 by default. Both follow the convention of OpenConfig YANG models.  </p>
 </blockquote>
-<p>Alternatively, you may use raw ssh connection:</p>
-<pre><code class="language-bash">ssh admin@ceos-01 -p 830 -s netconf
-</code></pre>
-<blockquote>
-<p><strong>What Both Commands Are Actually Doing</strong><br />
-<code>netconf-console2</code> is a dedicated NETCONF client. It handles the SSH transport internally, sends a proper NETCONF <hello> message with its own capabilities, waits for the device's <hello> in response, and then presents the result to you cleanly. It understands the NETCONF framing protocol (the ]]&gt;]]&gt; end-of-message marker in NETCONF 1.0, or chunked framing in 1.1).<br />
-<code>ssh -s netconf</code> is raw SSH. It opens the subsystem channel but does nothing after that. You are dropped directly into the NETCONF session at the XML layer. The device sends its <hello> message immediately, and then waits for yours. If you just sit there, nothing further happens — you would need to type raw XML to continue. It is useful for confirming the port is open and the device is responding, but it is not a practical way to send operations.</p>
-</blockquote>
-<p>Moving forwards, you can avoid adding credentials to the <code>netconf-console2</code> command line by using a wrapper script. For example:</p>
-<pre><code class="language-bash">./nc_wrapper.sh ceos-01 --hello
-</code></pre>
+<h2 id="step-4-reverse-engineering">Step 4: Reverse engineering</h2>
+<p>The most reliable path to determine which modules is used for configuration rking payload is to configure the feature manually via CLI first, then use a NETCONF <code>get-config</code> to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native model for the first time:</p>
               
             </div>
           </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../01-start-containerlab/" class="btn btn-neutral float-left" title="1. Start Containerlab"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../03-verify-gnmi/" class="btn btn-neutral float-right" title="3. Verify gNMI">Next <span class="icon icon-circle-arrow-right"></span></a>
-    </div>
 
   <hr/>
 
@@ -165,10 +150,6 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../01-start-containerlab/" style="color: #fcfcfc">&laquo; Previous</a></span>
-    
-    
-      <span><a href="../03-verify-gnmi/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Troubleshooting - Model-Driven Network Configuration Tutorial</title>
+    <title>pyang - Model-Driven Network Configuration Tutorial</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Troubleshooting";
-        var mkdocs_page_input_path = "reference/troubleshooting.md";
+        var mkdocs_page_name = "pyang";
+        var mkdocs_page_input_path = "reference/pyang.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -85,12 +85,10 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
-              <ul class="current">
+              <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../network-topology/">Topology</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Troubleshooting</a>
-    <ul class="current">
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../troubleshooting/">Troubleshooting</a>
                   </li>
               </ul>
       </div>
@@ -107,8 +105,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Reference</li>
-      <li class="breadcrumb-item active">Troubleshooting</li>
+      <li class="breadcrumb-item active">pyang</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -117,16 +114,208 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="troubleshooting">Troubleshooting</h1>
-<p>To get a schema:</p>
-<pre><code class="language-bash">./nc_wrapper.sh srl-01 --get-schema ietf-interfaces
+                <h1 id="pyang">pyang</h1>
+<p>pyang is a YANG validator, transformator, and code generator written in Python. It can be used to validate YANG modules for correctness, transform them into other formats, and write plugins to generate code from the modules.</p>
+<p>Install using:</p>
+<pre><code class="language-bash">pip install pyang
+</code></pre>
+<h2 id="common-options">Common Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-h, --help</code></td>
+<td>Print help and exit</td>
+</tr>
+<tr>
+<td><code>-v</code></td>
+<td>Print version and exit</td>
+</tr>
+<tr>
+<td><code>-f &lt;format&gt;</code></td>
+<td>Output format (tree, yin, xsd, jstree, etc.)</td>
+</tr>
+<tr>
+<td><code>-o &lt;file&gt;</code></td>
+<td>Write output to a file</td>
+</tr>
+<tr>
+<td><code>-p &lt;path&gt;</code></td>
+<td>Add a directory to the YANG module search path</td>
+</tr>
+<tr>
+<td><code>--canonical</code></td>
+<td>Validate module according to canonical YANG order</td>
+</tr>
+<tr>
+<td><code>--strict</code></td>
+<td>Force strict YANG compliance</td>
+</tr>
+</tbody>
+</table>
+<h2 id="output-formats-f">Output Formats (<code>-f</code>)</h2>
+<p>pyang can generate a compact tree representation of YANG models for quick visualization, translate YANG models to DSDL schemas for validating XML instance documents, generate UML diagrams, and perform schema-aware translation between XML and JSON.</p>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tree</code></td>
+<td>Human-readable ASCII tree view (most popular)</td>
+</tr>
+<tr>
+<td><code>yin</code></td>
+<td>Convert to YIN (XML equivalent of YANG)</td>
+</tr>
+<tr>
+<td><code>xsd</code></td>
+<td>Generate W3C XML Schema</td>
+</tr>
+<tr>
+<td><code>jstree</code></td>
+<td>HTML/JavaScript interactive YANG browser</td>
+</tr>
+<tr>
+<td><code>jtox</code></td>
+<td>JSON driver file for XML↔JSON conversion</td>
+</tr>
+<tr>
+<td><code>uml</code></td>
+<td>UML diagram output</td>
+</tr>
+<tr>
+<td><code>dsdl</code></td>
+<td>Hybrid DSDL schema (RFC 6110)</td>
+</tr>
+<tr>
+<td><code>sample-xml-skeleton</code></td>
+<td>Skeleton XML instance document</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tree-specific-options">Tree-Specific Options</h2>
+<p>These are some of the most commonly used options in practice:</p>
+<pre><code class="language-bash">pyang -f tree module.yang
+</code></pre>
+<p>You can filter the tree output by path and depth, for example:
+<code>pyang module.yang -f tree --tree-path=/bgp/neighbors --tree-depth=4</code></p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--tree-path=&lt;path&gt;</code></td>
+<td>Show only the subtree at the given XPath</td>
+</tr>
+<tr>
+<td><code>--tree-depth=&lt;n&gt;</code></td>
+<td>Limit output to N levels deep</td>
+</tr>
+<tr>
+<td><code>--tree-help</code></td>
+<td>Print explanation of tree symbols</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tree symbols:</strong>
+- <code>+--rw</code> — read-write node
+- <code>+--ro</code> — read-only node
+- <code>?</code> — optional node
+- <code>*</code> — list (multiple instances)</p>
+<h2 id="error-warning-options">Error &amp; Warning Options</h2>
+<p>You can print a listing of all error codes with <code>--list-errors</code>, treat warnings as errors with <code>-Werror</code>, suppress all warnings with <code>-Wnone</code>, and selectively treat specific error codes as warnings or errors.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-e, --list-errors</code></td>
+<td>List all possible error codes and exit</td>
+</tr>
+<tr>
+<td><code>-Werror</code></td>
+<td>Treat all warnings as errors</td>
+</tr>
+<tr>
+<td><code>-Wnone</code></td>
+<td>Suppress all warnings</td>
+</tr>
+<tr>
+<td><code>-W &lt;errorcode&gt;</code></td>
+<td>Treat a specific error as a warning</td>
+</tr>
+<tr>
+<td><code>--max-line-len=&lt;n&gt;</code></td>
+<td>Warn if any line exceeds N characters</td>
+</tr>
+</tbody>
+</table>
+<h2 id="module-resolution-options">Module Resolution Options</h2>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-p &lt;path&gt;</code></td>
+<td>Add search path for YANG modules</td>
+</tr>
+<tr>
+<td><code>--features &lt;mod:feat&gt;</code></td>
+<td>Specify active features for a module</td>
+</tr>
+<tr>
+<td><code>--hello</code></td>
+<td>Parse a NETCONF <code>&lt;hello&gt;</code> message as input</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>--features</code> option can be used repeatedly — each occurrence defines active (supported) features for one YANG module. If no <code>--features</code> option is present for a module, all features defined in that module are considered active.</p>
+<h2 id="common-usage-examples">Common Usage Examples</h2>
+<pre><code class="language-bash"># Validate a YANG module
+pyang module.yang
+
+# View as tree
+pyang -f tree module.yang
+
+# Convert to YIN (XML)
+pyang -f yin -o module.yin module.yang
+
+# Tree with path filter and depth limit
+pyang -f tree --tree-path=/interfaces/interface --tree-depth=3 module.yang
+
+# Validate multiple modules
+pyang module1.yang module2.yang
+
+# Use a search path for dependencies
+pyang -p ./yang-modules -f tree module.yang
+
+# Strict mode validation
+pyang --strict module.yang
 </code></pre>
               
             </div>
           </div><footer>
-    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../network-topology/" class="btn btn-neutral float-left" title="Topology"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-    </div>
 
   <hr/>
 
@@ -147,8 +336,6 @@
   <div class="rst-versions" role="note" aria-label="Versions">
   <span class="rst-current-version" data-toggle="rst-current-version">
     
-    
-      <span><a href="../network-topology/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
   </span>

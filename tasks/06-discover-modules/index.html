@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>6. Discover Modules - Model-Driven Network Configuration Tutorial</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "6. Discover Modules";
+        var mkdocs_page_input_path = "tasks/06-discover-modules.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Model-Driven Network Configuration Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/prerequisites/">Prerequisites</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/pyvirtual/">Python</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/tools/">Tools</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/motivation/">Motivation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/yang/">YANG</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/netconf/">NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/restconf/">RESTCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/gnmi/">gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/xml-anatomy/">XML Anatomy</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tasks</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01-start-containerlab/">1. Start Containerlab</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02-verify-netconf/">2. Verify NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04-capabilities/">4. Inspect Capabilities</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">5. Automation Scripts</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">6. Discover Modules</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#step-1-retrieve-modules">Step 1: Retrieve Modules</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-2-fetch-the-schema-netconf">Step 2: Fetch the Schema (NETCONF)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-3-visualize-the-tree-with-pyang">Step 3: Visualize the Tree with pyang</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#step-4-determining-configuration-models">Step 4: Determining Configuration Models</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Model-Driven Network Configuration Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Tasks</li>
+      <li class="breadcrumb-item active">6. Discover Modules</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="discover-yang-modules">Discover YANG Modules</h1>
+<p>Before starting configuring a devices, you must discover what YANG models the device supports and understand the shape of the data those models describe. This task covers the discovery workflow.</p>
+<p><strong>Read the Documentations</strong></p>
+<p>Reading the device documentation must be the first step in the process if configuring a device. Familiarize yourself with the content of the documents before proceeding. The links to Arista and Nokia devices are provided in the <a href="../../reference/network-topology/">References</a>.</p>
+<h2 id="step-1-retrieve-modules">Step 1: Retrieve Modules</h2>
+<p>Every NETCONF session begins with a capabilities exchange. The device advertises every YANG module it supports, along with the exact revision date. This is the authoritative list of what you can configure.</p>
+<p>Use the Python script <code>netconf-tool</code> to extract the modules from the device's advertised YANG capabilities:</p>
+<pre><code class="language-bash">./scripts/netconf_tool.py srl-01 modules
+</code></pre>
+<p>The code filters and prints the YANG modules from the capabilities:</p>
+<pre><code class="language-python">def get_modules(m):
+    &quot;&quot;&quot;Prints the YANG modules supported by the device.&quot;&quot;&quot;
+    mods = [c for c in m.server_capabilities if &quot;module=&quot; in c]
+    for cap in sorted(mods):
+        print(cap)
+}
+</code></pre>
+<p>Each capability string contains the module name, namespace, and revision. For example: </p>
+<pre><code class="language-bash">urn:ietf:params:xml:ns:yang:ietf-interfaces?module=ietf-interfaces&amp;revision=2014-05-08
+</code></pre>
+<p>or, for cEOS</p>
+<pre><code>urn:ietf:params:xml:ns:yang:ietf-interfaces?module=ietf-interfaces&amp;revision=2018-02-20
+</code></pre>
+<p>The URN identifies the IETF model for configuring and monitoring network interfaces.</p>
+<ul>
+<li>Namespace: urn:ietf:params:xml:ns:yang:ietf-interfaces</li>
+<li>Name: ietf-interfaces</li>
+<li>Revision: 2014-05-08 (2018-02-20)</li>
+</ul>
+<p>Note the revision date — always use models that match this exact revision when building payloads.</p>
+<p><strong>Using gNMI</strong></p>
+<p>Use the Python script <code>gnmi-tool</code> to extract the modules from the device's advertised YANG capabilities:</p>
+<pre><code class="language-bash">./scripts/gnmi_tool.py srl-01 modules 
+</code></pre>
+<p>which will execute the function:</p>
+<pre><code class="language-python">def get_modules(gc):
+    &quot;&quot;&quot;Prints the modules supported by the device.&quot;&quot;&quot;
+    capabilities = gc.capabilities()
+    mods = [
+        f'{c[&quot;name&quot;]}, {c[&quot;organization&quot;]}, {c[&quot;version&quot;]}'
+        for c in capabilities[&quot;supported_models&quot;]
+    ]
+    for mod in sorted(mods):
+        print(mod)
+</code></pre>
+<p>The output will look like:</p>
+<pre><code class="language-bash">http://openconfig.net/yang/interfaces:openconfig-interfaces, OpenConfig working group, 2024-04-04
+</code></pre>
+<p>The module identifies the OpenConfig model for configuring and monitoring network interfaces.</p>
+<ul>
+<li>Name: "http://openconfig.net/yang/interfaces:openconfig-interfaces"</li>
+<li>Organization: OpenConfig working group</li>
+<li>Version: 2024-04-04</li>
+</ul>
+<p><strong>Note about Model Support</strong></p>
+<p>If you search modules for the keyword <code>interfaces</code> (e.g. using <code>grep</code>), you will find that SR Linux supports bot IETF and OpenConfig modules:</p>
+<pre><code class="language-bash">urn:ietf:params:xml:ns:yang:ietf-interfaces?module=ietf-interfaces&amp;revision=2014-05-08
+http://openconfig.net/yang/interfaces?module=openconfig-interfaces&amp;revision=2024-04-04&amp;deviations=openconfig-srl-deviations
+</code></pre>
+<p>Similarly in cEOS:</p>
+<pre><code class="language-bash">urn:ietf:params:xml:ns:yang:ietf-interfaces?module=ietf-interfaces&amp;revision=2018-02-20
+http://openconfig.net/yang/interfaces?module=openconfig-interfaces&amp;revision=2024-12-05
+</code></pre>
+<p>This means the a module may exists on the device for various reasons (operational state, compatibility, or partial configuration), but it does not necessarily mean it is the primary configuration model.</p>
+<h2 id="step-2-fetch-the-schema-netconf">Step 2: Fetch the Schema (NETCONF)</h2>
+<p>Once you know which modules the device supports, you can pull the actual YANG source files directly from the device using the <code>get-schema</code> NETCONF RPC. This will get the exact model version the device is running:</p>
+<p>Run the script for both devices for both the IETF and OpenConfig models (the file name will be \&lt;model-name&gt;.yang):</p>
+<pre><code class="language-bash">./scripts/netconf_tool.py srl-01 schema ietf-interfaces
+Schema saved to ietf-interfaces.yang
+./scripts/netconf_tool.py srl-01 schema openconfig-interfaces
+Schema saved to openconfig-interfaces.yang
+</code></pre>
+<h2 id="step-3-visualize-the-tree-with-pyang">Step 3: Visualize the Tree with pyang</h2>
+<p>Raw YANG source is verbose and difficult to read. The pyang tool renders any YANG model as a concise indented tree that shows every configuration path, its data type, and whether it is mandatory. This tree is your primary reference when building payloads:</p>
+<pre><code class="language-bash">pyang -f tree ietf-interfaces.yang
+</code></pre>
+<pre><code>module: ietf-interfaces
+  +--rw interfaces
+  |  +--rw interface* [name]
+  |     +--rw name                        string
+  |     +--rw description?                string
+  |     +--rw type                        identityref
+  |     +--rw enabled?                    boolean
+  |     +--rw link-up-down-trap-enable?   enumeration {if-mib}?
+  +--ro interfaces-state
+     +--ro interface* [name]
+        +--ro name               string
+        +--ro type               identityref
+        ...
+</code></pre>
+<p>For OpenConfig (ignore the output errors for now):</p>
+<pre><code class="language-bash">pyang -f tree openconfig-interfaces.yang
+</code></pre>
+<pre><code>module: openconfig-interfaces
+  +--rw interfaces
+     +--rw interface* [name]
+        +--rw name                  -&gt; ../config/name
+        +--rw config
+        |  +--rw name?            string
+        |  +--rw type             identityref
+        |  +--rw mtu?             uint16
+        |  +--rw loopback-mode?   oc-opt-types:loopback-mode-type
+        |  +--rw description?     string
+        |  +--rw enabled?         boolean
+        +--ro state
+        |  +--ro name?            string
+        |  +--ro type             identityref
+        ...
+</code></pre>
+<p><strong>Reading the Tree</strong></p>
+<p>The <code>+--rw</code> prefix means read-write (configurable). <code>+--ro</code> means read-only (operational state). A <code>*</code> after the node name means it is a list (multiple entries). A <code>?</code> means the field is optional. These symbols tell you exactly what your payload must and can include.</p>
+<p>Notices that both YANG modules sperate the configuration fields from the state fields but using two different conventions. OpenConfig's style is generally considered more operator-friendly for automation and streaming telemetry, which is why it became very popular despite not being the original IETF approach. (Later IETF NMDA work moved closer to unified views in many newer modules.)</p>
+<p>We will focus out interest in configuration for now. To show only the configuration nodes:</p>
+<pre><code class="language-bash">pyang -f tree --tree-path /interfaces/interface ietf-interfaces.yang
+</code></pre>
+<pre><code>module: ietf-interfaces
+  +--rw interfaces
+     +--rw interface* [name]
+        +--rw name                        string
+        +--rw description?                string
+        +--rw type                        identityref
+        +--rw enabled?                    boolean
+        +--rw link-up-down-trap-enable?   enumeration {if-mib}?
+</code></pre>
+<p>To get a skeleton XML you can actually use for NETCONF configuration:</p>
+<pre><code class="language-bash">pyang -f sample-xml-skeleton --sample-xml-skeleton-doctype=config ietf-interfaces.yang
+</code></pre>
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;config xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;interfaces xmlns=&quot;urn:ietf:params:xml:ns:yang:ietf-interfaces&quot;&gt;
+    &lt;interface&gt;
+      &lt;name/&gt;
+      &lt;description/&gt;
+      &lt;type/&gt;
+      &lt;link-up-down-trap-enable/&gt;
+    &lt;/interface&gt;
+  &lt;/interfaces&gt;
+&lt;/config&gt;
+</code></pre>
+<p>For OpenConfig, you will need to download dependencies first. See <a href="../../reference/network-topology/">References</a> for details.</p>
+<pre><code class="language-bash">yang -f sample-xml-skeleton -p openconfig \
+     --sample-xml-skeleton-doctype=config \
+     openconfig-interfaces.yang
+</code></pre>
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;config xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+    &lt;interface&gt;
+      &lt;name/&gt;
+      &lt;config&gt;
+        &lt;name/&gt;
+        &lt;type/&gt;
+        &lt;mtu/&gt;
+        &lt;description/&gt;
+      &lt;/config&gt;
+      &lt;hold-time&gt;
+        &lt;config/&gt;
+      &lt;/hold-time&gt;
+      &lt;penalty-based-aied&gt;
+        &lt;config/&gt;
+      &lt;/penalty-based-aied&gt;
+      &lt;subinterfaces&gt;
+        &lt;subinterface&gt;
+          &lt;index/&gt;
+          &lt;config&gt;
+            &lt;description/&gt;
+          &lt;/config&gt;
+        &lt;/subinterface&gt;
+      &lt;/subinterfaces&gt;
+    &lt;/interface&gt;
+  &lt;/interfaces&gt;
+&lt;/config&gt;
+</code></pre>
+<h2 id="step-4-determining-configuration-models">Step 4: Determining Configuration Models</h2>
+<p>A quick way to determine which modules is used for configuration is to use a NETCONF <code>get-config</code> to read configuration on the devices using simplified XPATH filter</p>
+<pre><code class="language-bash">./nc_wrapper.sh srl-01 --get-config --filter /interfaces
+</code></pre>
+<p>Or</p>
+<pre><code class="language-bash">./nc_wrapper.sh srl-01 intf.xml
+</code></pre>
+<p>The result clearly indicate that SR Linux uses the OpenConfig module for interface configuration.</p>
+<pre><code>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;data xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; xmlns:nc=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+        &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+        ...
+</code></pre>
+<p>And so does cEOS:</p>
+<pre><code>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;data xmlns:netconf=&quot;http://arista.com/yang/rpc/netconf&quot; xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; netconf:time-modified=&quot;2026-03-05T17:12:16.876169374Z&quot;&gt;
+  &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+  ...
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../05-scripts/" class="btn btn-neutral float-left" title="5. Automation Scripts"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../reference/network-topology/" class="btn btn-neutral float-right" title="Topology">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../05-scripts/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../../reference/network-topology/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -99,6 +99,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../tasks/05-scripts/">5. Automation Scripts</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/06-discover-modules/">6. Discover Modules</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
               <ul>
@@ -327,7 +329,7 @@ container config</code></p>
 <li>Check for augmentations (extra namespaces)</li>
 </ol>
 <h2 id="debugging-using-ssh">Debugging using SSH</h2>
-<p>The first section shows a raw NETONF command <code>get-config</code> being sent to a device. Typically, tools such as <code>ncclient</code> or 'netconf-console2<code>hide the details of the exchanges between the device and the client. To exchanges raw messages, you can use</code>ssh`:</p>
+<p>The first section shows a raw NETONF command <code>get-config</code> being sent to a device. Typically, tools such as <code>ncclient</code> or <code>netconf-console2</code> hide the details of the exchanges between the device and the client. To exchanges raw messages, you can use <code>ssh</code>:</p>
 <pre><code class="language-bash">ssh -s -p 830 admin@srl-01 netconf
 </code></pre>
 <p>SR Linux immediately sends you its <code>&lt;hello&gt;</code>, so you will need to send your <code>&lt;hello&gt;</code> message as well. Copy and paste this:</p>
