@@ -29,10 +29,16 @@ DEVICES = {
 }
 
 def get_capabilities(m):
-    """Prints the YANG modules supported by the device."""
-    caps = [c for c in m.server_capabilities if "module=" in c]
+    """Prints the capabilities supported by the device."""
+    caps = [c for c in m.server_capabilities if "capability:" in c]
     for cap in sorted(caps):
         print(cap)
+
+def get_modules(m):
+    """Prints the YANG modules supported by the device."""
+    mods = [c for c in m.server_capabilities if "module=" in c]
+    for mod in sorted(mods):
+        print(mod)
 
 def get_config(m, filter_xml):
     """Retrieves and prints the network-instance configuration."""
@@ -41,17 +47,20 @@ def get_config(m, filter_xml):
 
 def save_schema(m, schema_name):
     """Downloads a YANG schema and saves it to a file."""
-    schema = m.get_schema(schema_name)
-    filename = f"{schema_name}.yang"
-    with open(filename, "w") as f:
-        f.write(schema.data)
-    print(f"Schema saved to {filename}")
+    try:
+        schema = m.get_schema(schema_name)
+        filename = f"{schema_name}.yang"
+        with open(filename, "w") as f:
+            f.write(schema.data)
+        print(f"Schema saved to {filename}")
+    except Exception as e:
+        print(e)
 
 def main():
     if len(sys.argv) < 3:
         print(f"Usage: {sys.argv[0]} <device> <action> [xml-filter | schema-name ]")
         print(f"Devices: {', '.join(list(DEVICES.keys()))}")
-        print("Actions: capabilities, config, schema")
+        print("Actions: capabilities, modules, config, schema")
         sys.exit(1)
 
     device_name = sys.argv[1]
@@ -65,6 +74,8 @@ def main():
     with manager.connect(**DEVICES[device_name]) as m:
         if action == "capabilities":
             get_capabilities(m)
+        elif action == "modules":
+            get_modules(m)
         elif action == "config":
             if len(sys.argv) < 4:
                 print("Error: Action 'config' requires a xml-filter.")

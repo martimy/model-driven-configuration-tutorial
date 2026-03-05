@@ -26,15 +26,15 @@ DEVICES = {
     },
 }
 
-def get_capabilities(gc):
-    """Prints the capabilities of the device."""
+def get_modules(gc):
+    """Prints the modules supported by the device."""
     capabilities = gc.capabilities()
-    caps = [
+    mods = [
         f'{c["name"]}, {c["organization"]}, {c["version"]}'
         for c in capabilities["supported_models"]
     ]
-    for cap in sorted(caps):
-        print(cap)
+    for mod in sorted(mods):
+        print(mod)
 
 def get_config(gc, path):
     """Retrieves and prints configuration."""
@@ -47,7 +47,7 @@ def main():
     if len(sys.argv) < 3:
         print(f"Usage: {sys.argv[0]} <device> <action> [path]")
         print(f"Devices: {', '.join(list(DEVICES.keys()))}")
-        print("Actions: capabilities, config")
+        print("Actions: modules, config")
         sys.exit(1)
 
     device_name = sys.argv[1]
@@ -59,8 +59,8 @@ def main():
 
     # Connect to the device and perform the action
     with gNMIclient(**DEVICES[device_name]) as gc:
-        if action == "capabilities":
-            get_capabilities(gc)
+        if action == "modules":
+            get_modules(gc)
         elif action == "config":
             if len(sys.argv) < 4:
                 print("Error: Action 'config' requires a path.")
