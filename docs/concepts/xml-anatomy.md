@@ -224,7 +224,7 @@ When teaching or analyzing, follow this order:
 
 ## Debugging using SSH
 
-The first section shows a raw NETONF command `get-config` being sent to a device. Typically, tools such as `ncclient` or 'netconf-console2` hide the details of the exchanges between the device and the client. To exchanges raw messages, you can use `ssh`:
+The first section shows a raw NETONF command `get-config` being sent to a device. Typically, tools such as `ncclient` or `netconf-console2` hide the details of the exchanges between the device and the client. To exchanges raw messages, you can use `ssh`:
 
 ```bash
 ssh -s -p 830 admin@srl-01 netconf
