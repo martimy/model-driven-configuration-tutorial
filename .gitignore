@@ -1,5 +1,10 @@
 mkdocs.yml
 .pyenv/
-labs/
-site/
+/labs/
+/site/
 clab-lab/
+/ietf/
+/openconfig/
+/arista/
+/nokia/
+
