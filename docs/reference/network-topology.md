@@ -9,6 +9,8 @@ srl-01  | Nokia SR Linux node | 192.168.100.12
 srl-02  | Nokia SR Linux node | 192.168.100.13
 
 
+![Topology](../img/topology.drawio.png)
+
 ## Software Version and Documentation
 
 Node | Version | Documentation
