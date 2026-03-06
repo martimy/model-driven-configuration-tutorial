@@ -193,66 +193,6 @@ module: ietf-interfaces
         +--rw link-up-down-trap-enable?   enumeration {if-mib}?
 ```
 
-To get a skeleton XML you can actually use for NETCONF configuration:
-
-```bash
-pyang -f sample-xml-skeleton --sample-xml-skeleton-doctype=config ietf-interfaces.yang
-```
-
-
-```xml
-<?xml version='1.0' encoding='UTF-8'?>
-<config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-  <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
-    <interface>
-      <name/>
-      <description/>
-      <type/>
-      <link-up-down-trap-enable/>
-    </interface>
-  </interfaces>
-</config>
-```
-
-For OpenConfig, you will need to download dependencies first. See [References](../reference/network-topology.md) for details.
-
-```bash
-yang -f sample-xml-skeleton -p openconfig \
-     --sample-xml-skeleton-doctype=config \
-     openconfig-interfaces.yang
-```
-
-```xml
-<?xml version='1.0' encoding='UTF-8'?>
-<config xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-  <interfaces xmlns="http://openconfig.net/yang/interfaces">
-    <interface>
-      <name/>
-      <config>
-        <name/>
-        <type/>
-        <mtu/>
-        <description/>
-      </config>
-      <hold-time>
-        <config/>
-      </hold-time>
-      <penalty-based-aied>
-        <config/>
-      </penalty-based-aied>
-      <subinterfaces>
-        <subinterface>
-          <index/>
-          <config>
-            <description/>
-          </config>
-        </subinterface>
-      </subinterfaces>
-    </interface>
-  </interfaces>
-</config>
-```
-
 ## Step 4: Determining Configuration Models
 
 A quick way to determine which modules is used for configuration is to use a NETCONF `get-config` to read configuration on the devices using simplified XPATH filter
