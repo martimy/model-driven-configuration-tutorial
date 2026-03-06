@@ -93,6 +93,8 @@
     </li>
     </ul>
                   </li>
+                  <li class="toctree-l1"><a class="" href="../07-configure-interface.md">7. Configure Interface</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
               <ul>
@@ -248,55 +250,6 @@ Schema saved to openconfig-interfaces.yang
         +--rw type                        identityref
         +--rw enabled?                    boolean
         +--rw link-up-down-trap-enable?   enumeration {if-mib}?
-</code></pre>
-<p>To get a skeleton XML you can actually use for NETCONF configuration:</p>
-<pre><code class="language-bash">pyang -f sample-xml-skeleton --sample-xml-skeleton-doctype=config ietf-interfaces.yang
-</code></pre>
-<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
-&lt;config xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
-  &lt;interfaces xmlns=&quot;urn:ietf:params:xml:ns:yang:ietf-interfaces&quot;&gt;
-    &lt;interface&gt;
-      &lt;name/&gt;
-      &lt;description/&gt;
-      &lt;type/&gt;
-      &lt;link-up-down-trap-enable/&gt;
-    &lt;/interface&gt;
-  &lt;/interfaces&gt;
-&lt;/config&gt;
-</code></pre>
-<p>For OpenConfig, you will need to download dependencies first. See <a href="../../reference/network-topology/">References</a> for details.</p>
-<pre><code class="language-bash">yang -f sample-xml-skeleton -p openconfig \
-     --sample-xml-skeleton-doctype=config \
-     openconfig-interfaces.yang
-</code></pre>
-<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
-&lt;config xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
-  &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
-    &lt;interface&gt;
-      &lt;name/&gt;
-      &lt;config&gt;
-        &lt;name/&gt;
-        &lt;type/&gt;
-        &lt;mtu/&gt;
-        &lt;description/&gt;
-      &lt;/config&gt;
-      &lt;hold-time&gt;
-        &lt;config/&gt;
-      &lt;/hold-time&gt;
-      &lt;penalty-based-aied&gt;
-        &lt;config/&gt;
-      &lt;/penalty-based-aied&gt;
-      &lt;subinterfaces&gt;
-        &lt;subinterface&gt;
-          &lt;index/&gt;
-          &lt;config&gt;
-            &lt;description/&gt;
-          &lt;/config&gt;
-        &lt;/subinterface&gt;
-      &lt;/subinterfaces&gt;
-    &lt;/interface&gt;
-  &lt;/interfaces&gt;
-&lt;/config&gt;
 </code></pre>
 <h2 id="step-4-determining-configuration-models">Step 4: Determining Configuration Models</h2>
 <p>A quick way to determine which modules is used for configuration is to use a NETCONF <code>get-config</code> to read configuration on the devices using simplified XPATH filter</p>

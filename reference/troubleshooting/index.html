@@ -83,6 +83,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../tasks/06-discover-modules/">6. Discover Modules</a>
                   </li>
+                  <li class="toctree-l1"><a class="" href="../../tasks/07-configure-interface.md">7. Configure Interface</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
               <ul class="current">
@@ -121,6 +123,13 @@
 <p>To get a schema:</p>
 <pre><code class="language-bash">./nc_wrapper.sh srl-01 --get-schema ietf-interfaces
 </code></pre>
+<p>validation:</p>
+<p>yanglint -p ./yang openconfig-interfaces.yang interfaces.xml</p>
+<p>xmllint --noout interfaces.xml</p>
+<p>The <code>--dry</code> option in <code>netconf-console2</code> returns the RPC to be sent, so we can use it verify that the XML file is formatted properly.</p>
+<pre><code class="language-bash">./nc_wrapper.sh srl-01 --edit-config=interface.xml --dry
+</code></pre>
+<p>./nc_wrapper.sh srl-01 --get-config --filter /interfaces/interface[name=ethernet-1/1] | xmllint --format -</p>
               
             </div>
           </div><footer>

@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>07 configure interfaces - Model-Driven Network Configuration Tutorial</title>
+    <title>Configure an Interface - Model-Driven Network Configuration Tutorial</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "07 configure interfaces";
+        var mkdocs_page_name = "Configure an Interface";
         var mkdocs_page_input_path = "tasks/07-configure-interfaces.md";
         var mkdocs_page_url = null;
       </script>
@@ -83,6 +83,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../06-discover-modules/">6. Discover Modules</a>
                   </li>
+                  <li class="toctree-l1"><a class="" href="../07-configure-interface.md">7. Configure Interface</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
               <ul>
@@ -105,7 +107,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">07 configure interfaces</li>
+      <li class="breadcrumb-item active">Configure an Interface</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -114,18 +116,241 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h2 id="step-5-construct-the-xml-file">Step 5: Construct the xml file</h2>
-<pre><code>netconf-console2 --host=&lt;device-ip&gt; --port=&lt;port-number&gt; --user=&lt;username&gt; --ssh --edit-config=&lt;config-file.xml&gt; --db=candidate
+                <h1 id="configure-an-interface">Configure an Interface</h1>
+<p>In this task, we will configure an interface using NETCONF.</p>
+<p>Learned from the previous task we learned:</p>
+<ul>
+<li>A device my support more than one YANG interfaces modules, but one is used for configuration.</li>
+<li>Both cEOS and SR Linux devices support IETF and OpenConfig Interfaces module and use the OpenConfig module for configuration.</li>
+</ul>
+<p>Visualize the module tree again (clone the OpenConfig public YANG models if you have not done so)</p>
+<p>For OpenConfig (ignore the output errors for now):</p>
+<pre><code class="language-bash">pyang -f tree -p openconfig openconfig-interfaces.yang
 </code></pre>
-<pre><code>netconf-console2 --host=&lt;device-ip&gt; --port=&lt;port-number&gt; --user=&lt;username&gt; --ssh --commit
+<p>The tree is large, but we are concerned only with <code>rw</code> branches and we will ignore the state branch as it is read only. We may further ignore branches that are entirely optional as indicated by '?'. The remaining are mandatory fields required to configure an interface. </p>
+<pre><code>module: openconfig-interfaces
+  +--rw interfaces
+     +--rw interface* [name]
+        +--rw name                  -&gt; ../config/name
+        +--rw config
+        |  +--rw name?            string
+        |  +--rw type             identityref
+        |  +--rw mtu?             uint16
+        |  +--rw loopback-mode?   oc-opt-types:loopback-mode-type
+        |  +--rw description?     string
+        |  +--rw enabled?         boolean
+        ... ommitted
+        +--rw subinterfaces
+           +--rw subinterface* [index]
+              +--rw index     -&gt; ../config/index
+              +--rw config
+              |  +--rw index?         uint32
+              |  +--rw description?   string
+              |  +--rw enabled?       boolean
+              ... ommitted
 </code></pre>
-<h3 id="lab-exercise-1-discover-the-interface-model">Lab Exercise 1: Discover the Interface Model</h3>
-<p>Deploy your <code>Containerlab</code> topology. Configure one interface with an IP address manually using the device CLI. Then perform a <code>get-config</code> and locate the interface configuration in the XML output. Cross-reference it with the <code>pyang</code> tree for <em>ietf-interfaces</em> and <em>openconfig-if-ip</em>. Document the exact YANG path and namespace you will need to construct a payload for this interface.</p>
-<blockquote>
-<p>Note that SR-Linux requires that you you configure at least one sub-interface and the sub-interface must be associated with a network-instance (i.e. VRF). cEOS creates the subinterface 0 by default. Both follow the convention of OpenConfig YANG models.  </p>
-</blockquote>
-<h2 id="step-4-reverse-engineering">Step 4: Reverse engineering</h2>
-<p>The most reliable path to determine which modules is used for configuration rking payload is to configure the feature manually via CLI first, then use a NETCONF <code>get-config</code> to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native model for the first time:</p>
+<p>The description of each item in the tree can be found <a href="https://openconfig.net/projects/models/schemadocs/yangdoc/openconfig-interfaces.html">here</a></p>
+<p>By OpenConfig convention, an interface must have at least one subinterface. More subinterfaces can be configured if VLANs are used. The IP addresses (if any) are assigned to the subinterface. Both the main interface and subinterface(s) must be enabled. </p>
+<p>OpenConfig also use the convention of using the interface name twice. The first location serves as a key for the list interfaces in the device. The second is where the name is stored in the configuration.</p>
+<h2 id="get-the-sample-xml-file">Get the Sample XML File</h2>
+<p>To get a skeleton XML you can actually use for NETCONF configuration:</p>
+<pre><code class="language-bash">pyang -f sample-xml-skeleton -p openconfig --sample-xml-skeleton-doctype=config openconfig-interfaces.yang
+</code></pre>
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;config xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+    &lt;interface&gt;
+      &lt;name/&gt;
+      &lt;config&gt;
+        &lt;name/&gt;
+        &lt;type/&gt;
+        &lt;mtu/&gt;
+        &lt;description/&gt;
+      &lt;/config&gt;
+      &lt;hold-time&gt;
+        &lt;config/&gt;
+      &lt;/hold-time&gt;
+      &lt;penalty-based-aied&gt;
+        &lt;config/&gt;
+      &lt;/penalty-based-aied&gt;
+      &lt;subinterfaces&gt;
+        &lt;subinterface&gt;
+          &lt;index/&gt;
+          &lt;config&gt;
+            &lt;description/&gt;
+          &lt;/config&gt;
+        &lt;/subinterface&gt;
+      &lt;/subinterfaces&gt;
+    &lt;/interface&gt;
+  &lt;/interfaces&gt;
+&lt;/config&gt;
+</code></pre>
+<h2 id="construct-the-xml-file">Construct the XML File</h2>
+<p>Create a file <code>interface.xml</code> and use the skeleton above to fill the required fields (ignore most optional fields). </p>
+<p>Note:
+- From the topology file, we know that SR Linux interface name convention is <code>ethernet-x/y</code>.
+- The interface type has to include the name space as well <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type></p>
+<pre><code class="language-xml">&lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+&lt;interface&gt;
+    &lt;name&gt;ethernet-1/1&lt;/name&gt;
+    &lt;config&gt;
+    &lt;name&gt;ethernet-1/1&lt;/name&gt;
+    &lt;type xmlns:ianaift=&quot;urn:ietf:params:xml:ns:yang:iana-if-type&quot;&gt;ianaift:ethernetCsmacd&lt;/type&gt;
+    &lt;description&gt;To ceos-01&lt;/description&gt;
+    &lt;/config&gt;
+    &lt;subinterfaces&gt;
+    &lt;subinterface&gt;
+        &lt;index&gt;0&lt;/index&gt;
+        &lt;config&gt;
+        &lt;index&gt;0&lt;/index&gt;
+        &lt;/config&gt;
+    &lt;/subinterface&gt;
+    &lt;/subinterfaces&gt;
+&lt;/interface&gt;
+&lt;/interfaces&gt;
+</code></pre>
+<h2 id="load-the-configuration">Load the Configuration</h2>
+<p>Use NETCONF's <code>edit-config</code> operation to load the interface configuration. </p>
+<p>Use <code>netconf-console</code> to edit the configuration in the candidate store:</p>
+<pre><code class="language-bash">./nc_wrapper.sh srl-01 --edit-config=interface.xml --db=candidate
+</code></pre>
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;ok xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; xmlns:nc=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;/&gt;
+</code></pre>
+<p>The output indicates no errors, let's commit the change:</p>
+<pre><code class="language-bash">./nc_wrapper.sh srl-01 --commit
+</code></pre>
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;ok xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; xmlns:nc=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;/&gt;
+</code></pre>
+<p>Verify that the configuration was committed to the running store:</p>
+<pre><code class="language-bash">./nc_wrapper.sh srl-01 --get-config --filter /interfaces/interface[name=ethernet-1/1]
+</code></pre>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;data xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; xmlns:nc=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+    &lt;interface&gt;
+      &lt;name&gt;ethernet-1/1&lt;/name&gt;
+      &lt;config&gt;
+        &lt;name&gt;ethernet-1/1&lt;/name&gt;
+        &lt;type xmlns:iana-if-type=&quot;urn:ietf:params:xml:ns:yang:iana-if-type&quot;&gt;iana-if-type:ethernetCsmacd&lt;/type&gt;
+        &lt;description&gt;To ceos-01&lt;/description&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;/config&gt;
+      &lt;subinterfaces&gt;
+        &lt;subinterface&gt;
+          &lt;index&gt;0&lt;/index&gt;
+          &lt;config&gt;
+            &lt;index&gt;0&lt;/index&gt;
+          &lt;/config&gt;
+        &lt;/subinterface&gt;
+      &lt;/subinterfaces&gt;
+    &lt;/interface&gt;
+  &lt;/interfaces&gt;
+&lt;/data&gt;
+</code></pre>
+<p>The output confirms that the interface was configured properly, but since the <code>enable</code> fields were not included, the main interface was enabled by default (by containerlab), but the subinterface was not enabled.</p>
+<p>We can enable the subinterface using the same process with this file:</p>
+<pre><code class="language-xml">&lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+&lt;interface&gt;
+    &lt;name&gt;ethernet-1/1&lt;/name&gt;
+    &lt;subinterfaces&gt;
+        &lt;subinterface&gt;
+            &lt;index&gt;0&lt;/index&gt;
+            &lt;config&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+            &lt;/config&gt;
+        &lt;/subinterface&gt;
+    &lt;/subinterfaces&gt;
+&lt;/interface&gt;
+&lt;/interfaces&gt;
+</code></pre>
+<pre><code class="language-xml">./nc_wrapper.sh srl-01 --get-config --filter /interfaces/interface[name=ethernet-1/1] | xmllint --format -
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;data xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; xmlns:nc=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+    &lt;interface&gt;
+      &lt;name&gt;ethernet-1/1&lt;/name&gt;
+      &lt;config&gt;
+        &lt;name&gt;ethernet-1/1&lt;/name&gt;
+        &lt;type xmlns:iana-if-type=&quot;urn:ietf:params:xml:ns:yang:iana-if-type&quot;&gt;iana-if-type:ethernetCsmacd&lt;/type&gt;
+        &lt;description&gt;To ceos-01&lt;/description&gt;
+        &lt;enabled&gt;true&lt;/enabled&gt;
+      &lt;/config&gt;
+      &lt;subinterfaces&gt;
+        &lt;subinterface&gt;
+          &lt;index&gt;0&lt;/index&gt;
+          &lt;config&gt;
+            &lt;index&gt;0&lt;/index&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+          &lt;/config&gt;
+        &lt;/subinterface&gt;
+      &lt;/subinterfaces&gt;
+    &lt;/interface&gt;
+  &lt;/interfaces&gt;
+&lt;/data&gt;
+</code></pre>
+<h2 id="alternative-approach-reverse-engineering">Alternative Approach - Reverse Engineering</h2>
+<p>A reliable and fast path to a create XML payload is to configure the feature manually via CLI first, then use a NETCONF <code>get-config</code> to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native model for the first time:</p>
+<p>We will use this approach to configure an interface on <code>ceos-01</code>.</p>
+<p>Use the CLI to set the description on interface <code>Ethernet1</code> and enable it:</p>
+<pre><code>interface Ethernet1
+   description To srl-01
+   no switchport
+!
+</code></pre>
+<pre><code class="language-bash">./nc_wrapper.sh ceos-01 --get-config --filter /interfaces/interface[name=Ethernet1]
+</code></pre>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;data xmlns:netconf=&quot;http://arista.com/yang/rpc/netconf&quot; xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; netconf:time-modified=&quot;2026-03-05T23:06:56.416836888Z&quot;&gt;
+  &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+    &lt;interface&gt;
+      &lt;name&gt;Ethernet1&lt;/name&gt;
+      &lt;config&gt;
+        &lt;description&gt;To srl-01&lt;/description&gt;
+        &lt;mtu&gt;0&lt;/mtu&gt;
+        &lt;name&gt;Ethernet1&lt;/name&gt;
+        &lt;type xmlns:ianaift=&quot;urn:ietf:params:xml:ns:yang:iana-if-type&quot;&gt;ianaift:ethernetCsmacd&lt;/type&gt;
+      &lt;/config&gt;
+      &lt;ethernet xmlns=&quot;http://openconfig.net/yang/interfaces/ethernet&quot;&gt;
+        &lt;config&gt;
+          &lt;fec-encoding xmlns=&quot;http://arista.com/yang/openconfig/interfaces/augments&quot;&gt;
+            &lt;disabled&gt;false&lt;/disabled&gt;
+            &lt;fire-code&gt;false&lt;/fire-code&gt;
+            &lt;reed-solomon&gt;false&lt;/reed-solomon&gt;
+            &lt;reed-solomon544&gt;false&lt;/reed-solomon544&gt;
+          &lt;/fec-encoding&gt;
+          &lt;mac-address&gt;00:00:00:00:00:00&lt;/mac-address&gt;
+          &lt;port-speed&gt;SPEED_UNKNOWN&lt;/port-speed&gt;
+          &lt;sfp-1000base-t xmlns=&quot;http://arista.com/yang/openconfig/interfaces/augments&quot;&gt;false&lt;/sfp-1000base-t&gt;
+        &lt;/config&gt;
+        &lt;pfc xmlns=&quot;http://arista.com/yang/openconfig/interfaces/augments&quot;/&gt;
+        &lt;tap-aggregation xmlns=&quot;http://arista.com/yang/experimental/eos/arista-ebra-octap-agg-port-config&quot;&gt;
+          &lt;config&gt;
+            &lt;interface-mode&gt;NON_TAP_TOOL&lt;/interface-mode&gt;
+          &lt;/config&gt;
+          &lt;name&gt;Ethernet1&lt;/name&gt;
+        &lt;/tap-aggregation&gt;
+      &lt;/ethernet&gt;
+      &lt;subinterfaces&gt;
+        &lt;subinterface&gt;
+          &lt;index&gt;0&lt;/index&gt;
+          &lt;config&gt;
+            &lt;description&gt;To srl-01&lt;/description&gt;
+          &lt;/config&gt;
+          &lt;ipv4 xmlns=&quot;http://openconfig.net/yang/interfaces/ip&quot;&gt;
+            &lt;config&gt;
+              &lt;enabled&gt;true&lt;/enabled&gt;
+            &lt;/config&gt;
+          &lt;/ipv4&gt;
+        &lt;/subinterface&gt;
+      &lt;/subinterfaces&gt;
+    &lt;/interface&gt;
+  &lt;/interfaces&gt;
+&lt;/data&gt;
+</code></pre>
+<p>Notice the namespace declarations, element names, and hierarchy you see in that XML are exactly what your payload must reproduce. This approach, however, does not differentiate between mandatory and optional fields.</p>
+<p>Change the description and load the configuration as above.</p>
               
             </div>
           </div><footer>
