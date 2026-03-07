@@ -91,6 +91,12 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">9. Configure IPv4 Address</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#configuration-tasks">Configuration Tasks</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#connectivity-verification">Connectivity Verification</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#conclusions">Conclusions</a>
+    </li>
     </ul>
                   </li>
               </ul>
@@ -128,7 +134,126 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="configure-ipv4-address">Configure IPv4 Address</h1>
-<p>Furthermore, cEOS devices operate as switches at startup. To enable routing functions, ip routing must be enabled and the switch mode must be disabled on each interface. As of this writing, I do not know of a mechanism to do this via NETCONF or gNMI, so it must be done via cLI:</p>
+<p>This task involves assigning IPv4 address to the two interfaces we configured thus far. According the topology <a href="../../reference/network-topology/">diagram</a>, the IPv4 addresses required are:</p>
+<table>
+<thead>
+<tr>
+<th>Device</th>
+<th>Interface</th>
+<th>IPv4 address/mask</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ceos-01</td>
+<td>Ethernet1</td>
+<td>192.168.1.2/31</td>
+</tr>
+<tr>
+<td>srl-01</td>
+<td>ethernet-1/1.0</td>
+<td>192.168.1.3/31</td>
+</tr>
+</tbody>
+</table>
+<h2 id="configuration-tasks">Configuration Tasks</h2>
+<p>We will follow the same workflow but I will skip the discovery steps.</p>
+<p>Both devices support the OpenConfig module <code>openconfig-if-ip</code> (different versions), so we will get the module and build the XML file.</p>
+<pre><code class="language-bash">./scripts/netconf_tool.py srl-01 schema openconfig-if-ip
+</code></pre>
+<pre><code class="language-bash">pyang -f tree -p openconfig openconfig-if-ip.yang
+</code></pre>
+<pre><code>module: openconfig-if-ip
+
+  augment /oc-if:interfaces/oc-if:interface/oc-if:subinterfaces/oc-if:subinterface:
+    +--rw ipv4
+       +--rw addresses
+       |  +--rw address* [ip]
+       |     +--rw ip        -&gt; ../config/ip
+       |     +--rw config
+       |     |  +--rw ip?              oc-inet:ipv4-address
+       |     |  +--rw prefix-length?   uint8
+</code></pre>
+<p>Looking at the top few lines of the tree, we see that we need the tree branch <code>/interfaces/interface/subinterfaces/subinterface/ipv4</code></p>
+<p>However, if we try to grab the this branch using <code>--tree-path</code>, we don't get the tree we want.</p>
+<pre><code class="language-bash"> pyang -f tree -p openconfig --tree-path /interfaces/interface/subinterfaces/subinterface/ipv4 openconfig-if-ip.yang
+</code></pre>
+<pre><code>module: openconfig-if-ip
+
+  augment /oc-if:interfaces/oc-if:interface/oc-if:subinterfaces/oc-if:subinterface:
+    +--rw ipv4
+  augment /oc-if:interfaces/oc-if:interface/oc-if:subinterfaces/oc-if:subinterface:
+    +--rw ipv6
+  augment /oc-if:interfaces/oc-if:interface/oc-vlan:routed-vlan:
+    +--rw ipv4
+  augment /oc-if:interfaces/oc-if:interface/oc-vlan:routed-vlan:
+    +--rw ipv6
+(.pyenv) automan@autobook:~/tutorial$
+</code></pre>
+<p>The command produces only the empty elements because <code>openconfig-if-ip.yang</code> is an augmentation-only module. It does not define any top-level data nodes itself (no container, list, leaf etc. at the root level of its own module). It only adds structure underneath nodes defined in other modules (mainly <code>openconfig-interfaces.yang</code>).</p>
+<p>When <code>pyang</code> generates the tree (or sample skeleton), it starts from the data tree of the module(s) you give it on the command line. Since <code>openconfig-if-ip</code> contributes nothing at the top, you get an empty elements.</p>
+<p>To get this branch using <code>--tree-path</code> we have to include all the top modules:</p>
+<pre><code class="language-bash">pyang -f tree -p openconfig --tree-path /interfaces/interface/subinterfaces/subinterface/ipv4 openconfig/release/models/interfaces/*.yang
+</code></pre>
+<p>Similarly, to get the XML skeleton (this time we need to include the interface):</p>
+<pre><code class="language-bash">pyang -f sample-xml-skeleton -p openconfig \
+ --sample-xml-skeleton-path=/interfaces/interface --sample-xml-skeleton-doctype=config openconfig/release/models/interfaces/*.yang
+</code></pre>
+<p>Create an XML file that includes only the parts we need for now:</p>
+<pre><code class="language-xml">&lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+   &lt;interface&gt;
+   &lt;name/&gt;
+   &lt;subinterfaces&gt;
+      &lt;subinterface&gt;
+         &lt;index/&gt;
+         &lt;ipv4 xmlns=&quot;http://openconfig.net/yang/interfaces/ip&quot;&gt;
+         &lt;addresses&gt;
+            &lt;address&gt;
+               &lt;ip/&gt;
+               &lt;config&gt;
+               &lt;ip/&gt;
+               &lt;prefix-length/&gt;
+               &lt;/config&gt;
+            &lt;/address&gt;
+         &lt;/addresses&gt;
+            &lt;config&gt;
+            &lt;/enabled&gt;
+            &lt;/config&gt;
+         &lt;/ipv4&gt;
+      &lt;/subinterface&gt;
+   &lt;/subinterfaces&gt;
+   &lt;/interface&gt;
+&lt;/interfaces&gt;
+</code></pre>
+<p>Edit the file for both routers. For <code>srl-01</code>, it will look like this:</p>
+<pre><code class="language-xml">&lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
+  &lt;interface&gt;
+    &lt;name&gt;ethernet-1/1&lt;/name&gt;
+    &lt;subinterfaces&gt;
+      &lt;subinterface&gt;
+        &lt;index&gt;0&lt;/index&gt;
+        &lt;ipv4 xmlns=&quot;http://openconfig.net/yang/interfaces/ip&quot;&gt;
+          &lt;addresses&gt;
+            &lt;address&gt;
+              &lt;ip&gt;192.168.1.3&lt;/ip&gt;
+              &lt;config&gt;
+                &lt;ip&gt;192.168.1.3&lt;/ip&gt;
+                &lt;prefix-length&gt;31&lt;/prefix-length&gt;
+              &lt;/config&gt;
+            &lt;/address&gt;
+          &lt;/addresses&gt;
+          &lt;config&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+          &lt;/config&gt;
+        &lt;/ipv4&gt;
+      &lt;/subinterface&gt;
+    &lt;/subinterfaces&gt;
+  &lt;/interface&gt;
+&lt;/interfaces&gt;
+</code></pre>
+<h2 id="connectivity-verification">Connectivity Verification</h2>
+<p>Before pinging, you need to check if routing is enabled on <code>ceos-01</code>.</p>
+<p>cEOS devices operate as switches at startup. To enable routing functions, ip routing must be enabled and the switch mode must be disabled on L3 interfaces. As of this writing, I could not find a mechanism to do this via NETCONF or gNMI, so it must be done via cLI:</p>
 <pre><code>ceos-01&gt;enable
 ceos-01#configure
 ceos-01(config)#ip routing
@@ -138,6 +263,7 @@ ceos-01(config)#exit
 <pre><code>interface Ethernet1
    description To SRL-01
    no switchport
+   ip address 192.168.1.2/31
 !
 interface Ethernet2
 !
@@ -146,11 +272,10 @@ interface Management0
    ip address 192.168.100.11/24
 !
 ip routing
-no ip routing vrf MGMT
-!
-ip route vrf MGMT 0.0.0.0/0 192.168.100.1
-!
 </code></pre>
+<p>From the CLI, you should be able to ping successfully between the two devices.</p>
+<h2 id="conclusions">Conclusions</h2>
+<p>You just completed the entire process of establishing a link between two routers. This process involved creating a subinterface, binding it to a network instance, then assigning an IPv4 address. A keen observer, will notice that we can combine creating a subinterface and assigning an IP address in one step. In fact, we can do all tasks in one step. This is what we will do configure the remaining interfaces in the toplogy.</p>
               
             </div>
           </div><footer>

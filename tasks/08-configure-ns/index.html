@@ -92,30 +92,30 @@
     <li class="toctree-l2"><a class="reference internal" href="#network-instance">Network Instance</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#configuration-workflow">Configuration Workflow</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#find-the-yang-module">Find the YANG module</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#get-the-xml-skeleton">Get the XML Skeleton</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#edit-the-xml-file">Edit the XML file</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#validation">Validation</a>
+    <li class="toctree-l3"><a class="reference internal" href="#find-the-yang-module">Find the YANG Module</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-the-xml-skeleton">Get the XML Skeleton</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#edit-the-xml-file">Edit the XML File</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#loading-the-configuration">Loading the Configuration</a>
+    <li class="toctree-l2"><a class="reference internal" href="#loading-the-configuration-and-commit">Loading the Configuration and Commit</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#use-the-openconfig-module">Use the OpenConfig Module</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#visualize-the-module">Visualize the module</a>
+    <li class="toctree-l3"><a class="reference internal" href="#visualize-the-module">Visualize the Module</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#get-the-xml-skeleton_1">Get the XML Skeleton</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#edit-the-xml-file_1">Edit the XML file</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#load-and-commit">Load and commit</a>
+    <li class="toctree-l3"><a class="reference internal" href="#load-and-commit">Load and Commit</a>
     </li>
         </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a>
     </li>
     </ul>
                   </li>
@@ -163,7 +163,7 @@
 </ul>
 <p>Both interfaces face each other according to the <a href="../../reference/network-topology/">network topology</a>. </p>
 <h2 id="network-instance">Network Instance</h2>
-<p>OpenConfig models require that each subinterface is associated with a network instances (aka VRF) to be functional. An interface without an assigned network instance cannot be used for forwarding traffic. In cEOS, interfaces are associated with a <code>default</code> network instance. So containerlab must assign the management interface explicitly to <code>MGMT</code> instance in the topology file. In SR Linux, the management interface, <code>mgmt0</code>, is automatically added to a separate, management network instance <code>mgmt</code>. Other interfaces are not associated with any network instance by default, so the interface we created must be associated with a network instance before it can be used in routing. </p>
+<p>The OpenConfig data model requires that each subinterface is associated with a network instances (similar to a VRF) to be functional. An interface without an assigned network instance cannot be used for forwarding traffic. In cEOS, interfaces are associated with a <code>default</code> network instance. So containerlab must assign the management interface explicitly to <code>MGMT</code> instance in the topology file. In SR Linux, the management interface, <code>mgmt0</code>, is automatically added to a separate, management network instance <code>mgmt</code>. Other interfaces are not associated with any network instance by default, so the interface we created must be associated with a network instance before it can be used in routing. </p>
 <p>In this task, we will add the interface <code>ethernet-1/1.0</code> to the default network instance <code>default</code> at <code>srl-01</code>.</p>
 <h2 id="configuration-workflow">Configuration Workflow</h2>
 <p>For SR Linux, we will follow the same workflow as in the previous task:</p>
@@ -173,7 +173,7 @@
 <li>Edit the XML file</li>
 <li>Load the configuration and commit</li>
 </ol>
-<h2 id="find-the-yang-module">Find the YANG module</h2>
+<h3 id="find-the-yang-module">Find the YANG Module</h3>
 <p>Start by searching for the <code>network-instance</code> module in the NETCONF capabilities of SR Linux router (you may also check the vendor documents):</p>
 <pre><code class="language-bash">./scripts/netconf_tool.py srl-01 modules | grep &quot;network-instance&quot;
 </code></pre>
@@ -182,7 +182,7 @@
 <pre><code class="language-bash">./scripts/netconf_tool.py srl-01 schema openconfig-network-instance
 </code></pre>
 <p>Visualizing both modules using <code>pyang -f tree</code>, we see that the root item is <code>network-instance</code> and <code>network-instances</code>, respectively. </p>
-<p>It seems that <code>get-config</code> operation returns valid configuration in both cases.</p>
+<p>The <code>get-config</code> operation retrieves the running configuration in both cases with different namespaces, indicating that both modules can be used for configuration.</p>
 <pre><code class="language-bash">./nc_wrapper.sh srl-01 --get-config --filter /network-instances
 </code></pre>
 <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
@@ -201,7 +201,8 @@
   &lt;/network-instance&gt;
 &lt;/data&gt;
 </code></pre>
-<h2 id="get-the-xml-skeleton">Get the XML Skeleton</h2>
+<p>When configuration is sent using either data model, SR Linux translates it into its internal data model. In practice, OpenConfig is preferred for portable, multi-vendor automation, while the Nokia native module is used when full device capabilities or vendor-specific features are required. As we have seen in the previous task that this is not always the case for all models. </p>
+<h3 id="get-the-xml-skeleton">Get the XML Skeleton</h3>
 <p>Visualize the Nokia's module:</p>
 <pre><code class="language-bash">pyang -f tree -p nokia --tree-path /network-instance/interface srl_nokia-network-instance.yang
 </code></pre>
@@ -224,12 +225,12 @@
         +--rw connection-point?   -&gt; ../../connection-point/name {srl-feat:connection-point}?
 </code></pre>
 <p>The SR Linux supports three types of <a href="https://documentation.nokia.com/srlinux/25-10/books/config-basics/network-instances.html">network-instances</a>: default, ip-vrf, and mac-vrf. Type default is the default network-instance and only one of this type is supported. Type <code>ip-vrf</code> is the regular network-instance; you can create multiple network-instances of this type.</p>
-<p>Creating the <code>deafult</code> instance and binding the interface to it in one step.</p>
+<p>Creating the <code>default</code> instance and binding the interface to it in one step.</p>
 <p>Create an XML skeleton using <code>pyang</code> and redirect the output to a file:</p>
 <pre><code class="language-bash">pyang -f sample-xml-skeleton -p nokia --ignore-errors \
 --sample-xml-skeleton-doctype=config srl_nokia-network-instance.yang &gt; ni_interface.xml
 </code></pre>
-<h2 id="edit-the-xml-file">Edit the XML file</h2>
+<h3 id="edit-the-xml-file">Edit the XML File</h3>
 <p>Edit the file to include only the mandatory fields in the interface branch (and remove the <code>&lt;config&gt;</code> tag). </p>
 <pre><code class="language-xml">&lt;network-instance xmlns=&quot;urn:nokia.com:srlinux:net-inst:network-instance&quot;&gt;
   &lt;name&gt;default&lt;/name&gt;
@@ -243,7 +244,7 @@
   &lt;/interface&gt;
 &lt;/network-instance&gt;
 </code></pre>
-<h3 id="validation">Validation</h3>
+<p><strong>Validation</strong></p>
 <p>Before loading the configuration, we can validate it.</p>
 <p><code>xmllint</code> looks at the XML syntax but it not aware of YANG:</p>
 <pre><code class="language-bash">xmllint --noout ni_interface.xml
@@ -251,14 +252,14 @@
 <p>The <code>--dry</code> option in <code>netconf-console2</code> returns the RPC to be sent, so we can use it verify that the XML file is formatted properly.</p>
 <pre><code>./nc_wrapper.sh srl-01 --edit-config=ni_interface.xml --dry
 </code></pre>
-<p>we alos can use <code>yanglint</code>.</p>
-<h2 id="loading-the-configuration">Loading the Configuration</h2>
+<p>we can also use <code>yanglint</code> to validate the XML file against the YANG module.</p>
+<h2 id="loading-the-configuration-and-commit">Loading the Configuration and Commit</h2>
 <p>Load the configuration to the candidate datastore and commit:</p>
 <pre><code class="language-bash">./nc_wrapper.sh srl-01 --edit-config=ni_interface.xml --db=candidate --commit
 </code></pre>
 <h2 id="use-the-openconfig-module">Use the OpenConfig Module</h2>
 <p>The OpenConfig module can be used also for the configuration. Repeat the same steps as before: </p>
-<h3 id="visualize-the-module">Visualize the module</h3>
+<h3 id="visualize-the-module">Visualize the Module</h3>
 <pre><code class="language-bash">pyang -f tree -p nokia --tree-path /network-instances/network-instance/interfaces openconfig-network-instance.yang
 </code></pre>
 <pre><code class="language-xml">module: openconfig-network-instance
@@ -306,12 +307,11 @@
   &lt;/network-instance&gt;
 &lt;/network-instances&gt;
 </code></pre>
-<h3 id="load-and-commit">Load and commit</h3>
+<h3 id="load-and-commit">Load and Commit</h3>
 <pre><code class="language-bash">./nc_wrapper.sh srl-01 --edit-config=ni_interface.xml --db=candidate --commit
 </code></pre>
-<p>You are able to bind the interface with the network instance using both OpenConfig and the native YANG models because the device supports multiple external YANG schemas that map to the same internal configuration datastore. The trees show that both models define a <code>network-instance</code> containing an <code>interface</code> list that references a physical interface and subinterface, but they structure and name the fields differently. One notable difference is that OpenConfig uses an <code>id</code> as key for the interface list instead of <code>name</code>.</p>
-<p>When configuration is sent using either model, SR Linux translates it into its internal data model. In practice, OpenConfig is preferred for portable, multi-vendor automation, while the Nokia native model is used when full device capabilities or vendor-specific features are required.
-As we have seen in the previous task that this is not always the case for all models. </p>
+<h2 id="summary">Summary</h2>
+<p>You are able to bind the interface with the network instance using both OpenConfig and the native YANG models because the device supports multiple external YANG data models that map to the same internal configuration datastore. The trees show that both models define a <code>network-instance</code> containing an <code>interface</code> list that references a physical interface and subinterface, but they structure and name the fields differently. One notable difference is that OpenConfig uses an <code>id</code> as key for the interface list instead of <code>name</code>.</p>
               
             </div>
           </div><footer>

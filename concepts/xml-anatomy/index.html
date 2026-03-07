@@ -249,18 +249,13 @@
 <p>Container</p>
 <p><code>xml
 &lt;interfaces&gt;</code></p>
-<p>Maps directly to:</p>
-<p><code>yang
-container interfaces</code></p>
+<p>Maps directly to <code>container interfaces</code></p>
 </li>
 <li>
 <p>List</p>
 <p><code>xml
 &lt;interface&gt;</code></p>
-<p>Maps to:</p>
-<p><code>yang
-list interface</code></p>
-<p>Each <code>&lt;interface&gt;</code> is one list entry.</p>
+<p>Maps to <code>list interface</code>. Each <code>&lt;interface&gt;</code> is one list entry.</p>
 </li>
 <li>
 <p>List Key</p>
@@ -271,17 +266,13 @@ list interface</code></p>
 <li>Identifies the list instance</li>
 <li>Required for uniqueness</li>
 </ul>
-<p>Equivalent to:</p>
-<p><code>yang
-key "name";</code></p>
+<p>Equivalent to <code>key "name";</code></p>
 </li>
 <li>
 <p>Nested Container</p>
 <p><code>xml
 &lt;config&gt;</code></p>
-<p>Maps to:</p>
-<p><code>yang
-container config</code></p>
+<p>Maps to <code>container config</code></p>
 </li>
 <li>
 <p>Leaf Nodes</p>
@@ -331,7 +322,7 @@ container config</code></p>
 <h2 id="how-to-read-any-get-config-xml">How to Read Any <code>&lt;get-config&gt;</code> XML</h2>
 <p>When teaching or analyzing, follow this order:</p>
 <ol>
-<li>Identify the namespace → which YANG module?</li>
+<li>Identify the namespace; which YANG module?</li>
 <li>Identify top-level container</li>
 <li>Identify lists and their keys</li>
 <li>Separate config vs state</li>
