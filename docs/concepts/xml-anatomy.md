@@ -102,11 +102,7 @@ XML returned by `<get-config>`
     <interfaces>
     ```
 
-    Maps directly to:
-
-    ```yang
-    container interfaces
-    ```
+    Maps directly to `container interfaces`
 
 3. List
 
@@ -114,13 +110,7 @@ XML returned by `<get-config>`
     <interface>
     ```
 
-    Maps to:
-
-    ```yang
-    list interface
-    ```
-
-    Each `<interface>` is one list entry.
+    Maps to `list interface`. Each `<interface>` is one list entry.
 
 4. List Key
 
@@ -132,11 +122,7 @@ XML returned by `<get-config>`
     - Identifies the list instance
     - Required for uniqueness
 
-    Equivalent to:
-
-    ```yang
-    key "name";
-    ```
+    Equivalent to `key "name";`
 
 5. Nested Container
 
@@ -144,11 +130,7 @@ XML returned by `<get-config>`
     <config>
     ```
 
-    Maps to:
-
-    ```yang
-    container config
-    ```
+    Maps to `container config`
 
 6. Leaf Nodes
 
@@ -214,7 +196,7 @@ Different namespace results in a different YANG module.
 
 When teaching or analyzing, follow this order:
 
-1. Identify the namespace → which YANG module?
+1. Identify the namespace; which YANG module?
 2. Identify top-level container
 3. Identify lists and their keys
 4. Separate config vs state
