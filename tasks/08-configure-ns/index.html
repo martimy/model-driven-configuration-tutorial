@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>8. Configure Network Instance - Model-Driven Network Configuration Tutorial</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "8. Configure Network Instance";
+        var mkdocs_page_input_path = "tasks/08-configure-ns.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Model-Driven Network Configuration Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/prerequisites/">Prerequisites</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/pyvirtual/">Python</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/tools/">Tools</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/motivation/">Motivation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/yang/">YANG</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/netconf/">NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/restconf/">RESTCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/gnmi/">gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/netconf_vs_gnmi/">NETCONF vs gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/xml-anatomy/">XML Anatomy</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tasks</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01-start-containerlab/">1. Start Containerlab</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../02-verify-netconf/">2. Verify NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../04-capabilities/">4. Inspect Capabilities</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">5. Automation Scripts</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../06-discover-modules/">6. Discover Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../07-configure-interface/">7. Configure Interface</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">8. Configure Network Instance</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#network-instance">Network Instance</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration-workflow">Configuration Workflow</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#find-the-yang-module">Find the YANG module</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#get-the-xml-skeleton">Get the XML Skeleton</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#edit-the-xml-file">Edit the XML file</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#validation">Validation</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#loading-the-configuration">Loading the Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#use-the-openconfig-module">Use the OpenConfig Module</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#visualize-the-module">Visualize the module</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#get-the-xml-skeleton_1">Get the XML Skeleton</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#edit-the-xml-file_1">Edit the XML file</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#load-and-commit">Load and commit</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../09-configure-ipv4/">9. Configure IPv4 Address</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/pyang/">pyang</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Model-Driven Network Configuration Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Tasks</li>
+      <li class="breadcrumb-item active">8. Configure Network Instance</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="bind-interface-to-network-instance">Bind Interface to Network Instance</h1>
+<p>If you have followed all previous tasks successfully, you should have two interfaces enabled:</p>
+<ul>
+<li>Interface <code>ethernet-1/1.0</code> at <code>srl-01</code></li>
+<li>Interface <code>Ethernet1</code> at <code>ceos-01</code></li>
+</ul>
+<p>Both interfaces face each other according to the <a href="../../reference/network-topology/">network topology</a>. </p>
+<h2 id="network-instance">Network Instance</h2>
+<p>OpenConfig models require that each subinterface is associated with a network instances (aka VRF) to be functional. An interface without an assigned network instance cannot be used for forwarding traffic. In cEOS, interfaces are associated with a <code>default</code> network instance. So containerlab must assign the management interface explicitly to <code>MGMT</code> instance in the topology file. In SR Linux, the management interface, <code>mgmt0</code>, is automatically added to a separate, management network instance <code>mgmt</code>. Other interfaces are not associated with any network instance by default, so the interface we created must be associated with a network instance before it can be used in routing. </p>
+<p>In this task, we will add the interface <code>ethernet-1/1.0</code> to the default network instance <code>default</code> at <code>srl-01</code>.</p>
+<h2 id="configuration-workflow">Configuration Workflow</h2>
+<p>For SR Linux, we will follow the same workflow as in the previous task:</p>
+<ol>
+<li>Find the supported YANG module</li>
+<li>Extract a skeleton XML file</li>
+<li>Edit the XML file</li>
+<li>Load the configuration and commit</li>
+</ol>
+<h2 id="find-the-yang-module">Find the YANG module</h2>
+<p>Start by searching for the <code>network-instance</code> module in the NETCONF capabilities of SR Linux router (you may also check the vendor documents):</p>
+<pre><code class="language-bash">./scripts/netconf_tool.py srl-01 modules | grep &quot;network-instance&quot;
+</code></pre>
+<p>The likely candidates are <code>srl_nokia-network-instance</code> and `openconfig-network-instance.</p>
+<p>Next, get the module using the schema:</p>
+<pre><code class="language-bash">./scripts/netconf_tool.py srl-01 schema openconfig-network-instance
+</code></pre>
+<p>Visualizing both modules using <code>pyang -f tree</code>, we see that the root item is <code>network-instance</code> and <code>network-instances</code>, respectively. </p>
+<p>It seems that <code>get-config</code> operation returns valid configuration in both cases.</p>
+<pre><code class="language-bash">./nc_wrapper.sh srl-01 --get-config --filter /network-instances
+</code></pre>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;data xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; xmlns:nc=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;network-instances xmlns=&quot;http://openconfig.net/yang/network-instance&quot;&gt;
+  ...
+  &lt;/network-instances&gt;
+&lt;/data&gt;
+</code></pre>
+<pre><code class="language-bash">./nc_wrapper.sh srl-01 --get-config --filter /network-instance
+</code></pre>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;data xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; xmlns:nc=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+  &lt;network-instance xmlns=&quot;urn:nokia.com:srlinux:net-inst:network-instance&quot;&gt;
+  ...
+  &lt;/network-instance&gt;
+&lt;/data&gt;
+</code></pre>
+<h2 id="get-the-xml-skeleton">Get the XML Skeleton</h2>
+<p>Visualize the Nokia's module:</p>
+<pre><code class="language-bash">pyang -f tree -p nokia --tree-path /network-instance/interface srl_nokia-network-instance.yang
+</code></pre>
+<pre><code class="language-xml">module: srl_nokia-network-instance
+  +--rw network-instance* [name]
+     +--rw interface* [name]
+        +--rw name                srl_nokia-netinst:network-instance-subintf-name
+        +--rw interface-ref {srl-feat:interface-references}?
+        |  +--rw interface?      -&gt; /srl_nokia-if:interface/name
+        |  +--rw subinterface?   -&gt; /srl_nokia-if:interface[srl_nokia-if:name=current()/../interface]/subinterface/index
+        +--ro oper-state?         srl_nokia-comm:oper-state
+        +--ro oper-down-reason?   enumeration
+        +--ro index?              uint64
+        +--rw bridge-table! {srl-feat:bridged}?
+        |  +--rw split-horizon-group?                 -&gt; ../../../bridge-table/split-horizon-group/name {srl-feat:bridged and srl-feat:bt-split-horizon-groups}?
+        |  +--ro mac-relearn-only?                    boolean
+        |  +--ro multicast-forwarding?                srl_nokia-comm:multicast-type
+        |  +--ro oper-mac-learning?                   srl_nokia-comm:oper-state
+        |  +--ro oper-mac-learning-disabled-reason?   enumeration
+        +--rw connection-point?   -&gt; ../../connection-point/name {srl-feat:connection-point}?
+</code></pre>
+<p>The SR Linux supports three types of <a href="https://documentation.nokia.com/srlinux/25-10/books/config-basics/network-instances.html">network-instances</a>: default, ip-vrf, and mac-vrf. Type default is the default network-instance and only one of this type is supported. Type <code>ip-vrf</code> is the regular network-instance; you can create multiple network-instances of this type.</p>
+<p>Creating the <code>deafult</code> instance and binding the interface to it in one step.</p>
+<p>Create an XML skeleton using <code>pyang</code> and redirect the output to a file:</p>
+<pre><code class="language-bash">pyang -f sample-xml-skeleton -p nokia --ignore-errors \
+--sample-xml-skeleton-doctype=config srl_nokia-network-instance.yang &gt; ni_interface.xml
+</code></pre>
+<h2 id="edit-the-xml-file">Edit the XML file</h2>
+<p>Edit the file to include only the mandatory fields in the interface branch (and remove the <code>&lt;config&gt;</code> tag). </p>
+<pre><code class="language-xml">&lt;network-instance xmlns=&quot;urn:nokia.com:srlinux:net-inst:network-instance&quot;&gt;
+  &lt;name&gt;default&lt;/name&gt;
+  &lt;description&gt;Default VRF&lt;/description&gt;
+  &lt;interface&gt;
+    &lt;name&gt;ethernet-1/1&lt;/name&gt;
+    &lt;interface-ref&gt;
+      &lt;interface&gt;ethernet-1/1&lt;/interface&gt;
+      &lt;subinterface&gt;0&lt;/subinterface&gt;
+    &lt;/interface-ref&gt;
+  &lt;/interface&gt;
+&lt;/network-instance&gt;
+</code></pre>
+<h3 id="validation">Validation</h3>
+<p>Before loading the configuration, we can validate it.</p>
+<p><code>xmllint</code> looks at the XML syntax but it not aware of YANG:</p>
+<pre><code class="language-bash">xmllint --noout ni_interface.xml
+</code></pre>
+<p>The <code>--dry</code> option in <code>netconf-console2</code> returns the RPC to be sent, so we can use it verify that the XML file is formatted properly.</p>
+<pre><code>./nc_wrapper.sh srl-01 --edit-config=ni_interface.xml --dry
+</code></pre>
+<p>we alos can use <code>yanglint</code>.</p>
+<h2 id="loading-the-configuration">Loading the Configuration</h2>
+<p>Load the configuration to the candidate datastore and commit:</p>
+<pre><code class="language-bash">./nc_wrapper.sh srl-01 --edit-config=ni_interface.xml --db=candidate --commit
+</code></pre>
+<h2 id="use-the-openconfig-module">Use the OpenConfig Module</h2>
+<p>The OpenConfig module can be used also for the configuration. Repeat the same steps as before: </p>
+<h3 id="visualize-the-module">Visualize the module</h3>
+<pre><code class="language-bash">pyang -f tree -p nokia --tree-path /network-instances/network-instance/interfaces openconfig-network-instance.yang
+</code></pre>
+<pre><code class="language-xml">module: openconfig-network-instance
+  +--rw network-instances
+     +--rw network-instance* [name]
+        +--rw interfaces
+           +--rw interface* [id]
+              +--rw id        -&gt; ../config/id
+              +--rw config
+              |  +--rw id?                            oc-if:interface-id
+              |  +--rw interface?                     -&gt; /oc-if:interfaces/interface/name
+              |  +--rw subinterface?                  -&gt; /oc-if:interfaces/interface[oc-if:name=current()/../interface]/subinterfaces/subinterface/index
+              |  +--rw associated-address-families*   identityref
+              |  +--rw mac-pinning?                   boolean
+              |  +--rw irb-anycast-gateway?           enumeration
+              +--ro state
+                 +--ro id?                            oc-if:interface-id
+                 +--ro interface?                     -&gt; /oc-if:interfaces/interface/name
+                 +--ro subinterface?                  -&gt; /oc-if:interfaces/interface[oc-if:name=current()/../interface]/subinterfaces/subinterface/index
+                 +--ro associated-address-families*   identityref
+                 +--ro mac-pinning?                   boolean
+                 +--ro irb-anycast-gateway?           enumeration
+</code></pre>
+<h3 id="get-the-xml-skeleton_1">Get the XML Skeleton</h3>
+<pre><code class="language-bash">pyang -f sample-xml-skeleton -p nokia openconfig-network-instance.yang
+</code></pre>
+<h3 id="edit-the-xml-file_1">Edit the XML file</h3>
+<pre><code class="language-xml">&lt;network-instances xmlns=&quot;http://openconfig.net/yang/network-instance&quot;&gt;
+  &lt;network-instance&gt;
+    &lt;name&gt;default&lt;/name&gt;
+    &lt;config&gt;
+      &lt;name&gt;default&lt;/name&gt;
+      &lt;description&gt;Default&lt;/description&gt;
+    &lt;/config&gt;
+    &lt;interfaces&gt;
+      &lt;interface&gt;
+        &lt;id&gt;1&lt;/id&gt;
+        &lt;config&gt;
+          &lt;id&gt;1&lt;/id&gt;
+          &lt;interface&gt;ethernet-1/1&lt;/interface&gt;
+          &lt;subinterface&gt;0&lt;/subinterface&gt;
+        &lt;/config&gt;
+      &lt;/interface&gt;
+    &lt;/interfaces&gt;
+  &lt;/network-instance&gt;
+&lt;/network-instances&gt;
+</code></pre>
+<h3 id="load-and-commit">Load and commit</h3>
+<pre><code class="language-bash">./nc_wrapper.sh srl-01 --edit-config=ni_interface.xml --db=candidate --commit
+</code></pre>
+<p>You are able to bind the interface with the network instance using both OpenConfig and the native YANG models because the device supports multiple external YANG schemas that map to the same internal configuration datastore. The trees show that both models define a <code>network-instance</code> containing an <code>interface</code> list that references a physical interface and subinterface, but they structure and name the fields differently. One notable difference is that OpenConfig uses an <code>id</code> as key for the interface list instead of <code>name</code>.</p>
+<p>When configuration is sent using either model, SR Linux translates it into its internal data model. In practice, OpenConfig is preferred for portable, multi-vendor automation, while the Nokia native model is used when full device capabilities or vendor-specific features are required.
+As we have seen in the previous task that this is not always the case for all models. </p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../07-configure-interface/" class="btn btn-neutral float-left" title="7. Configure Interface"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../09-configure-ipv4/" class="btn btn-neutral float-right" title="9. Configure IPv4 Address">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../07-configure-interface/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../09-configure-ipv4/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

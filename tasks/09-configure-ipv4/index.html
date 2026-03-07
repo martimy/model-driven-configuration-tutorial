@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Python - Model-Driven Network Configuration Tutorial</title>
+    <title>9. Configure IPv4 Address - Model-Driven Network Configuration Tutorial</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Python";
-        var mkdocs_page_input_path = "setup/pyvirtual.md";
+        var mkdocs_page_name = "9. Configure IPv4 Address";
+        var mkdocs_page_input_path = "tasks/09-configure-ipv4.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -44,16 +44,14 @@
                 </li>
               </ul>
               <p class="caption"><span class="caption-text">Setup</span></p>
-              <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../prerequisites/">Prerequisites</a>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/prerequisites/">Prerequisites</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../docker-images/">Docker Images</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Python</a>
-    <ul class="current">
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/pyvirtual/">Python</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../tools/">Tools</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/tools/">Tools</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Concepts</span></p>
@@ -74,24 +72,26 @@
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Tasks</span></p>
-              <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/01-start-containerlab/">1. Start Containerlab</a>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../01-start-containerlab/">1. Start Containerlab</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/02-verify-netconf/">2. Verify NETCONF</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../02-verify-netconf/">2. Verify NETCONF</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/03-verify-gnmi/">3. Verify gNMI</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/04-capabilities/">4. Inspect Capabilities</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../04-capabilities/">4. Inspect Capabilities</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/05-scripts/">5. Automation Scripts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">5. Automation Scripts</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/06-discover-modules/">6. Discover Modules</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../06-discover-modules/">6. Discover Modules</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/07-configure-interface/">7. Configure Interface</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../07-configure-interface/">7. Configure Interface</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/08-configure-ns/">8. Configure Network Instance</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../08-configure-ns/">8. Configure Network Instance</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/09-configure-ipv4/">9. Configure IPv4 Address</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">9. Configure IPv4 Address</a>
+    <ul class="current">
+    </ul>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
@@ -117,8 +117,8 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-          <li class="breadcrumb-item">Setup</li>
-      <li class="breadcrumb-item active">Python</li>
+          <li class="breadcrumb-item">Tasks</li>
+      <li class="breadcrumb-item active">9. Configure IPv4 Address</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -127,28 +127,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="setup-python-virtual-environment">Setup Python Virtual Environment</h1>
-<p>It is recommended that you setup a Python virtual environment for this lab to avoid cluttering the global Python installation with this project-specific packages and ensures reproducibility for this tutorial.</p>
-<p>To create the Virtual Environment after cloning the GitHub repository for this tutorial, use the following example:</p>
-<pre><code class="language-bash">git clone https://github.com/martimy/model-driven-configuration-tutorial tutorial
-cd tutorial
-python3 -m venv .pyenv
+                <h1 id="configure-ipv4-address">Configure IPv4 Address</h1>
+<p>Furthermore, cEOS devices operate as switches at startup. To enable routing functions, ip routing must be enabled and the switch mode must be disabled on each interface. As of this writing, I do not know of a mechanism to do this via NETCONF or gNMI, so it must be done via cLI:</p>
+<pre><code>ceos-01&gt;enable
+ceos-01#configure
+ceos-01(config)#ip routing
+ceos-01(config)#exit
 </code></pre>
-<p>To activate the environment:</p>
-<pre><code class="language-bash">source .pyenv/bin/activate
-</code></pre>
-<p>Afterwards, you can install any required Python packages individually using <code>pip install &lt;package-name&gt;</code>, or install all required packages using the <code>requirements.txt</code></p>
-<pre><code class="language-bash">install -r requirements.txt
-</code></pre>
-<p>To deactivate the virtual environment,</p>
-<pre><code class="language-bash">deactivate
+<p>A portion of the device configuration should look like this:</p>
+<pre><code>interface Ethernet1
+   description To SRL-01
+   no switchport
+!
+interface Ethernet2
+!
+interface Management0
+   vrf MGMT
+   ip address 192.168.100.11/24
+!
+ip routing
+no ip routing vrf MGMT
+!
+ip route vrf MGMT 0.0.0.0/0 192.168.100.1
+!
 </code></pre>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../docker-images/" class="btn btn-neutral float-left" title="Docker Images"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../tools/" class="btn btn-neutral float-right" title="Tools">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../08-configure-ns/" class="btn btn-neutral float-left" title="8. Configure Network Instance"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../reference/network-topology/" class="btn btn-neutral float-right" title="Topology">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -171,10 +179,10 @@ python3 -m venv .pyenv
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../docker-images/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../08-configure-ns/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../tools/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../../reference/network-topology/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
