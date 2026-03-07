@@ -3,7 +3,7 @@
 
 In this task, we will configure an interface using NETCONF.
 
-Learned from the previous task we learned:
+From the previous task we learned:
 
 - A device my support more than one YANG interfaces modules, but one is used for configuration.
 - Both cEOS and SR Linux devices support IETF and OpenConfig Interfaces module and use the OpenConfig module for configuration.
@@ -12,7 +12,7 @@ Learned from the previous task we learned:
 Visualize the module tree again (clone the OpenConfig public YANG models if you have not done so)
 
 
-For OpenConfig (ignore the output errors for now):
+For OpenConfig (ignore the output errors, if any):
 
 ```bash
 pyang -f tree -p openconfig openconfig-interfaces.yang
@@ -50,10 +50,11 @@ By OpenConfig convention, an interface must have at least one subinterface. More
 
 OpenConfig also use the convention of using the interface name twice. The first location serves as a key for the list interfaces in the device. The second is where the name is stored in the configuration.
 
-## Get the Sample XML File
+
+## Get the Sample XML Skeleton File
 
 
-To get a skeleton XML you can actually use for NETCONF configuration:
+To get a XML skeleton you can actually use for NETCONF configuration:
 
 ```bash
 pyang -f sample-xml-skeleton -p openconfig --sample-xml-skeleton-doctype=config openconfig-interfaces.yang
@@ -90,11 +91,12 @@ pyang -f sample-xml-skeleton -p openconfig --sample-xml-skeleton-doctype=config 
 </config>
 ```
 
-## Construct the XML File
+## Edit the XML File
 
-Create a file `interface.xml` and use the skeleton above to fill the required fields (ignore most optional fields). 
+Create a file `interface.xml` and use the skeleton above to fill the required elements' contents (ignore most optional elements). 
 
 Note:
+
 - From the topology file, we know that SR Linux interface name convention is `ethernet-x/y`.
 - The interface type has to include the name space as well <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
 
@@ -112,6 +114,7 @@ Note:
         <index>0</index>
         <config>
         <index>0</index>
+        <enabled>true</enabled>
         </config>
     </subinterface>
     </subinterfaces>
@@ -121,9 +124,7 @@ Note:
 
 ## Load the Configuration
 
-Use NETCONF's `edit-config` operation to load the interface configuration. 
-
-Use `netconf-console` to edit the configuration in the candidate store:
+Use NETCONF's `edit-config` operation to load the interface configuration to the the candidate datastore. 
 
 ```bash
 ./nc_wrapper.sh srl-01 --edit-config=interface.xml --db=candidate
@@ -168,53 +169,6 @@ Verify that the configuration was committed to the running store:
           <index>0</index>
           <config>
             <index>0</index>
-          </config>
-        </subinterface>
-      </subinterfaces>
-    </interface>
-  </interfaces>
-</data>
-```
-
-The output confirms that the interface was configured properly, but since the `enable` fields were not included, the main interface was enabled by default (by containerlab), but the subinterface was not enabled.
-
-We can enable the subinterface using the same process with this file:
-
-```xml
-<interfaces xmlns="http://openconfig.net/yang/interfaces">
-<interface>
-    <name>ethernet-1/1</name>
-    <subinterfaces>
-        <subinterface>
-            <index>0</index>
-            <config>
-            <enabled>true</enabled>
-            </config>
-        </subinterface>
-    </subinterfaces>
-</interface>
-</interfaces>
-```
-
-
-```xml
-./nc_wrapper.sh srl-01 --get-config --filter /interfaces/interface[name=ethernet-1/1] | xmllint --format -
-<?xml version="1.0" encoding="UTF-8"?>
-<data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
-  <interfaces xmlns="http://openconfig.net/yang/interfaces">
-    <interface>
-      <name>ethernet-1/1</name>
-      <config>
-        <name>ethernet-1/1</name>
-        <type xmlns:iana-if-type="urn:ietf:params:xml:ns:yang:iana-if-type">iana-if-type:ethernetCsmacd</type>
-        <description>To ceos-01</description>
-        <enabled>true</enabled>
-      </config>
-      <subinterfaces>
-        <subinterface>
-          <index>0</index>
-          <config>
-            <index>0</index>
             <enabled>true</enabled>
           </config>
         </subinterface>
@@ -224,12 +178,13 @@ We can enable the subinterface using the same process with this file:
 </data>
 ```
 
+The output confirms that the interface was configured properly. Note that the `enable` element must be included to enable the subinterface. The main interface is enabled by default (by containerlab), but the subinterface must be enabled explicitly in SR Linux.
 
-## Alternative Approach - Reverse Engineering
+## Alternative Approach
 
 A reliable and fast path to a create XML payload is to configure the feature manually via CLI first, then use a NETCONF `get-config` to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native model for the first time:
 
-We will use this approach to configure an interface on `ceos-01`.
+We will use this approach to configure interface `Ethernet1` on `ceos-01`. Note that cEOS creates subinterface `0` and enables it by default.
 
 Use the CLI to set the description on interface `Ethernet1` and enable it:
 
@@ -239,6 +194,8 @@ interface Ethernet1
    no switchport
 !
 ```
+
+Retrieve the running configuration:
 
 ```bash
 ./nc_wrapper.sh ceos-01 --get-config --filter /interfaces/interface[name=Ethernet1]
@@ -296,4 +253,27 @@ interface Ethernet1
 
 Notice the namespace declarations, element names, and hierarchy you see in that XML are exactly what your payload must reproduce. This approach, however, does not differentiate between mandatory and optional fields.
 
-Change the description and load the configuration as above.
+Change the description element and remove most elements, then load the configuration to the router using the commands shown above.
+
+The default behavior of the `edit-config` operation is to `merge` the new data into the existing configuration. Therefore, only the interface description will be changed while all other elements remain the same. 
+
+```xml
+<interfaces xmlns="http://openconfig.net/yang/interfaces">
+  <interface>
+    <name>Ethernet1</name>
+    <config>
+      <description>To SRL-01</description>
+      <name>Ethernet1</name>
+      <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+    </config>
+    <subinterfaces>
+      <subinterface>
+        <index>0</index>
+        <config>
+          <description>To SRL-01</description>
+        </config>
+      </subinterface>
+    </subinterfaces>
+  </interface>
+</interfaces>
+```
