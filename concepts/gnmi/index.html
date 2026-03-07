@@ -49,36 +49,38 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../setup/pyvirtual/">Python</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../setup/tools/">Tools</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/pyvirtual/">Python Environment</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Concepts</span></p>
               <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../motivation/">Motivation</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../yang/">YANG</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../netconf/">NETCONF</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../restconf/">RESTCONF</a>
-                  </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">gNMI</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#key-characteristics">Key Characteristics</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#main-operations-rpcs">Main Operations (RPCs)</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#configuration-vs-telemetry-handling">Configuration vs Telemetry Handling</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#advantages">Advantages</a>
-    </li>
+                  <li class="toctree-l1"><a class="reference internal" >Data Modeling</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../yang/">YANG</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../xml-anatomy/">XML Anatomy</a>
+                </li>
     </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../netconf_vs_gnmi/">NETCONF vs gNMI</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../xml-anatomy/">XML Anatomy</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" >Protocols</a>
+    <ul class="current">
+                <li class="toctree-l2"><a class="reference internal" href="../netconf/">NETCONF</a>
+                </li>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">gNMI</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#key-characteristics">Key Characteristics</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#main-operations-rpcs">Main Operations (RPCs)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configuration-vs-telemetry-handling">Configuration vs Telemetry Handling</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#advantages">Advantages</a>
+    </li>
+    </ul>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../restconf/">RESTCONF</a>
+                </li>
+    </ul>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Tasks</span></p>
@@ -89,9 +91,9 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../tasks/03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/04-capabilities/">4. Inspect Capabilities</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/05-scripts/">4. Automation Scripts</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/05-scripts/">5. Automation Scripts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/04-capabilities/">5. Inspect Capabilities</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../tasks/06-discover-modules/">6. Discover Modules</a>
                   </li>
@@ -105,6 +107,10 @@
               <p class="caption"><span class="caption-text">Reference</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/cli-tools/">CLI Tools</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/protocol-comparison/">Protocol Comparison</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
                   </li>
@@ -126,6 +132,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Concepts</li>
+          <li class="breadcrumb-item">Protocols</li>
       <li class="breadcrumb-item active">gNMI</li>
     <li class="wy-breadcrumbs-aside">
     </li>
@@ -185,8 +192,8 @@
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../restconf/" class="btn btn-neutral float-left" title="RESTCONF"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../netconf_vs_gnmi/" class="btn btn-neutral float-right" title="NETCONF vs gNMI">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../netconf/" class="btn btn-neutral float-left" title="NETCONF"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../restconf/" class="btn btn-neutral float-right" title="RESTCONF">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -209,10 +216,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../restconf/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../netconf/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../netconf_vs_gnmi/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../restconf/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

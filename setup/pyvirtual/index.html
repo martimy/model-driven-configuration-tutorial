@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Python - Model-Driven Network Configuration Tutorial</title>
+    <title>Python Environment - Model-Driven Network Configuration Tutorial</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Python";
+        var mkdocs_page_name = "Python Environment";
         var mkdocs_page_input_path = "setup/pyvirtual.md";
         var mkdocs_page_url = null;
       </script>
@@ -49,28 +49,30 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../docker-images/">Docker Images</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Python</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Python Environment</a>
     <ul class="current">
     </ul>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../tools/">Tools</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Concepts</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/motivation/">Motivation</a>
+                  <li class="toctree-l1"><a class="reference internal" >Data Modeling</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/yang/">YANG</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/xml-anatomy/">XML Anatomy</a>
+                </li>
+    </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/yang/">YANG</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/netconf/">NETCONF</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/restconf/">RESTCONF</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/gnmi/">gNMI</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/netconf_vs_gnmi/">NETCONF vs gNMI</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../concepts/xml-anatomy/">XML Anatomy</a>
+                  <li class="toctree-l1"><a class="reference internal" >Protocols</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/netconf/">NETCONF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/gnmi/">gNMI</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/restconf/">RESTCONF</a>
+                </li>
+    </ul>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Tasks</span></p>
@@ -81,9 +83,9 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../tasks/03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/04-capabilities/">4. Inspect Capabilities</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/05-scripts/">4. Automation Scripts</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/05-scripts/">5. Automation Scripts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/04-capabilities/">5. Inspect Capabilities</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../tasks/06-discover-modules/">6. Discover Modules</a>
                   </li>
@@ -97,6 +99,10 @@
               <p class="caption"><span class="caption-text">Reference</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/cli-tools/">CLI Tools</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/protocol-comparison/">Protocol Comparison</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
                   </li>
@@ -118,7 +124,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Setup</li>
-      <li class="breadcrumb-item active">Python</li>
+      <li class="breadcrumb-item active">Python Environment</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -148,7 +154,7 @@ python3 -m venv .pyenv
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../docker-images/" class="btn btn-neutral float-left" title="Docker Images"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../tools/" class="btn btn-neutral float-right" title="Tools">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../../concepts/yang/" class="btn btn-neutral float-right" title="YANG">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -174,7 +180,7 @@ python3 -m venv .pyenv
       <span><a href="../docker-images/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../tools/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../../concepts/yang/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
