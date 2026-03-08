@@ -26,7 +26,7 @@ The string form is not sent on the wire. clients/tools convert it to/from the st
 ## Key Characteristics
 
 - Simplified XPath subset: familiar to NETCONF/RESTCONF users, but intentionally limited for performance and simplicity.
-- Origin field: disambiguates schemas when multiple models exist (e.g. `openconfig`, `ietf`, vendor-native).
+- Origin field: disambiguates schemas when multiple models exist (e.g. openconfig, ietf, native).
 - Prefix support: common ancestor path can be factored out to reduce message size in subscriptions.
 - Wildcard support: mainly `*` for all instances of a list (no deep `//` recursion).
 

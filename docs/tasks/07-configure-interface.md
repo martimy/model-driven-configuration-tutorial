@@ -9,7 +9,7 @@ From the previous task we learned:
 - Both cEOS and SR Linux devices support IETF and OpenConfig Interfaces module and use the OpenConfig module for configuration.
 
 
-Visualize the module tree again (clone the OpenConfig public YANG models if you have not done so)
+Visualize the module tree again (clone the OpenConfig public YANG modules if you have not done so)
 
 
 For OpenConfig (ignore the output errors, if any):
@@ -146,7 +146,7 @@ The output indicates no errors, let's commit the change:
 <ok xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0"/>
 ```
 
-Verify that the configuration was committed to the running store:
+Verify that the configuration was committed to the running datastore:
 
 ```bash
 ./nc_wrapper.sh srl-01 --get-config --filter /interfaces/interface[name=ethernet-1/1]
@@ -182,7 +182,7 @@ The output confirms that the interface was configured properly. Note that the `e
 
 ## Alternative Approach
 
-A reliable and fast path to a create XML payload is to configure the feature manually via CLI first, then use a NETCONF `get-config` to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native model for the first time:
+A reliable and fast path to a create XML payload is to configure the feature manually via CLI first, then use a NETCONF `get-config` to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native module for the first time:
 
 We will use this approach to configure interface `Ethernet1` on `ceos-01`. Note that cEOS creates subinterface `0` and enables it by default.
 

@@ -1,6 +1,6 @@
 # Discover YANG Modules
 
-Before starting configuring a devices, you must discover what YANG models the device supports and understand the shape of the data those models describe. This task covers the discovery workflow.
+Before starting configuring a devices, you must discover what YANG modules the device supports and understand the shape of the data those moddules describe. This task covers the discovery workflow.
 
 
 **Read the Documentations**
@@ -47,7 +47,7 @@ The URN identifies the IETF model for configuring and monitoring network interfa
 - Name: ietf-interfaces
 - Revision: 2014-05-08 (2018-02-20)
 
-Note the revision date — always use models that match this exact revision when building payloads.
+Note the revision date — always use modules that match this exact revision when building payloads.
 
 
 **Using gNMI**
@@ -106,12 +106,13 @@ http://openconfig.net/yang/interfaces?module=openconfig-interfaces&revision=2024
 This means the a module may exists on the device for various reasons (operational state, compatibility, or partial configuration), but it does not necessarily mean it is the primary configuration model.
 
 
-## Step 2: Fetch the Schema (NETCONF)
+## Step 2: Fetch the Module (NETCONF)
 
-Once you know which modules the device supports, you can pull the actual YANG source files directly from the device using the `get-schema` NETCONF RPC. This will get the exact model version the device is running:
+Once you know which modules the device supports, you can pull the actual YANG source files directly from the device using the `get-schema` NETCONF RPC. This will get the exact module version the device is running:
 
+> Note: ncclient uses the term "schema" for what YANG formally calls a module,
 
-Run the script for both devices for both the IETF and OpenConfig models (the file name will be \<model-name\>.yang):
+Run the script for both devices for both the IETF and OpenConfig modules (the file name will be \<module-name\>.yang):
 
 ```bash
 ./scripts/netconf_tool.py srl-01 schema ietf-interfaces
@@ -193,9 +194,9 @@ module: ietf-interfaces
         +--rw link-up-down-trap-enable?   enumeration {if-mib}?
 ```
 
-## Step 4: Determining Configuration Models
+## Step 4: Determining Configuration Modules
 
-A quick way to determine which modules is used for configuration is to use a NETCONF `get-config` to read configuration on the devices using simplified XPATH filter
+A quick way to determine which module is used for configuration is to use a NETCONF `get-config` to read configuration on the devices using simplified XPATH filter
 
 ```bash
 ./nc_wrapper.sh srl-01 --get-config --filter /interfaces

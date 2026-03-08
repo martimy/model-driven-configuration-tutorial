@@ -26,10 +26,12 @@ YANG defines four main node types:
 - Container : Groups related nodes (no value itself); can be configuration (`config true`, read-write) or operational state (`config false`, read-only).
 - List : A sequence of entries (like a list of interfaces), each identified by a key (e.g., interface name).
 
+> Note: A model is an abstract concept, while a module is the realization of that concept. In practice, however, these two terms are often used interchangeably.
+
 ## Standard vs. Vendor-Specific Models
 
 - Industry-standard models : Developed by IETF (e.g., `ietf-interfaces.yang`, `ietf-ip.yang`) or OpenConfig for broad compatibility.
-- Vendor-specific (native) models : Tailored to a specfic platform. These are often required when standard models lack coverage for vendor-unique features.
+- Vendor-specific (native) models : Tailored to a specific platform. These are often required when standard models lack coverage for vendor-unique features.
 
 All models are publicly available on GitHub:
 

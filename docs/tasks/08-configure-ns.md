@@ -102,7 +102,7 @@ module: srl_nokia-network-instance
         +--rw connection-point?   -> ../../connection-point/name {srl-feat:connection-point}?
 ```
 
-The SR Linux supports three types of [network-instances](https://documentation.nokia.com/srlinux/25-10/books/config-basics/network-instances.html): default, ip-vrf, and mac-vrf. Type default is the default network-instance and only one of this type is supported. Type `ip-vrf` is the regular network-instance; you can create multiple network-instances of this type.
+The SR Linux supports three types of [network-instances](https://documentation.nokia.com/srlinux/25-10/books/config-basics/network-instances.html): default, ip-vrf, and mac-vrf. Type default is the default network instance and only one of this type is supported. Type `ip-vrf` is the regular network instance; you can create multiple network instances of this type.
 
 Creating the `default` instance and binding the interface to it in one step.
 

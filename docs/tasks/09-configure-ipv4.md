@@ -138,7 +138,7 @@ Edit the file for both routers. For `srl-01`, it will look like this:
 
 Before pinging, you need to check if routing is enabled on `ceos-01`.
 
-cEOS devices operate as switches at startup. To enable routing functions, ip routing must be enabled and the switch mode must be disabled on L3 interfaces. As of this writing, I could not find a mechanism to do this via NETCONF or gNMI, so it must be done via cLI:
+cEOS devices operate as switches at startup. To enable routing functions, ip routing must be enabled and the switch mode must be disabled on L3 interfaces. As of this writing, I could not find a mechanism to do this via NETCONF or gNMI, so it must be done via cLI. This represents one of the important real-world implementation challenges that this tutorial aim to highlight.
 
 ```
 ceos-01>enable

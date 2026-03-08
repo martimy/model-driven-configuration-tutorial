@@ -1,6 +1,6 @@
 # Configure Remaining Interfaces with gNMI
 
-In the previous task, we used NETCONF to configure the link between `ceos-01` and `srl-01`. Now, we will configure the remaining links in our topology using gNMI (gRPC Network Management Interface). This task will move at a faster pace since you are now familiar with the OpenConfig models.
+In the previous task, we used NETCONF to configure the link between `ceos-01` and `srl-01`. Now, we will configure the remaining links in our topology using gNMI (gRPC Network Management Interface). This task will move at a faster pace since you are now familiar with the OpenConfig modules.
 
 
 We need to configure the following remaining links:
@@ -178,7 +178,7 @@ You should see the JSON output reflecting the new IP address and interface state
 
 The previous technique is useful for small changes, like enabling an interface, and when you are familiar with the required payload. More efficient method is needed.
 
-The `gnmic` tool is able to generate configuration payload based on the target YANG data model. The `gnmic` `generate` command takes the target's YANG models as input and generates:
+The `gnmic` tool is able to generate configuration payload based on the target YANG data module. The `gnmic` `generate` command takes the target's YANG modules as input and generates:
 
 - Paths in xpath or gNMI formats.
 - Configuration payloads that can be used as update or replace input files for the Set command.

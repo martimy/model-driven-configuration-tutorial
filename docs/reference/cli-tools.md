@@ -20,7 +20,7 @@ These libraries allow your automation scripts to communicate with the devices:
 These are used for manual exploration and "reverse engineering" before writing code:
 
 - gnmic: A CLI client for gNMI. It is used to explore device capabilities, retrieve state, and test telemetry subscriptions.
-- netconf-console2: A CLI clients for NETCONF. They are useful for checking connectivity, retrieving schemas, and testing XML filters without writing Python code.
+- netconf-console2: A CLI clients for NETCONF. They are useful for checking connectivity, retrieving modules, and testing XML filters without writing Python code.
 
 ## YANG Modeling & Validation Tools
 

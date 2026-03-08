@@ -19,7 +19,7 @@ The key characteristics of the output:
 
 - Includes rich metadata such as feature support, deviations, augmentations, and dependencies.
 - Each YANG module is individually listed, often with query strings for module details.
-- IETF, OpenConfig and vendor-specific modules are included.
+- IETF, OpenConfig and native modules are included.
 - Supports NMDA (Network Management Datastore Architecture) capabilities.
 
 
@@ -53,14 +53,14 @@ gnmic -a srl-01:57400 -u admin -p NokiaSrl1! --skip-verify capabilities
 the device returns the following in plain text:
 
 - gNMI version (e.g., 0.10.0).
-- List of YANG models by URN, including module name, publisher, and revision date.
+- List of YANG modules by URN, including module name, publisher, and revision date.
 - Supported encodings: Lists encoding formats such as JSON_IETF, PROTO, ASCII, and related numeric codes.
 
 The key characteristics of the output:
 
-- Provides only the essential details for a gNMI client: supported models and encodings.
+- Provides only the essential details for a gNMI client: supported modules and encodings.
 - Does not specify per-module features or deviations.
-- Models are listed solely by URNs, without feature flags or module breakdowns.
+- Modules are listed solely by URNs, without feature flags or module breakdowns.
 
 
 Example:
@@ -81,13 +81,14 @@ supported models:
 
 In the examples above, the distinction between lines starting with `urn:` and those starting with `http:` reflects the naming authority and origin of the YANG models:
 
-- `urn:` prefixes indicate Nokia proprietary models (e.g., `urn:nokia.com:srlinux:aaa:aaa`). These are internal, vendor-specific schemas defined by Nokia for their SRLinux implementation. They follow a URN format using the `nokia.com` domain.
+- `urn:` prefixes indicate Nokia native models (e.g., `urn:nokia.com:srlinux:aaa:aaa`). These are internal, native schemas defined by Nokia for their SRLinux implementation. They follow a URN format using the `nokia.com` domain.
 - `http://` prefixes indicate IETF or OpenConfig models (e.g., `http://openconfig.net/yang/interfaces`). These are industry-standard models defined by OpenConfig working group.
 - `https://` prefixes (seen in NETCONF output) indicate OpenConfig gNSI models (e.g., `https://github.com/openconfig/yang/gnsi/authz`), though these appear as `http://` in the gNMI output for simplicity.
 
 This dual-namespace approach allows the device to support both:
-1. **Standardized models** (`http://`) for multi-vendor compatibility
-2. **Vendor-specific extensions** (`urn:`) for advanced Nokia features not covered by standards
+
+1. Standardized models (`http://`) for multi-vendor compatibility
+2. Native extensions (`urn:`) for advanced Nokia features not covered by standards
 
 
 ## Conclusion
@@ -100,6 +101,6 @@ The gNMI and NETCONF capabilities responses differ in both format and the type o
 
 ## Exercise
 
-Compare the capabilities returned by `ceo-01` for both NETCONF and gNMI. Does cEOS support the same NETCONF capabilities as SR Linux? Explain the difference in the format of the capabilities returned by gNMI?
+Compare the capabilities returned by `ceos-01` for both NETCONF and gNMI. Does cEOS support the same NETCONF capabilities as SR Linux? Explain the difference in the format of the capabilities returned by gNMI?
 
 The differences you notice in both the capabilities, supported models, and formatting, highlight one of the challenges in managing the network via data models in multi-vendor environment.
