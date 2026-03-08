@@ -60,6 +60,8 @@
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../../concepts/xml-anatomy/">XML Anatomy</a>
                 </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/gnmi-paths/">gNMI Paths</a>
+                </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" >Protocols</a>
@@ -70,6 +72,8 @@
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../../concepts/restconf/">RESTCONF</a>
                 </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/protocol-comparison/">Protocol Comparison</a>
+                </li>
     </ul>
                   </li>
               </ul>
@@ -77,7 +81,7 @@
               <ul class="current">
                   <li class="toctree-l1"><a class="reference internal" href="../01-start-containerlab/">1. Start Containerlab</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../02-verify-netconf/">2. Verify NETCONF</a>
+                  <li class="toctree-l1"><a class="" href="../02-ver+-ify-netconf.md">2. Verify NETCONF</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
@@ -121,8 +125,6 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Topology</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/cli-tools/">CLI Tools</a>
-                  </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../reference/protocol-comparison/">Protocol Comparison</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
                   </li>
@@ -191,8 +193,9 @@
 </table>
 <h2 id="technique-1-using-existing-configuration">Technique 1: Using Existing Configuration</h2>
 <p>Unlike NETCONF's XML, gNMI typically uses JSON for its payload. We will use the same OpenConfig <code>interfaces</code> model.</p>
+<p>I recommended that you review <a href="../../concepts/gnmi-paths/">gNMi paths</a> before proceeding as you will use them extensively in this task.. </p>
 <h3 id="get-existing-configuration">Get Existing Configuration</h3>
-<p>The easiest way to configure the interfaces is to get the configuration of the interface that we already </p>
+<p>The easiest way to configure the interfaces is to get the configuration of the interface that we already completed:</p>
 <pre><code class="language-bash">gnmic --config srl-gnmic.yml get --path /interface[name=ethernet-1/1]/subinterface[index=0] -t config
 </code></pre>
 <pre><code class="language-json">[

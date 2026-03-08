@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>gNMI - Model-Driven Network Configuration Tutorial</title>
+    <title>gNMI Paths - Model-Driven Network Configuration Tutorial</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "gNMI";
-        var mkdocs_page_input_path = "concepts/gnmi.md";
+        var mkdocs_page_name = "gNMI Paths";
+        var mkdocs_page_input_path = "concepts/gnmi-paths.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -54,31 +54,27 @@
               </ul>
               <p class="caption"><span class="caption-text">Concepts</span></p>
               <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" >Data Modeling</a>
-    <ul>
+                  <li class="toctree-l1 current"><a class="reference internal current" >Data Modeling</a>
+    <ul class="current">
                 <li class="toctree-l2"><a class="reference internal" href="../yang/">YANG</a>
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../xml-anatomy/">XML Anatomy</a>
                 </li>
-                <li class="toctree-l2"><a class="reference internal" href="../gnmi-paths/">gNMI Paths</a>
+                <li class="toctree-l2 current"><a class="reference internal current" href="#">gNMI Paths</a>
+    <ul class="current">
+    <li class="toctree-l3"><a class="reference internal" href="#string-representation">String Representation</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#key-characteristics">Key Characteristics</a>
+    </li>
+    </ul>
                 </li>
     </ul>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" >Protocols</a>
-    <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" >Protocols</a>
+    <ul>
                 <li class="toctree-l2"><a class="reference internal" href="../netconf/">NETCONF</a>
                 </li>
-                <li class="toctree-l2 current"><a class="reference internal current" href="#">gNMI</a>
-    <ul class="current">
-    <li class="toctree-l3"><a class="reference internal" href="#key-characteristics">Key Characteristics</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#main-operations-rpcs">Main Operations (RPCs)</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#configuration-vs-telemetry-handling">Configuration vs Telemetry Handling</a>
-    </li>
-    <li class="toctree-l3"><a class="reference internal" href="#advantages">Advantages</a>
-    </li>
-    </ul>
+                <li class="toctree-l2"><a class="reference internal" href="../gnmi/">gNMI</a>
                 </li>
                 <li class="toctree-l2"><a class="reference internal" href="../restconf/">RESTCONF</a>
                 </li>
@@ -136,8 +132,8 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Concepts</li>
-          <li class="breadcrumb-item">Protocols</li>
-      <li class="breadcrumb-item active">gNMI</li>
+          <li class="breadcrumb-item">Data Modeling</li>
+      <li class="breadcrumb-item active">gNMI Paths</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -146,58 +142,36 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="gnmi">gNMI</h1>
-<p>gNMI (gRPC Network Management Interface) is a gRPC-based protocol developed by the OpenConfig project for configuration management and streaming telemetry on network devices (routers, switches, etc.). It provides a single, unified, high-performance service for both modifying/retrieving configuration and generating real-time telemetry streams.</p>
-<p>Current specification: version 0.10.0 (published 2023), defined via Protocol Buffers (proto3) in the openconfig/gnmi GitHub repository.</p>
-<p>It was created to address the need for efficient, model-driven management - combining configuration (like NETCONF) and telemetry (previously handled separately, e.g., via SNMP traps or proprietary mechanisms) into one modern, binary-efficient protocol built on gRPC.</p>
+                <h1 id="paths-in-gnmi">Paths in gNMI</h1>
+<p>In gNMI (gRPC Network Management Interface), paths identify specific nodes in the data tree, whether for retrieving configuration/state (Get), modifying data (Set), or subscribing to telemetry updates (Subscribe).</p>
+<p>gNMI deliberately uses a structured, efficient path representation rather than raw strings or full XPath. This design keeps the protocol lightweight, strongly typed, and easy to parse/validate against YANG models.</p>
+<h2 id="string-representation">String Representation</h2>
+<p>Most tools, CLIs, documentation, and clients (gnmic, pygnmi, etc.) display and accept paths using a familiar XPath-like string syntax (defined in gNMI Path Conventions):</p>
+<pre><code>/interfaces/interface[name=eth1/1]/state/counters
+/openconfig-interfaces:interfaces/interface[name=*]/state/admin-status
+/interfaces/interface[name=eth1/1]/config/description
+</code></pre>
+<p>Key features of this string form:</p>
+<ul>
+<li><code>/</code> separates hierarchy levels</li>
+<li><code>[key=value]</code> selects list entries (multiple keys allowed: <code>[ifIndex=42,name=eth1]</code>)</li>
+<li><code>*</code> acts as a wildcard for all list instances</li>
+<li>No support for full XPath axes (<code>//</code>, <code>..</code>, <code>contains()</code>, functions, complex predicates)</li>
+</ul>
+<p>The string form is not sent on the wire. clients/tools convert it to/from the structured <code>Path</code> protobuf.</p>
 <h2 id="key-characteristics">Key Characteristics</h2>
 <ul>
-<li>Uses gRPC over TLS (&gt;=1.2) for secure, bidirectional communication; mutual authentication via X.509 certificates is required.</li>
-<li>Encoding → Protocol Buffers (preferred for efficiency) with TypedValue (scalars: string, int64, uint64, bool, double, bytes, arrays); also supports JSON, JSON_IETF (RFC 7951), Bytes, ASCII. JSON is mandatory minimum support.</li>
-<li>Paths → XPath-like, structured as ordered lists of PathElem (name + optional key-value pairs); support prefix for common base paths, wildcards (*), origins (e.g., "openconfig", "cli" for vendor-specific).</li>
-<li>Schema-agnostic at protocol level but designed for YANG/OpenConfig models; uses <code>origin</code> field to disambiguate schemas.</li>
-<li>Supports transactional configuration changes (atomic all-or-nothing).</li>
-<li>Streaming telemetry via long-lived subscriptions with multiple modes.</li>
-<li>Single gRPC service with four RPCs.</li>
+<li>Simplified XPath subset: familiar to NETCONF/RESTCONF users, but intentionally limited for performance and simplicity.</li>
+<li>Origin field: disambiguates schemas when multiple models exist (e.g. <code>openconfig</code>, <code>ietf</code>, vendor-native).</li>
+<li>Prefix support: common ancestor path can be factored out to reduce message size in subscriptions.</li>
+<li>Wildcard support: mainly <code>*</code> for all instances of a list (no deep <code>//</code> recursion).</li>
 </ul>
-<h2 id="main-operations-rpcs">Main Operations (RPCs)</h2>
-<ul>
-<li>Capabilities : Discovery handshake: reports supported models (name/org/version), encodings, gNMI version, extensions.</li>
-<li>Get : Retrieve snapshot of data for specified paths; filter by datatype (CONFIG, STATE, OPERATIONAL); returns timestamped Notification messages with updates/deletes.</li>
-<li>Set : Atomic modification: supports delete (recursive), replace (full subtree overwrite), update (merge leaf changes), union_replace; operations processed in order (delete → replace → update); full rollback on failure.</li>
-<li>Subscribe - Streaming telemetry:</li>
-<li>ONCE → one-off sync, closes after initial data.</li>
-<li>POLL → long-lived, client-triggered updates via Poll messages.</li>
-<li>STREAM → continuous:<ul>
-<li>ON_CHANGE → push on value change + optional heartbeat.</li>
-<li>SAMPLE → periodic (nanosecond interval) + suppress_redundant option.</li>
-<li>TARGET_DEFINED → device decides per-leaf mode.</li>
-</ul>
-</li>
-<li>Supports qos marking, updates_only (skip initial sync), aggregation.</li>
-</ul>
-<h2 id="configuration-vs-telemetry-handling">Configuration vs Telemetry Handling</h2>
-<ul>
-<li>Configuration → read/write ("config true" in YANG); modified via Set.</li>
-<li>State/Operational → read-only telemetry data; retrieved via Get or Subscribe.</li>
-<li>No separate datastores like NETCONF (candidate/running); changes are direct but atomic.</li>
-</ul>
-<h2 id="advantages">Advantages</h2>
-<ul>
-<li>Unified interface for config + telemetry → simplifies client and device implementations.</li>
-<li>High performance → gRPC streaming + binary Protobuf encoding → low latency/overhead for large-scale telemetry.</li>
-<li>Real-time push telemetry (vs. polling) with fine-grained modes (change detection, sampling).</li>
-<li>Model-driven → strong OpenConfig YANG alignment for vendor neutrality; capabilities ensure compatibility.</li>
-<li>Secure by default → TLS mandatory, supports per-RPC authorization.</li>
-<li>Better suited for SDN, automation pipelines, and large-scale monitoring than legacy protocols.</li>
-</ul>
-<p>gNMI has become a cornerstone of modern network automation and telemetry, widely adopted by vendors (Cisco, Juniper, Arista, Nokia, etc.) alongside OpenConfig models, complementing NETCONF (configuration-focused) with superior streaming capabilities.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../netconf/" class="btn btn-neutral float-left" title="NETCONF"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../restconf/" class="btn btn-neutral float-right" title="RESTCONF">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../xml-anatomy/" class="btn btn-neutral float-left" title="XML Anatomy"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../netconf/" class="btn btn-neutral float-right" title="NETCONF">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -220,10 +194,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../netconf/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../xml-anatomy/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../restconf/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../netconf/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
