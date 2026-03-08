@@ -101,6 +101,8 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="tasks/09-configure-ipv4/">9. Configure IPv4 Address</a>
                   </li>
+                  <li class="toctree-l1"><a class="reference internal" href="tasks/10-configure-gnmi/">10. Configure Remaining with gNMI</a>
+                  </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
               <ul>
@@ -145,13 +147,15 @@
 <p>Traditional router configuration approaches—especially those centered on CLI interaction—are increasingly inadequate for these environments. To address these challenges, modern network systems are evolving toward an API-first architecture. In this model, configuration and operational state are accessed through structured programmatic interfaces, while the CLI is repositioned as just another client layered on top of these APIs rather than being the primary control interface.</p>
 <p>The most significant architectural shift enabling this transition is the adoption of model-driven management, centered around the YANG data modeling language.</p>
 <h2 id="objectives">Objectives</h2>
-<p>In this tutorial, you will:
-- <strong>Deploy</strong> a multi-vendor network topology using Containerlab.
-- <strong>Understand</strong> the core concepts of YANG data modeling and XML/JSON representations.
-- <strong>Interact</strong> with network devices using modern protocols: NETCONF and gNMI.
-- <strong>Explore</strong> device capabilities and download YANG modules directly from routers.
-- <strong>Automate</strong> configuration tasks using Python scripts and unified tools.
-- <strong>Configure</strong> interfaces, network instances, and IPv4 addressing via model-driven APIs.</p>
+<p>In this tutorial, you will:</p>
+<ul>
+<li>Deploy a multi-vendor network topology using Containerlab.</li>
+<li>Understand the core concepts of YANG data modeling and XML/JSON representations.</li>
+<li>Interact with network devices using modern protocols: NETCONF and gNMI.</li>
+<li>Explore device capabilities and download YANG modules directly from routers.</li>
+<li>Automate configuration tasks using Python scripts and unified tools.</li>
+<li>Configure interfaces, network instances, and IPv4 addressing via model-driven APIs.</li>
+</ul>
 <h2 id="tasks">Tasks</h2>
 <p>Each task introduces a concept, and then provides a set of instructions to explore or implement the concept. Complete the tasks in order as each task builds upon the previous one.</p>
               
@@ -202,5 +206,5 @@
 
 <!--
 MkDocs version : 1.6.1
-Build Date UTC : 2026-03-07 17:55:40.143235+00:00
+Build Date UTC : 2026-03-08 01:19:52.241224+00:00
 -->
