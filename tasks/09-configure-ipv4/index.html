@@ -85,7 +85,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Automation Scripts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Python Scripts</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../04-capabilities/">5. Inspect Capabilities</a>
                   </li>
@@ -106,6 +106,8 @@
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../10-configure-gnmi/">10. Configure Interfaces with gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../11-configure-ospf/">11. Configure OSPF</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
@@ -263,7 +265,7 @@
 </code></pre>
 <h2 id="connectivity-verification">Connectivity Verification</h2>
 <p>Before pinging, you need to check if routing is enabled on <code>ceos-01</code>.</p>
-<p>cEOS devices operate as switches at startup. To enable routing functions, ip routing must be enabled and the switch mode must be disabled on L3 interfaces. As of this writing, I could not find a mechanism to do this via NETCONF or gNMI, so it must be done via cLI:</p>
+<p>cEOS devices operate as switches at startup. To enable routing functions, ip routing must be enabled and the switch mode must be disabled on L3 interfaces. As of this writing, I could not find a mechanism to do this via NETCONF or gNMI, so it must be done via cLI. This represents one of the important real-world implementation challenges that this tutorial aim to highlight.</p>
 <pre><code>ceos-01&gt;enable
 ceos-01#configure
 ceos-01(config)#ip routing

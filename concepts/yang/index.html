@@ -97,7 +97,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../tasks/03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/05-scripts/">4. Automation Scripts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/05-scripts/">4. Python Scripts</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../tasks/04-capabilities/">5. Inspect Capabilities</a>
                   </li>
@@ -110,6 +110,8 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../tasks/09-configure-ipv4/">9. Configure IPv4 Address</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../tasks/10-configure-gnmi/">10. Configure Interfaces with gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/11-configure-ospf/">11. Configure OSPF</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
@@ -172,10 +174,13 @@
 <li>Container : Groups related nodes (no value itself); can be configuration (<code>config true</code>, read-write) or operational state (<code>config false</code>, read-only).</li>
 <li>List : A sequence of entries (like a list of interfaces), each identified by a key (e.g., interface name).</li>
 </ul>
+<blockquote>
+<p>Note: A model is an abstract concept, while a module is the realization of that concept. In practice, however, these two terms are often used interchangeably.</p>
+</blockquote>
 <h2 id="standard-vs-vendor-specific-models">Standard vs. Vendor-Specific Models</h2>
 <ul>
 <li>Industry-standard models : Developed by IETF (e.g., <code>ietf-interfaces.yang</code>, <code>ietf-ip.yang</code>) or OpenConfig for broad compatibility.</li>
-<li>Vendor-specific (native) models : Tailored to a specfic platform. These are often required when standard models lack coverage for vendor-unique features.</li>
+<li>Vendor-specific (native) models : Tailored to a specific platform. These are often required when standard models lack coverage for vendor-unique features.</li>
 </ul>
 <p>All models are publicly available on GitHub:</p>
 <ul>

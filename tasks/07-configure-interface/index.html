@@ -85,7 +85,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Automation Scripts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Python Scripts</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../04-capabilities/">5. Inspect Capabilities</a>
                   </li>
@@ -108,6 +108,8 @@
                   <li class="toctree-l1"><a class="reference internal" href="../09-configure-ipv4/">9. Configure IPv4 Address</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../10-configure-gnmi/">10. Configure Interfaces with gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../11-configure-ospf/">11. Configure OSPF</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
@@ -152,7 +154,7 @@
 <li>A device my support more than one YANG interfaces modules, but one is used for configuration.</li>
 <li>Both cEOS and SR Linux devices support IETF and OpenConfig Interfaces module and use the OpenConfig module for configuration.</li>
 </ul>
-<p>Visualize the module tree again (clone the OpenConfig public YANG models if you have not done so)</p>
+<p>Visualize the module tree again (clone the OpenConfig public YANG modules if you have not done so)</p>
 <p>For OpenConfig (ignore the output errors, if any):</p>
 <pre><code class="language-bash">pyang -f tree -p openconfig openconfig-interfaces.yang
 </code></pre>
@@ -254,7 +256,7 @@
 <pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
 &lt;ok xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; xmlns:nc=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;/&gt;
 </code></pre>
-<p>Verify that the configuration was committed to the running store:</p>
+<p>Verify that the configuration was committed to the running datastore:</p>
 <pre><code class="language-bash">./nc_wrapper.sh srl-01 --get-config --filter /interfaces/interface[name=ethernet-1/1]
 </code></pre>
 <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
@@ -283,7 +285,7 @@
 </code></pre>
 <p>The output confirms that the interface was configured properly. Note that the <code>enable</code> element must be included to enable the subinterface. The main interface is enabled by default (by containerlab), but the subinterface must be enabled explicitly in SR Linux.</p>
 <h2 id="alternative-approach">Alternative Approach</h2>
-<p>A reliable and fast path to a create XML payload is to configure the feature manually via CLI first, then use a NETCONF <code>get-config</code> to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native model for the first time:</p>
+<p>A reliable and fast path to a create XML payload is to configure the feature manually via CLI first, then use a NETCONF <code>get-config</code> to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native module for the first time:</p>
 <p>We will use this approach to configure interface <code>Ethernet1</code> on <code>ceos-01</code>. Note that cEOS creates subinterface <code>0</code> and enables it by default.</p>
 <p>Use the CLI to set the description on interface <code>Ethernet1</code> and enable it:</p>
 <pre><code>interface Ethernet1

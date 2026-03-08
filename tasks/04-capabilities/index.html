@@ -85,7 +85,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Automation Scripts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Python Scripts</a>
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">5. Inspect Capabilities</a>
     <ul class="current">
@@ -108,6 +108,8 @@
                   <li class="toctree-l1"><a class="reference internal" href="../09-configure-ipv4/">9. Configure IPv4 Address</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../10-configure-gnmi/">10. Configure Interfaces with gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../11-configure-ospf/">11. Configure OSPF</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
@@ -160,7 +162,7 @@
 <ul>
 <li>Includes rich metadata such as feature support, deviations, augmentations, and dependencies.</li>
 <li>Each YANG module is individually listed, often with query strings for module details.</li>
-<li>IETF, OpenConfig and vendor-specific modules are included.</li>
+<li>IETF, OpenConfig and native modules are included.</li>
 <li>Supports NMDA (Network Management Datastore Architecture) capabilities.</li>
 </ul>
 <p>Example:</p>
@@ -185,14 +187,14 @@
 <p>the device returns the following in plain text:</p>
 <ul>
 <li>gNMI version (e.g., 0.10.0).</li>
-<li>List of YANG models by URN, including module name, publisher, and revision date.</li>
+<li>List of YANG modules by URN, including module name, publisher, and revision date.</li>
 <li>Supported encodings: Lists encoding formats such as JSON_IETF, PROTO, ASCII, and related numeric codes.</li>
 </ul>
 <p>The key characteristics of the output:</p>
 <ul>
-<li>Provides only the essential details for a gNMI client: supported models and encodings.</li>
+<li>Provides only the essential details for a gNMI client: supported modules and encodings.</li>
 <li>Does not specify per-module features or deviations.</li>
-<li>Models are listed solely by URNs, without feature flags or module breakdowns.</li>
+<li>Modules are listed solely by URNs, without feature flags or module breakdowns.</li>
 </ul>
 <p>Example:</p>
 <pre><code class="language-bash">gNMI version: 0.10.0
@@ -208,13 +210,15 @@ supported models:
 </code></pre>
 <p>In the examples above, the distinction between lines starting with <code>urn:</code> and those starting with <code>http:</code> reflects the naming authority and origin of the YANG models:</p>
 <ul>
-<li><code>urn:</code> prefixes indicate Nokia proprietary models (e.g., <code>urn:nokia.com:srlinux:aaa:aaa</code>). These are internal, vendor-specific schemas defined by Nokia for their SRLinux implementation. They follow a URN format using the <code>nokia.com</code> domain.</li>
+<li><code>urn:</code> prefixes indicate Nokia native models (e.g., <code>urn:nokia.com:srlinux:aaa:aaa</code>). These are internal, native schemas defined by Nokia for their SRLinux implementation. They follow a URN format using the <code>nokia.com</code> domain.</li>
 <li><code>http://</code> prefixes indicate IETF or OpenConfig models (e.g., <code>http://openconfig.net/yang/interfaces</code>). These are industry-standard models defined by OpenConfig working group.</li>
 <li><code>https://</code> prefixes (seen in NETCONF output) indicate OpenConfig gNSI models (e.g., <code>https://github.com/openconfig/yang/gnsi/authz</code>), though these appear as <code>http://</code> in the gNMI output for simplicity.</li>
 </ul>
-<p>This dual-namespace approach allows the device to support both:
-1. <strong>Standardized models</strong> (<code>http://</code>) for multi-vendor compatibility
-2. <strong>Vendor-specific extensions</strong> (<code>urn:</code>) for advanced Nokia features not covered by standards</p>
+<p>This dual-namespace approach allows the device to support both:</p>
+<ol>
+<li>Standardized models (<code>http://</code>) for multi-vendor compatibility</li>
+<li>Native extensions (<code>urn:</code>) for advanced Nokia features not covered by standards</li>
+</ol>
 <h2 id="conclusion">Conclusion</h2>
 <p>The gNMI and NETCONF capabilities responses differ in both format and the type of information they convey. NETCONF exposes protocol workflow features while gNMI exposes data model and encoding features. This reflects the different philosophies of the two protocols:</p>
 <ul>
@@ -222,13 +226,13 @@ supported models:
 <li>gNMI is designed for lightweight, high-frequency streaming and minimal overhead.</li>
 </ul>
 <h2 id="exercise">Exercise</h2>
-<p>Compare the capabilities returned by <code>ceo-01</code> for both NETCONF and gNMI. Does cEOS support the same NETCONF capabilities as SR Linux? Explain the difference in the format of the capabilities returned by gNMI?</p>
+<p>Compare the capabilities returned by <code>ceos-01</code> for both NETCONF and gNMI. Does cEOS support the same NETCONF capabilities as SR Linux? Explain the difference in the format of the capabilities returned by gNMI?</p>
 <p>The differences you notice in both the capabilities, supported models, and formatting, highlight one of the challenges in managing the network via data models in multi-vendor environment.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../05-scripts/" class="btn btn-neutral float-left" title="4. Automation Scripts"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../05-scripts/" class="btn btn-neutral float-left" title="4. Python Scripts"><span class="icon icon-circle-arrow-left"></span> Previous</a>
         <a href="../06-discover-modules/" class="btn btn-neutral float-right" title="6. Discover Modules">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 

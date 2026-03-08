@@ -85,7 +85,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Automation Scripts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Python Scripts</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../04-capabilities/">5. Inspect Capabilities</a>
                   </li>
@@ -118,6 +118,8 @@
     <li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a>
     </li>
     </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../11-configure-ospf/">11. Configure OSPF</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
@@ -156,7 +158,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="configure-remaining-interfaces-with-gnmi">Configure Remaining Interfaces with gNMI</h1>
-<p>In the previous task, we used NETCONF to configure the link between <code>ceos-01</code> and <code>srl-01</code>. Now, we will configure the remaining links in our topology using gNMI (gRPC Network Management Interface). This task will move at a faster pace since you are now familiar with the OpenConfig models.</p>
+<p>In the previous task, we used NETCONF to configure the link between <code>ceos-01</code> and <code>srl-01</code>. Now, we will configure the remaining links in our topology using gNMI (gRPC Network Management Interface). This task will move at a faster pace since you are now familiar with the OpenConfig modules.</p>
 <p>We need to configure the following remaining links:</p>
 <table>
 <thead>
@@ -319,7 +321,7 @@
 <p>You should see the JSON output reflecting the new IP address and interface state.</p>
 <h2 id="technique-2">Technique 2:</h2>
 <p>The previous technique is useful for small changes, like enabling an interface, and when you are familiar with the required payload. More efficient method is needed.</p>
-<p>The <code>gnmic</code> tool is able to generate configuration payload based on the target YANG data model. The <code>gnmic</code> <code>generate</code> command takes the target's YANG models as input and generates:</p>
+<p>The <code>gnmic</code> tool is able to generate configuration payload based on the target YANG data module. The <code>gnmic</code> <code>generate</code> command takes the target's YANG modules as input and generates:</p>
 <ul>
 <li>Paths in xpath or gNMI formats.</li>
 <li>Configuration payloads that can be used as update or replace input files for the Set command.</li>
@@ -388,7 +390,7 @@
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
         <a href="../09-configure-ipv4/" class="btn btn-neutral float-left" title="9. Configure IPv4 Address"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../../reference/network-topology/" class="btn btn-neutral float-right" title="Topology">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../11-configure-ospf/" class="btn btn-neutral float-right" title="11. Configure OSPF">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -414,7 +416,7 @@
       <span><a href="../09-configure-ipv4/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../../reference/network-topology/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../11-configure-ospf/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

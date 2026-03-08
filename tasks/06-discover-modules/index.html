@@ -85,7 +85,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Automation Scripts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Python Scripts</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../04-capabilities/">5. Inspect Capabilities</a>
                   </li>
@@ -93,11 +93,11 @@
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#step-1-retrieve-modules">Step 1: Retrieve Modules</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#step-2-fetch-the-schema-netconf">Step 2: Fetch the Schema (NETCONF)</a>
+    <li class="toctree-l2"><a class="reference internal" href="#step-2-fetch-the-module-netconf">Step 2: Fetch the Module (NETCONF)</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#step-3-visualize-the-tree-with-pyang">Step 3: Visualize the Tree with pyang</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#step-4-determining-configuration-models">Step 4: Determining Configuration Models</a>
+    <li class="toctree-l2"><a class="reference internal" href="#step-4-determining-configuration-modules">Step 4: Determining Configuration Modules</a>
     </li>
     </ul>
                   </li>
@@ -108,6 +108,8 @@
                   <li class="toctree-l1"><a class="reference internal" href="../09-configure-ipv4/">9. Configure IPv4 Address</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../10-configure-gnmi/">10. Configure Interfaces with gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../11-configure-ospf/">11. Configure OSPF</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
@@ -146,7 +148,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="discover-yang-modules">Discover YANG Modules</h1>
-<p>Before starting configuring a devices, you must discover what YANG models the device supports and understand the shape of the data those models describe. This task covers the discovery workflow.</p>
+<p>Before starting configuring a devices, you must discover what YANG modules the device supports and understand the shape of the data those moddules describe. This task covers the discovery workflow.</p>
 <p><strong>Read the Documentations</strong></p>
 <p>Reading the device documentation must be the first step in the process if configuring a device. Familiarize yourself with the content of the documents before proceeding. The links to Arista and Nokia devices are provided in the <a href="../../reference/network-topology/">References</a>.</p>
 <h2 id="step-1-retrieve-modules">Step 1: Retrieve Modules</h2>
@@ -174,7 +176,7 @@
 <li>Name: ietf-interfaces</li>
 <li>Revision: 2014-05-08 (2018-02-20)</li>
 </ul>
-<p>Note the revision date — always use models that match this exact revision when building payloads.</p>
+<p>Note the revision date — always use modules that match this exact revision when building payloads.</p>
 <p><strong>Using gNMI</strong></p>
 <p>Use the Python script <code>gnmi-tool</code> to extract the modules from the device's advertised YANG capabilities:</p>
 <pre><code class="language-bash">./scripts/gnmi_tool.py srl-01 modules 
@@ -209,9 +211,12 @@ http://openconfig.net/yang/interfaces?module=openconfig-interfaces&amp;revision=
 http://openconfig.net/yang/interfaces?module=openconfig-interfaces&amp;revision=2024-12-05
 </code></pre>
 <p>This means the a module may exists on the device for various reasons (operational state, compatibility, or partial configuration), but it does not necessarily mean it is the primary configuration model.</p>
-<h2 id="step-2-fetch-the-schema-netconf">Step 2: Fetch the Schema (NETCONF)</h2>
-<p>Once you know which modules the device supports, you can pull the actual YANG source files directly from the device using the <code>get-schema</code> NETCONF RPC. This will get the exact model version the device is running:</p>
-<p>Run the script for both devices for both the IETF and OpenConfig models (the file name will be \&lt;model-name&gt;.yang):</p>
+<h2 id="step-2-fetch-the-module-netconf">Step 2: Fetch the Module (NETCONF)</h2>
+<p>Once you know which modules the device supports, you can pull the actual YANG source files directly from the device using the <code>get-schema</code> NETCONF RPC. This will get the exact module version the device is running:</p>
+<blockquote>
+<p>Note: ncclient uses the term "schema" for what YANG formally calls a module,</p>
+</blockquote>
+<p>Run the script for both devices for both the IETF and OpenConfig modules (the file name will be \&lt;module-name&gt;.yang):</p>
 <pre><code class="language-bash">./scripts/netconf_tool.py srl-01 schema ietf-interfaces
 Schema saved to ietf-interfaces.yang
 ./scripts/netconf_tool.py srl-01 schema openconfig-interfaces
@@ -269,8 +274,8 @@ Schema saved to openconfig-interfaces.yang
         +--rw enabled?                    boolean
         +--rw link-up-down-trap-enable?   enumeration {if-mib}?
 </code></pre>
-<h2 id="step-4-determining-configuration-models">Step 4: Determining Configuration Models</h2>
-<p>A quick way to determine which modules is used for configuration is to use a NETCONF <code>get-config</code> to read configuration on the devices using simplified XPATH filter</p>
+<h2 id="step-4-determining-configuration-modules">Step 4: Determining Configuration Modules</h2>
+<p>A quick way to determine which module is used for configuration is to use a NETCONF <code>get-config</code> to read configuration on the devices using simplified XPATH filter</p>
 <pre><code class="language-bash">./nc_wrapper.sh srl-01 --get-config --filter /interfaces
 </code></pre>
 <p>Or</p>

@@ -85,7 +85,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Automation Scripts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Python Scripts</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../04-capabilities/">5. Inspect Capabilities</a>
                   </li>
@@ -128,6 +128,8 @@
                   <li class="toctree-l1"><a class="reference internal" href="../09-configure-ipv4/">9. Configure IPv4 Address</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../10-configure-gnmi/">10. Configure Interfaces with gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../11-configure-ospf/">11. Configure OSPF</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
@@ -234,7 +236,7 @@
         |  +--ro oper-mac-learning-disabled-reason?   enumeration
         +--rw connection-point?   -&gt; ../../connection-point/name {srl-feat:connection-point}?
 </code></pre>
-<p>The SR Linux supports three types of <a href="https://documentation.nokia.com/srlinux/25-10/books/config-basics/network-instances.html">network-instances</a>: default, ip-vrf, and mac-vrf. Type default is the default network-instance and only one of this type is supported. Type <code>ip-vrf</code> is the regular network-instance; you can create multiple network-instances of this type.</p>
+<p>The SR Linux supports three types of <a href="https://documentation.nokia.com/srlinux/25-10/books/config-basics/network-instances.html">network-instances</a>: default, ip-vrf, and mac-vrf. Type default is the default network instance and only one of this type is supported. Type <code>ip-vrf</code> is the regular network instance; you can create multiple network instances of this type.</p>
 <p>Creating the <code>default</code> instance and binding the interface to it in one step.</p>
 <p>Create an XML skeleton using <code>pyang</code> and redirect the output to a file:</p>
 <pre><code class="language-bash">pyang -f sample-xml-skeleton -p nokia --ignore-errors \
