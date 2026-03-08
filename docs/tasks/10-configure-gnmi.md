@@ -14,9 +14,11 @@ We need to configure the following remaining links:
 
 Unlike NETCONF's XML, gNMI typically uses JSON for its payload. We will use the same OpenConfig `interfaces` model.
 
+I recommended that you review [gNMi paths](../concepts/gnmi-paths.md) before proceeding as you will use them extensively in this task.. 
+
 ### Get Existing Configuration
 
-The easiest way to configure the interfaces is to get the configuration of the interface that we already 
+The easiest way to configure the interfaces is to get the configuration of the interface that we already completed:
 
 ```bash
 gnmic --config srl-gnmic.yml get --path /interface[name=ethernet-1/1]/subinterface[index=0] -t config
