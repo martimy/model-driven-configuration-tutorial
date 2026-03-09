@@ -15,8 +15,10 @@ srl-02  | Nokia SR Linux node | 192.168.100.13
 
 Node | Version | Documentation
 ---|---|---
-Arista cEOSLab | 4.35.1F | https://www.arista.com/en/support/product-documentation \ https://github.com/aristanetworks/yang
-Nokia SR Linux | 25.10.1 | https://documentation.nokia.com/srlinux/25-10/ \ https://documentation.nokia.com/srlinux/25-10/html/product/reference.html
+Arista cEOSLab | 4.35.1F | https://www.arista.com/en/support/product-documentation
+| | | https://github.com/aristanetworks/yang
+Nokia SR Linux | 25.10.1 | https://documentation.nokia.com/srlinux/25-10/ 
+| | | https://documentation.nokia.com/srlinux/25-10/html/product/reference.html
 
 
 ## Downloading YANG models
