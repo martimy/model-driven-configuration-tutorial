@@ -9,7 +9,7 @@ CREDENTIALS=(
     "ceos-01|830|admin|admin"
     "srl-01|830|admin|NokiaSrl1!"
     "192.168.100.12|830|admin|NokiaSrl1!"
-    "srl-02|803|admin|NokiaSrl1!"
+    "srl-02|830|admin|NokiaSrl1!"
     "192.168.100.13|830|admin|NokiaSrl1!"
 )
 
