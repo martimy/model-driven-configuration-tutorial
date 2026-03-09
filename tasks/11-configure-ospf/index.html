@@ -101,6 +101,12 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">11. Configure OSPF</a>
     <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#ospf-model-support">OSPF Model Support</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#ceos">cEOS</a>
+    </li>
     </ul>
                   </li>
               </ul>
@@ -109,6 +115,10 @@
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Topology</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/cli-tools/">CLI Tools</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/commands/">Command Quick Reference</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/building-payloads/">Configuration Techniques</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/troubleshooting/">Troubleshooting</a>
                   </li>
@@ -140,8 +150,309 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="configure-ospf">Configure OSPF</h1>
-<p>http://openconfig.net/yang/ospfv2?module=openconfig-ospfv2&amp;revision=2024-06-17
-urn:nokia.com:srlinux:ospf:ospf?module=srl_nokia-ospf&amp;revision=2025-10-31</p>
+<p>This task covers configuring OSPF using NETCONF following the typical workflow of module discovery, payload editing, and loading.</p>
+<h2 id="ospf-model-support">OSPF Model Support</h2>
+<pre><code>http://openconfig.net/yang/ospfv2?module=openconfig-ospfv2&amp;revision=2024-06-17
+urn:nokia.com:srlinux:ospf:ospf?module=srl_nokia-ospf&amp;revision=2025-10-31
+</code></pre>
+<pre><code>http://openconfig.net/yang/ospf?module=openconfig-ospf&amp;revision=2025-02-13
+</code></pre>
+<h2 id="configuration">Configuration</h2>
+<p>One of the challenges in model-driven configuration is the lack of documentation. Most vendor documents focus on the CLI, so finding a clear instructions on how to configure OSPF using NETCONF was a challenge.</p>
+<p>However, SR Linux is built to support YANG data models. Therefore, all management interfaces (CLI, gNMI, and JSON-RPC) are based on a common YANG models for configuration, state, and operational tasks. For example, the CLI command tree is derived from the YANG models loaded into the system and a gNMI client can use the models to configure the system.</p>
+<p>Therefore, using SR Linux documents has been helpful in discovering the requirements for configuring OSPF in SR Linux. From the <a href="https://documentation.nokia.com/srlinux/25-10/books/routing-protocols/ospf.html">documentation</a>, we find that we need the following to create a basic OSPF configuration:</p>
+<ul>
+<li>OSPF version number (v2 in this task)</li>
+<li>Router ID: Each router running OSPF must be configured with a unique router ID.</li>
+<li>An area: At least one OSPF area must be created. An interface must be assigned to each OSPF area.</li>
+<li>Interfaces: An interface has a single IP address and mask (unless the network is an unnumbered point-to-point network).</li>
+</ul>
+<p>Configuring all of the above will be done at the network instance level, so let's visit the network instance tree again:</p>
+<pre><code class="language-bash">pyang -f tree -p nokia  srl_nokia-network-instance.yang --tree-path /network-instance --tree-depth=2 --ignore-errors
+</code></pre>
+<p>Here I limited the depth of the tree to focus on the main branches. The OSPF protocol will fit inside the <code>protocols</code> container </p>
+<pre><code class="language-xml">module: srl_nokia-network-instance
+  +--rw network-instance* [name]
+     +--rw name                                     srl_nokia-comm:restricted-name
+     +--rw type?                                    identityref
+     +--rw admin-state?                             srl_nokia-comm:admin-state
+     +--ro oper-state?                              srl_nokia-comm:oper-state
+     +--ro oper-down-reason?                        enumeration
+     +--ro oper-mac-vrf-mtu?                        uint16
+     +--ro oper-vpws-mtu?                           uint16 {srl-feat:vpws}?
+     +--rw description?                             srl_nokia-comm:description
+     +--rw router-id?                               srl_nokia-comm:dotted-quad
+     +--rw mpls-forwarding
+     |     ...
+     +--rw ip-forwarding!
+     |     ...
+     +--rw ip-tunnel-statistics {srl-feat:gribi-host-prefix-ip-tunnel-statistics}?
+     |     ...
+     +--rw interface* [name]
+     |     ...
+     +--ro system-ipv4-address
+     |     ...
+     +--ro system-ipv6-address
+     |     ...
+     +--rw vxlan-interface* [name] {srl-feat:vxlan}?
+     |     ...
+     +--ro icmp
+     |     ...
+     +--ro icmp6
+     |     ...
+     +--rw protocols
+     |     ...
+     +--rw bridge-table! {srl-feat:bridged}?
+     |     ...
+     +--ro route-table
+     +--ro tunnel-table
+     +--ro multicast-forwarding-information-base
+     +--rw connection-point* [name] {srl-feat:connection-point}?
+           ...
+</code></pre>
+<p>You can also inspect the OSPF module tree, which is also large:</p>
+<pre><code class="language-bash">pyang -f tree -p nokia srl_nokia-ospf.yang
+</code></pre>
+<pre><code class="language-xml">module: srl_nokia-ospf
+
+  augment /srl_nokia-netinst:network-instance/srl_nokia-netinst:protocols:
+    +--rw ospf!
+       +--rw instance* [name]
+          +--rw name                           srl_nokia-comm:name
+          +--rw admin-state?                   srl_nokia-comm:admin-state
+          +--rw version                        identityref
+          +--rw address-family?                identityref
+          +--rw instance-id?                   uint32
+          +--rw router-id?                     yang:dotted-quad
+          +--rw max-ecmp-paths?                srl_nokia-ospf-types:ospf-ecmp
+          +--rw advertise-router-capability?   enumeration
+          +--rw export-policy?                 -&gt; /srl-rpol:routing-policy/policy/name
+          +--rw asbr!
+          ...
+</code></pre>
+<p>It is worth mentioning that the <code>!</code> symbol immediately following a node name (such as ospf!) indicates that the node is a presence container. Unlike a normal container, a presence container exists in the configuration just by being created, even if it has no child nodes. Its mere existence signifies that OSPF is enabled in the network instance.</p>
+<p>Typically, what you need to do next, is to generate the XML skeleton file that include the minimum configuration items mentioned above. However, for such configuration, relying on another technique that we explored earlier in Task 10, may be more efficient.</p>
+<pre><code class="language-bash">./nc_wrapper.sh srl-01 --get-config --filter /network-instance[name=default]
+</code></pre>
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+&lt;data xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; xmlns:nc=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
+    &lt;network-instance xmlns=&quot;urn:nokia.com:srlinux:net-inst:network-instance&quot;&gt;
+        &lt;name&gt;default&lt;/name&gt;
+        &lt;description&gt;Default&lt;/description&gt;
+        &lt;interface&gt;
+            &lt;name&gt;2&lt;/name&gt;
+            &lt;interface-ref&gt;
+                &lt;interface&gt;ethernet-1/1&lt;/interface&gt;
+                &lt;subinterface&gt;0&lt;/subinterface&gt;
+            &lt;/interface-ref&gt;
+        &lt;/interface&gt;
+        &lt;interface&gt;
+            &lt;name&gt;ethernet-1/2.0&lt;/name&gt;
+        &lt;/interface&gt;
+    &lt;/network-instance&gt;
+&lt;/data&gt;
+</code></pre>
+<pre><code class="language-bash">./scripts/netconf_tool.py srl-01 schema srl_nokia-ospf
+</code></pre>
+<h2 id="ceos">cEOS</h2>
+<pre><code class="language-bash">pyang -f tree -p openconfig --tree-path network-instances/network-instance/protocols/protocol/ospfv2 openconfig-network-instance.yang &gt; ospf.txt
+</code></pre>
+<p>From the generated tree, we are interested in these tree branches and mandatory elements (router id will be assigned automatically if not provided):</p>
+<pre><code>module: openconfig-network-instance
+  +--rw network-instances
+     +--rw network-instance* [name]
+        +--rw protocols
+           +--rw protocol* [identifier name]
+              +--rw ospfv2
+                 +--rw global
+                 |  +--rw config
+                 |  |  +--rw router-id?                    yang:dotted-quad
+                 ...
+                 +--rw areas
+                    +--rw area* [identifier]
+                       +--rw identifier       -&gt; ../config/identifier
+                       +--rw config
+                       |  +--rw identifier?   oc-ospf-types:ospf-area-identifier
+                       ...
+                       +--rw interfaces
+                       |  +--rw interface* [id]
+                       |     +--rw id               -&gt; ../config/id
+                       |     +--rw config
+                       |     |  +--rw id?                             oc-if:interface-id
+                       |     |  +--rw network-type?                   identityref
+                       ...
+</code></pre>
+<p>Generate a XML skeleton at a subtree: </p>
+<pre><code class="language-bash">pyang -f sample-xml-skeleton --sample-xml-skeleton-path=/network-instances/network-instance/protocols/protocol/ospfv2 --sample-xml-skeleton-doctype=config -p openconfig openconfig-network-instance.yang --ignore-errors -o ospf.xml
+</code></pre>
+<p>Edit the file <code>ospf</code> and remove the elements that are not required:</p>
+<pre><code class="language-xml">&lt;network-instances xmlns=&quot;http://openconfig.net/yang/network-instance&quot;&gt;
+&lt;network-instance&gt;
+    &lt;protocols&gt;
+    &lt;protocol&gt;
+        &lt;ospfv2&gt;
+        &lt;global&gt;
+            &lt;config&gt;
+            &lt;router-id&gt;2.2.2.2&lt;/router-id&gt;
+            &lt;/config&gt;
+        &lt;/global&gt;
+        &lt;areas&gt;
+            &lt;area&gt;
+            &lt;identifier&gt;0.0.0.0&lt;/identifier&gt;
+            &lt;config&gt;
+                &lt;identifier&gt;0.0.0.0&lt;/identifier&gt;
+            &lt;/config&gt;
+            &lt;interfaces&gt;
+                &lt;interface&gt;
+                &lt;id&gt;ethernet-1/1.0&lt;/id&gt;
+                &lt;config&gt;
+                    &lt;id&gt;ethernet-1/1.0&lt;/id&gt;
+                &lt;/config&gt;
+                &lt;/interface&gt;
+                &lt;interface&gt;
+                &lt;id&gt;ethernet-1/2.0&lt;/id&gt;
+                &lt;config&gt;
+                    &lt;id&gt;ethernet-1/2.0&lt;/id&gt;
+                &lt;/config&gt;
+                &lt;/interface&gt;
+            &lt;/interfaces&gt;
+            &lt;/area&gt;
+        &lt;/areas&gt;
+        &lt;/ospfv2&gt;
+    &lt;/protocol&gt;
+    &lt;/protocols&gt;
+&lt;/network-instance&gt;
+&lt;/network-instances&gt;
+</code></pre>
+<pre><code class="language-xml">pyang -f tree -p nokia srl_nokia-ospf.yang --tree-depth=4
+</code></pre>
+<pre><code class="language-xml">module: srl_nokia-ospf
+
+  augment /srl_nokia-netinst:network-instance/srl_nokia-netinst:protocols:
+    +--rw ospf!
+       +--rw instance* [name]
+          +--rw name                           srl_nokia-comm:name
+          +--rw admin-state?                   srl_nokia-comm:admin-state
+          +--rw version                        identityref
+          +--rw address-family?                identityref
+          +--rw instance-id?                   uint32
+          +--rw router-id?                     yang:dotted-quad
+          +--rw max-ecmp-paths?                srl_nokia-ospf-types:ospf-ecmp
+          +--rw advertise-router-capability?   enumeration
+          +--rw export-policy?                 -&gt; /srl-rpol:routing-policy/policy/name
+          +--rw asbr!
+          |  +--rw trace-path?   union
+          +--rw export-limit!
+          |  +--rw number         uint32
+          |  +--rw log-percent?   uint32
+          +--rw external-preference?           uint8
+          +--rw external-db-overflow!
+          |  +--rw interval?   uint32
+          |  +--rw limit?      uint32
+          +--rw graceful-restart
+          |  +--rw helper-mode?           boolean
+          |  +--rw strict-lsa-checking?   boolean
+          +--rw reference-bandwidth?           uint64
+          +--rw preference?                    uint8
+          +--rw overload
+          |  +--rw active?                   boolean
+          |  +--rw overload-include-ext-1?   boolean
+          |  +--rw overload-include-ext-2?   boolean
+          |  +--rw overload-include-stub?    boolean
+          |  +--rw overload-on-boot!
+          |  |     ...
+          |  +--rw rtr-adv-lsa-limit
+          |        ...
+          +--rw timers
+          |  +--rw incremental-spf-wait?   uint32
+          |  +--rw lsa-accumulate?         uint32
+          |  +--rw lsa-arrival?            uint32
+          |  +--rw redistribute-delay?     uint32
+          |  +--rw lsa-generate
+          |  |     ...
+          |  +--rw spf-wait
+          |        ...
+          +--rw trace-options
+          |  +--rw trace
+          |        ...
+          +--rw te-database-install! {srl-feat:traffic-engineering-ospf}?
+          |  +--rw bgp-ls! {srl-feat:traffic-engineering-bgpls}?
+          |        ...
+          +--rw traffic-engineering {srl-feat:traffic-engineering-ospf}?
+          |  +--rw advertisement?   boolean {srl-feat:traffic-engineering-ospf}?
+          +--ro oper-state?                    srl_nokia-comm:admin-state
+          +--ro last-disabled-reason?          string
+          +--ro area-border-router?            boolean
+          +--ro as-border-router?              boolean
+          +--ro backbone-router?               boolean
+          +--ro overload-state?                enumeration
+          +--ro overload-rem-interval?         int32
+          +--ro last-overload-entered-time?    srl_nokia-comm:date-and-time-delta
+          +--ro last-overload-exit-time?       srl_nokia-comm:date-and-time-delta
+          +--ro last-overload-enter-code?      enumeration
+          +--ro last-overload-exit-code?       enumeration
+          +--ro overflow?                      boolean
+          +--ro last-overflow-entered-time?    srl_nokia-comm:date-and-time-delta
+          +--ro last-overflow-exit-time?       srl_nokia-comm:date-and-time-delta
+          +--ro opaque-lsa-support?            boolean
+          +--ro last-enabled-time?             srl_nokia-comm:date-and-time-delta
+          +--ro routes-submitted?              yang:gauge32
+          +--ro total-exported-routes?         yang:gauge32
+          +--ro ovld-lsa-limit-rem-interval?   int32
+          +--ro new-lsas-originated?           yang:counter32
+          +--ro new-lsas-received?             yang:counter32
+          +--ro extern-lsa-count?              yang:gauge32
+          +--ro extern-lsa-cksum-sum?          srl_nokia-comm:hex-number
+          +--ro spf
+          |  +--ro full-spf-runs?                yang:counter32
+          |  +--ro ext-spf-runs?                 yang:counter32
+          |  +--ro incremental-inter-spf-runs?   yang:counter32
+          |  +--ro incremental-ext-spf-runs?     yang:counter32
+          |  +--ro spf-attempts-failed?          yang:counter32
+          |  +--ro max-spf-run-interval?         int32
+          |  +--ro min-spf-run-interval?         int32
+          |  +--ro avg-spf-run-interval?         int32
+          |  +--ro last-full-spf
+          |  |     ...
+          |  +--ro last-ext-spf
+          |        ...
+          +--ro lsa-totals
+          |  +--ro as-external-lsa?     yang:gauge32
+          |  +--ro e-as-external-lsa?   yang:gauge32
+          |  +--ro as-opaque-lsa?       yang:gauge32
+          |  +--ro router-info-lsa?     yang:gauge32
+          +--ro lsdb
+          |  +--ro lsa-types
+          |        ...
+          +--rw ldp-synchronization! {srl_nokia-feat:ldp}?
+          |  +--rw hold-down-timer?   uint16
+          |  +--rw end-of-lib?        boolean
+          +--rw area* [area-id]
+             +--rw area-id                        srl_nokia-ospf-types:ospf-area-identifier
+             +--rw advertise-router-capability?   boolean
+             +--rw blackhole-aggregate?           boolean
+             +--rw export-policy?                 -&gt; /srl-rpol:routing-policy/policy/name
+             +--rw stub!
+             |     ...
+             +--rw nssa!
+             |     ...
+             +--rw area-range* [ip-prefix-mask]
+             |     ...
+             +--rw bgp-ls-exclude?                boolean {srl-feat:traffic-engineering-ospf}?
+             +--ro full-spf-runs?                 yang:counter32
+             +--ro last-spf-run-time?             srl_nokia-comm:date-and-time-delta
+             +--ro area-bdr-rtr-count?            yang:gauge32
+             +--ro as-bdr-rtr-count?              yang:gauge32
+             +--ro active-interfaces?             uint32
+             +--ro lsa-totals
+             |     ...
+             +--ro lsa-filter-totals
+             |     ...
+             +--rw interface* [interface-name]
+             |     ...
+             +--ro lsdb
+                   ...
+</code></pre>
               
             </div>
           </div><footer>

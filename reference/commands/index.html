@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Command Quick Reference - Model-Driven Network Configuration Tutorial</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Command Quick Reference";
+        var mkdocs_page_input_path = "reference/commands.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Model-Driven Network Configuration Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/prerequisites/">Prerequisites</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../setup/pyvirtual/">Python Environment</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Concepts</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" >Data Modeling</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/yang/">YANG</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/xml-anatomy/">XML Anatomy</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/gnmi-paths/">gNMI Paths</a>
+                </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" >Protocols</a>
+    <ul>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/netconf/">NETCONF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/gnmi/">gNMI</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/restconf/">RESTCONF</a>
+                </li>
+                <li class="toctree-l2"><a class="reference internal" href="../../concepts/protocol-comparison/">Protocol Comparison</a>
+                </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Tasks</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/01-start-containerlab/">1. Start Containerlab</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/02-verify-netconf/">2. Verify NETCONF</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/03-verify-gnmi/">3. Verify gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/05-scripts/">4. Python Scripts</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/04-capabilities/">5. Inspect Capabilities</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/06-discover-modules/">6. Discover Modules</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/07-configure-interface/">7. Configure Interface</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/08-configure-ns/">8. Configure Network Instance</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/09-configure-ipv4/">9. Configure IPv4 Address</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/10-configure-gnmi/">10. Configure Interfaces with gNMI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../tasks/11-configure-ospf/">11. Configure OSPF</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Reference</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../network-topology/">Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../cli-tools/">CLI Tools</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Command Quick Reference</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#1-environment-setup">1. Environment Setup</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#2-netconf-netconf-console2-nc_wrappersh">2. NETCONF (netconf-console2 / nc_wrapper.sh)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#3-gnmi-gnmic">3. gNMI (gnmic)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#4-yang-module-inspection-pyang">4. YANG Module Inspection (pyang)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#5-payload-validation">5. Payload Validation</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../building-payloads/">Configuration Techniques</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../troubleshooting/">Troubleshooting</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../pyang/">pyang</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Model-Driven Network Configuration Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Reference</li>
+      <li class="breadcrumb-item active">Command Quick Reference</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="command-quick-reference">Command Quick Reference</h1>
+<h2 id="1-environment-setup">1. Environment Setup</h2>
+<p>Containerlab</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deploy the lab</td>
+<td>sudo containerlab deploy -t topology/tutorial.clab.yml</td>
+</tr>
+<tr>
+<td>List running nodes</td>
+<td>clab inspect -t topology</td>
+</tr>
+<tr>
+<td>Destroy the lab</td>
+<td>sudo clab destroy [--cleanup]</td>
+</tr>
+</tbody>
+</table>
+<p>Node Access</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SSH to a node</td>
+<td>ssh admin@<node></td>
+</tr>
+<tr>
+<td>Access SR Linux CLI via Docker</td>
+<td>docker exec -it srl-01 sr_cli</td>
+</tr>
+<tr>
+<td>Access SR Linux bash via Docker</td>
+<td>docker exec -it srl-01 bash</td>
+</tr>
+<tr>
+<td>NETCONF raw SSH session</td>
+<td>ssh -s -p 830 admin@srl-01 netconf</td>
+</tr>
+</tbody>
+</table>
+<p>Python Virtual Environment</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clone tutorial repo</td>
+<td>git clone https://github.com/martimy/model-driven-configuration-tutorial tutorial</td>
+</tr>
+<tr>
+<td>Create virtual environment</td>
+<td>python3 -m venv .pyenv</td>
+</tr>
+<tr>
+<td>Activate virtual environment</td>
+<td>source .pyenv/bin/activate</td>
+</tr>
+<tr>
+<td>Install dependencies</td>
+<td>pip install -r requirements.txt</td>
+</tr>
+<tr>
+<td>Deactivate virtual environment</td>
+<td>deactivate</td>
+</tr>
+<tr>
+<td>Install pyang</td>
+<td>pip install pyang</td>
+</tr>
+<tr>
+<td>Install gnmic</td>
+<td>bash -c "$(curl -sL https://get-gnmic.openconfig.net)"</td>
+</tr>
+</tbody>
+</table>
+<p>Docker Images</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Import Arista cEOS image</td>
+<td>docker import cEOS-lab-4.35.1F.tar.xz ceos:image</td>
+</tr>
+<tr>
+<td>Pull Nokia SR Linux image</td>
+<td>docker pull ghcr.io/nokia/srlinux</td>
+</tr>
+</tbody>
+</table>
+<p>Clone YANG Model Repositories</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IETF YANG models</td>
+<td>git clone https://github.com/YangModels/yang ietf</td>
+</tr>
+<tr>
+<td>OpenConfig YANG models</td>
+<td>git clone https://github.com/openconfig/public/ openconfig</td>
+</tr>
+<tr>
+<td>Arista EOS YANG models</td>
+<td>git clone https://github.com/aristanetworks/yang arista</td>
+</tr>
+<tr>
+<td>Nokia SR Linux YANG models</td>
+<td>git clone -b v25.10.1 --depth 1 https://github.com/nokia/srlinux-yang-models nokia</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-netconf-netconf-console2-nc_wrappersh">2. NETCONF (netconf-console2 / nc_wrapper.sh)</h2>
+<p>Connectivity &amp; Capabilities</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Verify NETCONF connectivity (hello)</td>
+<td>netconf-console2 --host=<node> --port 830 -u admin -p <pass> --hello</td>
+</tr>
+<tr>
+<td>Verify via wrapper script</td>
+<td>./nc_wrapper.sh <node> --hello</td>
+</tr>
+<tr>
+<td>Raw SSH NETCONF probe</td>
+<td>ssh admin@<node> -p 830 -s netconf</td>
+</tr>
+</tbody>
+</table>
+<p>Discovery</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List supported YANG modules</td>
+<td>./scripts/netconf_tool.py <node> modules</td>
+</tr>
+<tr>
+<td>Filter modules by keyword</td>
+<td>./scripts/netconf_tool.py <node> modules</td>
+</tr>
+<tr>
+<td>Download a YANG module from device</td>
+<td>./scripts/netconf_tool.py <node> schema <module-name></td>
+</tr>
+<tr>
+<td>Get schema via wrapper</td>
+<td>./nc_wrapper.sh <node> --get-schema <module-name></td>
+</tr>
+<tr>
+<td>List all NETCONF capabilities</td>
+<td>./scripts/netconf_tool.py <node> capabilities</td>
+</tr>
+</tbody>
+</table>
+<p>Configuration Retrieval</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Get full running configuration</td>
+<td>./nc_wrapper.sh <node> --get-config</td>
+</tr>
+<tr>
+<td>Get config with XPath filter</td>
+<td>./nc_wrapper.sh <node> --get-config --filter /<top-element></td>
+</tr>
+<tr>
+<td>Get config using XML filter file</td>
+<td>./nc_wrapper.sh <node> <filter-file>.xml</td>
+</tr>
+<tr>
+<td>Get running config (Python tool)</td>
+<td>./scripts/netconf_tool.py <node> config '<filter/>'</td>
+</tr>
+</tbody>
+</table>
+<p>Configuration Push</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Load config to candidate datastore</td>
+<td>./nc_wrapper.sh <node> --edit-config=<file>.xml --db=candidate</td>
+</tr>
+<tr>
+<td>Commit candidate to running</td>
+<td>./nc_wrapper.sh <node> --commit</td>
+</tr>
+<tr>
+<td>Load and commit in one step</td>
+<td>./nc_wrapper.sh <node> --edit-config=<file>.xml --db=candidate --commit</td>
+</tr>
+<tr>
+<td>Dry run (preview RPC without sending)</td>
+<td>./nc_wrapper.sh <node> --edit-config=<file>.xml --dry</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-gnmi-gnmic">3. gNMI (gnmic)</h2>
+<p>Connectivity &amp; Capabilities</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Check cEOS capabilities (direct)</td>
+<td>gnmic -a ceos-01:6030 -u admin -p admin --insecure capabilities</td>
+</tr>
+<tr>
+<td>Check SR Linux capabilities (direct)</td>
+<td>gnmic -a srl-01:57400 -u admin -p NokiaSrl1! --skip-verify capabilities</td>
+</tr>
+<tr>
+<td>Check capabilities via config file</td>
+<td>gnmic --config <node>-gnmic.yml capabilities</td>
+</tr>
+<tr>
+<td>Override target in config file</td>
+<td>gnmic --config srl-gnmic.yml -a srl-02 capabilities</td>
+</tr>
+</tbody>
+</table>
+<p>Discovery</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List supported YANG modules</td>
+<td>./scripts/gnmi_tool.py <node> modules</td>
+</tr>
+</tbody>
+</table>
+<p>Configuration Retrieval</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Get config at a path</td>
+<td>gnmic --config <node>-gnmic.yml get --path <gnmi-path> -t config</td>
+</tr>
+<tr>
+<td>Get config (Python tool)</td>
+<td>./scripts/gnmi_tool.py <node> config '<top-element>'</td>
+</tr>
+</tbody>
+</table>
+<p>Configuration Push</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Set (update) a path with inline value</td>
+<td>gnmic --config <node>-gnmic.yml set --update-path <path> --update-value '<json>'</td>
+</tr>
+<tr>
+<td>Set using a request file</td>
+<td>gnmic --config <node>-gnmic.yml set --request-file <file>.yml</td>
+</tr>
+<tr>
+<td>Generate a set-request template</td>
+<td>gnmic generate --file openconfig set-request --update <path> &gt; <file>.yml</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-yang-module-inspection-pyang">4. YANG Module Inspection (pyang)</h2>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Validate a module</td>
+<td>pyang <module>.yang</td>
+</tr>
+<tr>
+<td>Display full tree</td>
+<td>pyang -f tree <module>.yang</td>
+</tr>
+<tr>
+<td>Tree with search path for dependencies</td>
+<td>pyang -f tree -p <path> <module>.yang</td>
+</tr>
+<tr>
+<td>Tree filtered to a subtree path</td>
+<td>pyang -f tree --tree-path=/<path> <module>.yang</td>
+</tr>
+<tr>
+<td>Tree limited to N levels deep</td>
+<td>pyang -f tree --tree-depth=<n> <module>.yang</td>
+</tr>
+<tr>
+<td>Tree across multiple modules (augments)</td>
+<td>pyang -f tree -p <path> --tree-path=/<path> <dir>/*.yang</td>
+</tr>
+<tr>
+<td>Generate XML skeleton for config</td>
+<td>pyang -f sample-xml-skeleton --sample-xml-skeleton-doctype=config <module>.yang</td>
+</tr>
+<tr>
+<td>Generate XML skeleton at a subtree</td>
+<td>pyang -f sample-xml-skeleton --sample-xml-skeleton-path=/<path> --sample-xml-skeleton-doctype=config <dir>/*.yang</td>
+</tr>
+<tr>
+<td>Generate XML skeleton to file</td>
+<td>pyang -f sample-xml-skeleton --ignore-errors --sample-xml-skeleton-doctype=config <module>.yang &gt; <file>.xml</td>
+</tr>
+<tr>
+<td>Strict validation</td>
+<td>pyang --strict <module>.yang</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-payload-validation">5. Payload Validation</h2>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Validate XML syntax</td>
+<td>xmllint --noout <file>.xml</td>
+</tr>
+<tr>
+<td>Validate XML against YANG schema</td>
+<td>yanglint -p <yang-path> <module>.yang <file>.xml</td>
+</tr>
+<tr>
+<td>Format/pretty-print XML output</td>
+<td>./nc_wrapper.sh <node> --get-config --filter <path></td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../cli-tools/" class="btn btn-neutral float-left" title="CLI Tools"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../building-payloads/" class="btn btn-neutral float-right" title="Configuration Techniques">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../cli-tools/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../building-payloads/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
