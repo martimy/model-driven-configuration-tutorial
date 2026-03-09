@@ -1,36 +1,53 @@
 # Model-Driven Network Configuration Tutorial
 
-[![Static Badge](https://img.shields.io/badge/Docs-github.io-blue)](https://martimy.github.io/model-driven-configuration-tutorial/)
+[![Docs](https://img.shields.io/badge/Docs-github.io-blue)](https://martimy.github.io/model-driven-configuration-tutorial/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Containerlab](https://img.shields.io/badge/Built%20with-Containerlab-informational)](https://containerlab.dev)
 
+Modern networks are managed through APIs, not CLI sessions. The protocols, NETCONF and gNMI, are well-documented. The gap is everything in between: understanding YANG data models well enough to construct valid configuration payloads, navigating multi-vendor inconsistencies, and knowing why the same OpenConfig path behaves differently on Nokia SR Linux and Arista cEOS.
 
-This tutorial teaches you how to configure network devices using YANG data models. The tutorial is built on Containerlab, an open-source network emulation platform that spins up virtual instances of Nokia SR-Linux and Arista cEOS routers on your laptop.
+This tutorial closes that gap. It is a hands-on, lab-based guide to configuring real network devices using YANG models — not scripts, not automation frameworks, just you, the models, and the devices.
 
-📖 **[Read the full tutorial →](https://martimy.github.io/model-driven-configuration-tutorial)**
+📖 **[Read the full tutorial](https://martimy.github.io/model-driven-configuration-tutorial)**
+
+## What You Will Learn
+
+- How YANG modules are structured and how to read them with `pyang`
+- How NETCONF and gNMI work at the protocol level, and how they differ
+- How to discover what models a device supports and fetch them directly from the device
+- How to construct XML and JSON configuration payloads from scratch
+- Why multi-vendor environments are harder than the standards suggest, and how to handle it
+- Configuring interfaces, IP addressing, network instances, and OSPF across a mixed Nokia/Arista topology
+
+## Why This Tutorial Is Different
+
+Most network automation tutorials skip straight to Python libraries and abstraction frameworks. This one deliberately does not. Understanding the model layer, before any automation tool is involved, is what separates engineers who can debug broken automation from those who cannot.
+
+The lab uses real vendor images (Nokia SR Linux and Arista cEOS) running in Containerlab on your laptop. Every task exposes a real challenge: revision mismatches between vendors, modules that advertise support but cannot be used for configuration, augmentation-only modules that break tooling assumptions. These are not edge cases; they are everyday realities in multi-vendor deployments.
 
 ## Prerequisites
 
-- Familiarity with networking fundamentals: IP addressing, routing protocols, etc.
-- Comfort with the Linux command line and a text editor
+- Networking fundamentals: IP addressing, routing protocols
+- Linux command line basics
+- No prior YANG or NETCONF/gNMI experience required
 
 ## Quick Start
-
-Clone the repository and deploy the lab topology:
 
 ```bash
 git clone https://github.com/martimy/model-driven-configuration-tutorial.git
 cd model-driven-configuration-tutorial
 ```
 
-You will need [Docker](https://docs.docker.com/engine/install/) and [Containerlab](https://containerlab.dev/install/) installed, as well as the Arista cEOS and Nokia SR Linux container images. See the [Setup](https://martimy.github.io/model-driven-configuration-tutorial/setup/docker-images/) in the tutorial for details.
+You will need [Docker](https://docs.docker.com/engine/install/) and [Containerlab](https://containerlab.dev/install/) installed, as well as the Arista cEOS and Nokia SR Linux container images. See the [Setup guide](https://martimy.github.io/model-driven-configuration-tutorial/setup/docker-images/) for details.
 
 ## Repository Structure
 
 ```
 ├── docs/        # Tutorial content (source for GitHub Pages)
 ├── topology/    # Containerlab topology file and device configs
-└── scripts/     # Python automation scripts
+└── scripts/     # Python scripts for NETCONF and gNMI interaction
 ```
 
 ## License
 
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
+MIT License — see [LICENSE](LICENSE) for details.
