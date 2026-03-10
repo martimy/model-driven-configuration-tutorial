@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>9. Configure IPv4 Address - Model-Driven Network Configuration Tutorial</title>
+    <title>13. Stream Telemetry - Model-Driven Network Configuration Tutorial</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "9. Configure IPv4 Address";
-        var mkdocs_page_input_path = "tasks/09-configure-ipv4.md";
+        var mkdocs_page_name = "13. Stream Telemetry";
+        var mkdocs_page_input_path = "tasks/13-stream-telemetry.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -95,15 +95,7 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../08-configure-ns/">8. Configure Network Instance</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">9. Configure IPv4 Address</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#configuration-tasks">Configuration Tasks</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#connectivity-verification">Connectivity Verification</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#conclusions">Conclusions</a>
-    </li>
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09-configure-ipv4/">9. Configure IPv4 Address</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../10-configure-gnmi/">10. Configure Interfaces with gNMI</a>
                   </li>
@@ -111,7 +103,17 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../12-verify-ospf/">12. Verify OSPF</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../13-stream-telemetry/">13. Stream Telemetry</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">13. Stream Telemetry</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#subscribe-modes">Subscribe Modes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#subscribe-to-interface-counters">Subscribe to Interface Counters</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#using-a-gnmic-configuration-file-for-subscriptions">Using a gnmic Configuration File for Subscriptions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a>
+    </li>
+    </ul>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
@@ -144,7 +146,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Tasks</li>
-      <li class="breadcrumb-item active">9. Configure IPv4 Address</li>
+      <li class="breadcrumb-item active">13. Stream Telemetry</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -153,155 +155,98 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="configure-ipv4-address">Configure IPv4 Address</h1>
-<p>This task involves assigning IPv4 address to the two interfaces we configured thus far. According the topology <a href="../../reference/network-topology/">diagram</a>, the IPv4 addresses required are:</p>
-<table>
-<thead>
-<tr>
-<th>Device</th>
-<th>Interface</th>
-<th>IPv4 address/mask</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ceos-01</td>
-<td>Ethernet1</td>
-<td>192.168.1.2/31</td>
-</tr>
-<tr>
-<td>srl-01</td>
-<td>ethernet-1/1.0</td>
-<td>192.168.1.3/31</td>
-</tr>
-</tbody>
-</table>
-<h2 id="configuration-tasks">Configuration Tasks</h2>
-<p>We will follow the same workflow but I will skip the discovery steps.</p>
-<p>Both devices support the OpenConfig module <code>openconfig-if-ip</code> (different versions), so we will get the module and build the XML file.</p>
-<pre><code class="language-bash">./scripts/netconf_tool.py srl-01 schema openconfig-if-ip
+                <h1 id="stream-telemetry-with-gnmi-subscribe">Stream Telemetry with gNMI Subscribe</h1>
+<p>In the previous tasks, you used the gNMI <code>Get</code> RPC to retrieve snapshots of configuration and operational state. This is useful for one-off queries but requires repeated polling to track changes over time. gNMI addresses this with the <code>Subscribe</code> RPC, which establishes a long-lived stream from the device to the client — the device pushes updates rather than the client pulling them.</p>
+<p>This task introduces streaming telemetry using interface counters as the data source. Counters make an ideal first telemetry target: they change continuously whenever traffic is present, the data is easy to interpret, and they are reliably supported across vendors.</p>
+<h2 id="subscribe-modes">Subscribe Modes</h2>
+<p>The gNMI specification defines three subscription modes:</p>
+<ul>
+<li><code>ONCE</code> — the device sends a single snapshot and closes the stream. Functionally similar to <code>Get</code> but using the Subscribe RPC.</li>
+<li><code>POLL</code> — the client sends explicit poll requests over a persistent stream; the device responds to each one.</li>
+<li><code>STREAM</code> — the device pushes updates continuously. This is the mode used for real telemetry and supports two sub-modes:</li>
+<li><code>ON_CHANGE</code> — the device sends an update only when a value changes.</li>
+<li><code>SAMPLE</code> — the device sends updates at a fixed interval regardless of whether the value has changed.</li>
+</ul>
+<p>Interface counters are better suited to <code>SAMPLE</code> mode because they change with every packet and <code>ON_CHANGE</code> would generate excessive updates under any meaningful traffic load.</p>
+<h2 id="subscribe-to-interface-counters">Subscribe to Interface Counters</h2>
+<p>Open two terminals. In the first terminal, start a continuous ping between the two routers to generate traffic:</p>
+<pre><code class="language-bash"># From ceos-01 CLI
+ping 192.168.1.3 repeat 10000 interval 1
 </code></pre>
-<pre><code class="language-bash">pyang -f tree -p openconfig openconfig-if-ip.yang
+<p>In the second terminal, start a gNMI subscription to interface counters on SR Linux:</p>
+<pre><code class="language-bash">gnmic --config srl-gnmic.yml subscribe \
+  --path /interface[name=ethernet-1/1]/statistics \
+  --mode stream \
+  --stream-mode sample \
+  --sample-interval 5s
 </code></pre>
-<pre><code>module: openconfig-if-ip
-
-  augment /oc-if:interfaces/oc-if:interface/oc-if:subinterfaces/oc-if:subinterface:
-    +--rw ipv4
-       +--rw addresses
-       |  +--rw address* [ip]
-       |     +--rw ip        -&gt; ../config/ip
-       |     +--rw config
-       |     |  +--rw ip?              oc-inet:ipv4-address
-       |     |  +--rw prefix-length?   uint8
+<p>You should see counter updates pushed to your terminal every five seconds. The <code>in-octets</code> and <code>out-octets</code> fields will increment with each sample, reflecting the ping traffic:</p>
+<pre><code class="language-json">{
+  &quot;source&quot;: &quot;srl-01:57400&quot;,
+  &quot;subscription-name&quot;: &quot;default-1773182967&quot;,
+  &quot;timestamp&quot;: 1773183053033074178,
+  &quot;time&quot;: &quot;2026-03-10T22:50:53.033074178Z&quot;,
+  &quot;updates&quot;: [
+    {
+      &quot;Path&quot;: &quot;srl_nokia-interfaces:interface[name=ethernet-1/1]/statistics&quot;,
+      &quot;values&quot;: {
+        &quot;srl_nokia-interfaces:interface/statistics&quot;: {
+          &quot;carrier-transitions&quot;: &quot;0&quot;,
+          &quot;in-broadcast-packets&quot;: &quot;11&quot;,
+          &quot;in-discarded-packets&quot;: &quot;188392&quot;,
+          &quot;in-error-packets&quot;: &quot;0&quot;,
+          &quot;in-fcs-error-packets&quot;: &quot;0&quot;,
+          &quot;in-multicast-packets&quot;: &quot;224215&quot;,
+          &quot;in-octets&quot;: &quot;32038668&quot;,
+          &quot;in-packets&quot;: &quot;244453&quot;,
+          &quot;in-unicast-packets&quot;: &quot;20227&quot;,
+          &quot;out-broadcast-packets&quot;: &quot;11&quot;,
+          &quot;out-discarded-packets&quot;: &quot;0&quot;,
+          &quot;out-error-packets&quot;: &quot;0&quot;,
+          &quot;out-multicast-packets&quot;: &quot;43674&quot;,
+          &quot;out-octets&quot;: &quot;8495740&quot;,
+          &quot;out-packets&quot;: &quot;63944&quot;,
+          &quot;out-unicast-packets&quot;: &quot;20259&quot;
+        }
+      }
+    }
+  ]
+}
 </code></pre>
-<p>Looking at the top few lines of the tree, we see that we need the tree branch <code>/interfaces/interface/subinterfaces/subinterface/ipv4</code></p>
-<p>However, if we try to grab the this branch using <code>--tree-path</code>, we don't get the tree we want.</p>
-<pre><code class="language-bash"> pyang -f tree -p openconfig --tree-path /interfaces/interface/subinterfaces/subinterface/ipv4 openconfig-if-ip.yang
+<p>Press <code>Ctrl+C</code> to stop the subscription.</p>
+<p>Repeat for cEOS using the OpenConfig path:</p>
+<pre><code class="language-bash">gnmic --config ceos-gnmic.yml subscribe \
+  --path /interfaces/interface[name=Ethernet1]/state/counters \
+  --mode stream \
+  --stream-mode sample \
+  --sample-interval 5s
 </code></pre>
-<pre><code>module: openconfig-if-ip
-
-  augment /oc-if:interfaces/oc-if:interface/oc-if:subinterfaces/oc-if:subinterface:
-    +--rw ipv4
-  augment /oc-if:interfaces/oc-if:interface/oc-if:subinterfaces/oc-if:subinterface:
-    +--rw ipv6
-  augment /oc-if:interfaces/oc-if:interface/oc-vlan:routed-vlan:
-    +--rw ipv4
-  augment /oc-if:interfaces/oc-if:interface/oc-vlan:routed-vlan:
-    +--rw ipv6
-(.pyenv) automan@autobook:~/tutorial$
+<p>Notice that the path structure differs between the two vendors. SR Linux uses <code>/interface[name=...]/statistics</code> via its native model, while cEOS uses <code>/interfaces/interface[name=...]/state/counters</code> via the OpenConfig model. Both return counter data, but the field names and hierarchy reflect their respective YANG modules.</p>
+<h2 id="using-a-gnmic-configuration-file-for-subscriptions">Using a gnmic Configuration File for Subscriptions</h2>
+<p>For more complex or reusable subscriptions, you can define them in the gnmic configuration file rather than passing all flags on the command line. Add a <code>subscriptions</code> block to your <code>srl-gnmic.yml</code>:</p>
+<pre><code class="language-yaml">subscriptions:
+  interface-counters:
+    paths:
+      - /interface[name=ethernet-1/1]/statistics
+      - /interface[name=ethernet-1/2]/statistics
+    mode: stream
+    stream-mode: sample
+    sample-interval: 5s
 </code></pre>
-<p>The command produces only the empty elements because <code>openconfig-if-ip.yang</code> is an augmentation-only module. It does not define any top-level data nodes itself (no container, list, leaf etc. at the root level of its own module). It only adds structure underneath nodes defined in other modules (mainly <code>openconfig-interfaces.yang</code>).</p>
-<p>When <code>pyang</code> generates the tree (or sample skeleton), it starts from the data tree of the module(s) you give it on the command line. Since <code>openconfig-if-ip</code> contributes nothing at the top, you get an empty elements.</p>
-<p>To get this branch using <code>--tree-path</code> we have to include all the top modules:</p>
-<pre><code class="language-bash">pyang -f tree -p openconfig --tree-path /interfaces/interface/subinterfaces/subinterface/ipv4 openconfig/release/models/interfaces/*.yang
+<p>Then invoke it by name:</p>
+<pre><code class="language-bash">gnmic --config srl-gnmic.yml subscribe --name interface-counters
 </code></pre>
-<p>Similarly, to get the XML skeleton (this time we need to include the interface):</p>
-<pre><code class="language-bash">pyang -f sample-xml-skeleton -p openconfig \
- --sample-xml-skeleton-path=/interfaces/interface --sample-xml-skeleton-doctype=config openconfig/release/models/interfaces/*.yang
-</code></pre>
-<p>Create an XML file that includes only the parts we need for now:</p>
-<pre><code class="language-xml">&lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
-   &lt;interface&gt;
-   &lt;name/&gt;
-   &lt;subinterfaces&gt;
-      &lt;subinterface&gt;
-         &lt;index/&gt;
-         &lt;ipv4 xmlns=&quot;http://openconfig.net/yang/interfaces/ip&quot;&gt;
-         &lt;addresses&gt;
-            &lt;address&gt;
-               &lt;ip/&gt;
-               &lt;config&gt;
-               &lt;ip/&gt;
-               &lt;prefix-length/&gt;
-               &lt;/config&gt;
-            &lt;/address&gt;
-         &lt;/addresses&gt;
-            &lt;config&gt;
-            &lt;/enabled&gt;
-            &lt;/config&gt;
-         &lt;/ipv4&gt;
-      &lt;/subinterface&gt;
-   &lt;/subinterfaces&gt;
-   &lt;/interface&gt;
-&lt;/interfaces&gt;
-</code></pre>
-<p>Edit the file for both routers. For <code>srl-01</code>, it will look like this:</p>
-<pre><code class="language-xml">&lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
-  &lt;interface&gt;
-    &lt;name&gt;ethernet-1/1&lt;/name&gt;
-    &lt;subinterfaces&gt;
-      &lt;subinterface&gt;
-        &lt;index&gt;0&lt;/index&gt;
-        &lt;ipv4 xmlns=&quot;http://openconfig.net/yang/interfaces/ip&quot;&gt;
-          &lt;addresses&gt;
-            &lt;address&gt;
-              &lt;ip&gt;192.168.1.3&lt;/ip&gt;
-              &lt;config&gt;
-                &lt;ip&gt;192.168.1.3&lt;/ip&gt;
-                &lt;prefix-length&gt;31&lt;/prefix-length&gt;
-              &lt;/config&gt;
-            &lt;/address&gt;
-          &lt;/addresses&gt;
-          &lt;config&gt;
-            &lt;enabled&gt;true&lt;/enabled&gt;
-          &lt;/config&gt;
-        &lt;/ipv4&gt;
-      &lt;/subinterface&gt;
-    &lt;/subinterfaces&gt;
-  &lt;/interface&gt;
-&lt;/interfaces&gt;
-</code></pre>
-<h2 id="connectivity-verification">Connectivity Verification</h2>
-<p>Before pinging, you need to check if routing is enabled on <code>ceos-01</code>.</p>
-<p>cEOS devices operate as switches at startup. To enable routing functions, ip routing must be enabled and the switch mode must be disabled on L3 interfaces. As of this writing, I could not find a mechanism to do this via NETCONF or gNMI, so it must be done via cLI. This represents one of the important real-world implementation challenges that this tutorial aim to highlight.</p>
-<pre><code>ceos-01&gt;enable
-ceos-01#configure
-ceos-01(config)#ip routing
-ceos-01(config)#exit
-</code></pre>
-<p>A portion of the device configuration should look like this:</p>
-<pre><code>interface Ethernet1
-   description To SRL-01
-   no switchport
-   ip address 192.168.1.2/31
-!
-interface Ethernet2
-!
-interface Management0
-   vrf MGMT
-   ip address 192.168.100.11/24
-!
-ip routing
-</code></pre>
-<p>From the CLI, you should be able to ping successfully between the two devices.</p>
-<h2 id="conclusions">Conclusions</h2>
-<p>You just completed the entire process of establishing a link between two routers. This process involved creating a subinterface, binding it to a network instance, then assigning an IPv4 address. A keen observer, will notice that we can combine creating a subinterface and assigning an IP address in one step. In fact, we can do all tasks in one step. This is what we will do configure the remaining interfaces in the toplogy.</p>
+<p>This approach scales naturally to production use cases where you might subscribe to dozens of paths simultaneously across multiple devices.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>The <code>Subscribe</code> RPC is what makes gNMI fundamentally different from NETCONF. NETCONF is a transaction-oriented protocol. You send a request and receive a response. gNMI's streaming model inverts this relationship: the device continuously pushes data to the collector, enabling real-time visibility at scale without repeated polling overhead.</p>
+<p>Polling a large network for interface counters every 30 seconds places a predictable but significant load on both devices and the management system. A gNMI subscription with a 30-second sample interval achieves the same result with a single persistent connection per device and a fraction of the overhead, and can be reduced to five seconds or less without meaningful impact on device performance.</p>
+<p>As you complete this tutorial, the most important takeaway is not any specific command or YANG path — those change with every software release. It is the workflow: discover what the device supports, find the right module, read the tree, construct the payload, validate before pushing, and know when to fall back to native models. That workflow applies regardless of vendor, protocol version, or automation tool, and it is the foundation on which everything else in network automation is built.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../08-configure-ns/" class="btn btn-neutral float-left" title="8. Configure Network Instance"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../10-configure-gnmi/" class="btn btn-neutral float-right" title="10. Configure Interfaces with gNMI">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../12-verify-ospf/" class="btn btn-neutral float-left" title="12. Verify OSPF"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../../reference/network-topology/" class="btn btn-neutral float-right" title="Topology">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -324,10 +269,10 @@ ip routing
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../08-configure-ns/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../12-verify-ospf/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../10-configure-gnmi/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../../reference/network-topology/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>

@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>9. Configure IPv4 Address - Model-Driven Network Configuration Tutorial</title>
+    <title>12. Verify OSPF - Model-Driven Network Configuration Tutorial</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "9. Configure IPv4 Address";
-        var mkdocs_page_input_path = "tasks/09-configure-ipv4.md";
+        var mkdocs_page_name = "12. Verify OSPF";
+        var mkdocs_page_input_path = "tasks/12-verify-ospf.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -95,21 +95,21 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../08-configure-ns/">8. Configure Network Instance</a>
                   </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">9. Configure IPv4 Address</a>
-    <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#configuration-tasks">Configuration Tasks</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#connectivity-verification">Connectivity Verification</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#conclusions">Conclusions</a>
-    </li>
-    </ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../09-configure-ipv4/">9. Configure IPv4 Address</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../10-configure-gnmi/">10. Configure Interfaces with gNMI</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../11-configure-ospf/">11. Configure OSPF</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../12-verify-ospf/">12. Verify OSPF</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">12. Verify OSPF</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#sr-linux">SR Linux</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#ceos">cEOS</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a>
+    </li>
+    </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../13-stream-telemetry/">13. Stream Telemetry</a>
                   </li>
@@ -144,7 +144,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Tasks</li>
-      <li class="breadcrumb-item active">9. Configure IPv4 Address</li>
+      <li class="breadcrumb-item active">12. Verify OSPF</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -153,155 +153,87 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="configure-ipv4-address">Configure IPv4 Address</h1>
-<p>This task involves assigning IPv4 address to the two interfaces we configured thus far. According the topology <a href="../../reference/network-topology/">diagram</a>, the IPv4 addresses required are:</p>
-<table>
-<thead>
-<tr>
-<th>Device</th>
-<th>Interface</th>
-<th>IPv4 address/mask</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ceos-01</td>
-<td>Ethernet1</td>
-<td>192.168.1.2/31</td>
-</tr>
-<tr>
-<td>srl-01</td>
-<td>ethernet-1/1.0</td>
-<td>192.168.1.3/31</td>
-</tr>
-</tbody>
-</table>
-<h2 id="configuration-tasks">Configuration Tasks</h2>
-<p>We will follow the same workflow but I will skip the discovery steps.</p>
-<p>Both devices support the OpenConfig module <code>openconfig-if-ip</code> (different versions), so we will get the module and build the XML file.</p>
-<pre><code class="language-bash">./scripts/netconf_tool.py srl-01 schema openconfig-if-ip
+                <h1 id="verify-ospf-routing">Verify OSPF Routing</h1>
+<p>In this task, you will use gNMI to retrieve the routing table from the network instance <code>default</code> on SR Linux and cEOS to confirm that OSPF is exchanging routes correctly.</p>
+<h2 id="sr-linux">SR Linux</h2>
+<p>In <a href="../11-configure-ospf/">Task 11</a> we saw that <code>+--ro route-table</code> is one of the read-only containers in the network instance <code>default</code>. Therefore, to list all IPv4 unicast routes in the routing table on SR Linux:</p>
+<pre><code class="language-bash">gnmic --config srl-gnmic.yml get \
+  --path /network-instance[name=default]/route-table/ipv4-unicast/route
 </code></pre>
-<pre><code class="language-bash">pyang -f tree -p openconfig openconfig-if-ip.yang
+<p>Or to retrieve only the prefixes, which gives a more readable summary:</p>
+<pre><code class="language-bash">gnmic --config srl-gnmic.yml get \
+  --path /network-instance[name=default]/route-table/ipv4-unicast/route/ipv4-prefix
 </code></pre>
-<pre><code>module: openconfig-if-ip
-
-  augment /oc-if:interfaces/oc-if:interface/oc-if:subinterfaces/oc-if:subinterface:
-    +--rw ipv4
-       +--rw addresses
-       |  +--rw address* [ip]
-       |     +--rw ip        -&gt; ../config/ip
-       |     +--rw config
-       |     |  +--rw ip?              oc-inet:ipv4-address
-       |     |  +--rw prefix-length?   uint8
+<p>The output confirms that the routing table contains entries from multiple sources:</p>
+<pre><code class="language-json">```json
+[
+  {
+    &quot;source&quot;: &quot;srl-01:57400&quot;,
+    &quot;timestamp&quot;: 1773162638528776120,
+    &quot;time&quot;: &quot;2026-03-10T17:10:38.52877612Z&quot;,
+    &quot;updates&quot;: [
+      {
+        &quot;Path&quot;: &quot;srl_nokia-network-instance:network-instance[name=default]/route-table/srl_nokia-ip-route-tables:ipv4-unicast&quot;,
+        &quot;values&quot;: {
+          &quot;srl_nokia-network-instance:network-instance/route-table/srl_nokia-ip-route-tables:ipv4-unicast&quot;: {
+            &quot;route&quot;: [
+              {
+                &quot;id&quot;: 9,
+                &quot;ipv4-prefix&quot;: &quot;192.168.1.2/31&quot;,
+                &quot;origin-network-instance&quot;: &quot;default&quot;,
+                &quot;route-owner&quot;: &quot;net_inst_mgr&quot;,
+                &quot;route-type&quot;: &quot;srl_nokia-common:local&quot;
+              },
+              {
+                &quot;id&quot;: 9,
+                &quot;ipv4-prefix&quot;: &quot;192.168.1.3/32&quot;,
+                &quot;origin-network-instance&quot;: &quot;default&quot;,
+                &quot;route-owner&quot;: &quot;net_inst_mgr&quot;,
+                &quot;route-type&quot;: &quot;srl_nokia-common:host&quot;
+              },
+              {
+                &quot;id&quot;: 0,
+                &quot;ipv4-prefix&quot;: &quot;192.168.1.4/31&quot;,
+                &quot;origin-network-instance&quot;: &quot;default&quot;,
+                &quot;route-owner&quot;: &quot;ospf_mgr&quot;,
+                &quot;route-type&quot;: &quot;srl_nokia-common:ospfv2&quot;
+              },
+              {
+                &quot;id&quot;: 8,
+                &quot;ipv4-prefix&quot;: &quot;192.168.1.6/31&quot;,
+                &quot;origin-network-instance&quot;: &quot;default&quot;,
+                &quot;route-owner&quot;: &quot;net_inst_mgr&quot;,
+                &quot;route-type&quot;: &quot;srl_nokia-common:local&quot;
+              },
+              {
+                &quot;id&quot;: 8,
+                &quot;ipv4-prefix&quot;: &quot;192.168.1.6/32&quot;,
+                &quot;origin-network-instance&quot;: &quot;default&quot;,
+                &quot;route-owner&quot;: &quot;net_inst_mgr&quot;,
+                &quot;route-type&quot;: &quot;srl_nokia-common:host&quot;
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+]
 </code></pre>
-<p>Looking at the top few lines of the tree, we see that we need the tree branch <code>/interfaces/interface/subinterfaces/subinterface/ipv4</code></p>
-<p>However, if we try to grab the this branch using <code>--tree-path</code>, we don't get the tree we want.</p>
-<pre><code class="language-bash"> pyang -f tree -p openconfig --tree-path /interfaces/interface/subinterfaces/subinterface/ipv4 openconfig-if-ip.yang
-</code></pre>
-<pre><code>module: openconfig-if-ip
-
-  augment /oc-if:interfaces/oc-if:interface/oc-if:subinterfaces/oc-if:subinterface:
-    +--rw ipv4
-  augment /oc-if:interfaces/oc-if:interface/oc-if:subinterfaces/oc-if:subinterface:
-    +--rw ipv6
-  augment /oc-if:interfaces/oc-if:interface/oc-vlan:routed-vlan:
-    +--rw ipv4
-  augment /oc-if:interfaces/oc-if:interface/oc-vlan:routed-vlan:
-    +--rw ipv6
-(.pyenv) automan@autobook:~/tutorial$
-</code></pre>
-<p>The command produces only the empty elements because <code>openconfig-if-ip.yang</code> is an augmentation-only module. It does not define any top-level data nodes itself (no container, list, leaf etc. at the root level of its own module). It only adds structure underneath nodes defined in other modules (mainly <code>openconfig-interfaces.yang</code>).</p>
-<p>When <code>pyang</code> generates the tree (or sample skeleton), it starts from the data tree of the module(s) you give it on the command line. Since <code>openconfig-if-ip</code> contributes nothing at the top, you get an empty elements.</p>
-<p>To get this branch using <code>--tree-path</code> we have to include all the top modules:</p>
-<pre><code class="language-bash">pyang -f tree -p openconfig --tree-path /interfaces/interface/subinterfaces/subinterface/ipv4 openconfig/release/models/interfaces/*.yang
-</code></pre>
-<p>Similarly, to get the XML skeleton (this time we need to include the interface):</p>
-<pre><code class="language-bash">pyang -f sample-xml-skeleton -p openconfig \
- --sample-xml-skeleton-path=/interfaces/interface --sample-xml-skeleton-doctype=config openconfig/release/models/interfaces/*.yang
-</code></pre>
-<p>Create an XML file that includes only the parts we need for now:</p>
-<pre><code class="language-xml">&lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
-   &lt;interface&gt;
-   &lt;name/&gt;
-   &lt;subinterfaces&gt;
-      &lt;subinterface&gt;
-         &lt;index/&gt;
-         &lt;ipv4 xmlns=&quot;http://openconfig.net/yang/interfaces/ip&quot;&gt;
-         &lt;addresses&gt;
-            &lt;address&gt;
-               &lt;ip/&gt;
-               &lt;config&gt;
-               &lt;ip/&gt;
-               &lt;prefix-length/&gt;
-               &lt;/config&gt;
-            &lt;/address&gt;
-         &lt;/addresses&gt;
-            &lt;config&gt;
-            &lt;/enabled&gt;
-            &lt;/config&gt;
-         &lt;/ipv4&gt;
-      &lt;/subinterface&gt;
-   &lt;/subinterfaces&gt;
-   &lt;/interface&gt;
-&lt;/interfaces&gt;
-</code></pre>
-<p>Edit the file for both routers. For <code>srl-01</code>, it will look like this:</p>
-<pre><code class="language-xml">&lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
-  &lt;interface&gt;
-    &lt;name&gt;ethernet-1/1&lt;/name&gt;
-    &lt;subinterfaces&gt;
-      &lt;subinterface&gt;
-        &lt;index&gt;0&lt;/index&gt;
-        &lt;ipv4 xmlns=&quot;http://openconfig.net/yang/interfaces/ip&quot;&gt;
-          &lt;addresses&gt;
-            &lt;address&gt;
-              &lt;ip&gt;192.168.1.3&lt;/ip&gt;
-              &lt;config&gt;
-                &lt;ip&gt;192.168.1.3&lt;/ip&gt;
-                &lt;prefix-length&gt;31&lt;/prefix-length&gt;
-              &lt;/config&gt;
-            &lt;/address&gt;
-          &lt;/addresses&gt;
-          &lt;config&gt;
-            &lt;enabled&gt;true&lt;/enabled&gt;
-          &lt;/config&gt;
-        &lt;/ipv4&gt;
-      &lt;/subinterface&gt;
-    &lt;/subinterfaces&gt;
-  &lt;/interface&gt;
-&lt;/interfaces&gt;
-</code></pre>
-<h2 id="connectivity-verification">Connectivity Verification</h2>
-<p>Before pinging, you need to check if routing is enabled on <code>ceos-01</code>.</p>
-<p>cEOS devices operate as switches at startup. To enable routing functions, ip routing must be enabled and the switch mode must be disabled on L3 interfaces. As of this writing, I could not find a mechanism to do this via NETCONF or gNMI, so it must be done via cLI. This represents one of the important real-world implementation challenges that this tutorial aim to highlight.</p>
-<pre><code>ceos-01&gt;enable
-ceos-01#configure
-ceos-01(config)#ip routing
-ceos-01(config)#exit
-</code></pre>
-<p>A portion of the device configuration should look like this:</p>
-<pre><code>interface Ethernet1
-   description To SRL-01
-   no switchport
-   ip address 192.168.1.2/31
-!
-interface Ethernet2
-!
-interface Management0
-   vrf MGMT
-   ip address 192.168.100.11/24
-!
-ip routing
-</code></pre>
-<p>From the CLI, you should be able to ping successfully between the two devices.</p>
-<h2 id="conclusions">Conclusions</h2>
-<p>You just completed the entire process of establishing a link between two routers. This process involved creating a subinterface, binding it to a network instance, then assigning an IPv4 address. A keen observer, will notice that we can combine creating a subinterface and assigning an IP address in one step. In fact, we can do all tasks in one step. This is what we will do configure the remaining interfaces in the toplogy.</p>
+<p>The <code>route-owner</code> field identifies the source of each route. The entry for <code>192.168.1.4/31</code> has <code>route-owner: ospf_mgr</code> and <code>route-type: srl_nokia-common:ospfv2</code>, confirming that this prefix was learned via OSPF from <code>ceos-01</code>. The remaining entries are locally connected prefixes and host routes managed by <code>net_inst_mgr</code>.</p>
+<p>Note that the path used here <code>/network-instance[name=default]/route-table/...</code> is the Nokia native model path.</p>
+<h2 id="ceos">cEOS</h2>
+<p>Retrieving the routing table from cEOS presents a different challenge. OpenConfig does not define a single unified operational model for the merged routing table. Instead, it models routing information in a per-protocol, per-address-family way through separate RIBs (Routing Information Bases) defined in <code>openconfig-rib-bgp</code> and related modules. These modules are not fully implemented on this version of cEOS.</p>
+<p>The native EOS YANG model also does not expose a clean routing table path via gNMI in this cEOS version. Retrieving routing state programmatically on cEOS currently requires either the eAPI (Arista's HTTP-based API) or the CLI.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>This task highlights one of the most important practical realities of model-driven management: the gap between configuration and operational state coverage is significant and varies by vendor and software version.</p>
+<p>For configuration, both SR Linux and cEOS support OpenConfig models reliably, as demonstrated throughout this tutorial. For operational state, the picture is less consistent. SR Linux exposes a rich native model for routing state that is accessible via gNMI, but the OpenConfig AFT (Abstract Forwarding Table) model is not yet fully supported. cEOS, in this version, does not expose the routing table via gNMI at all through either OpenConfig or native paths.</p>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../08-configure-ns/" class="btn btn-neutral float-left" title="8. Configure Network Instance"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../10-configure-gnmi/" class="btn btn-neutral float-right" title="10. Configure Interfaces with gNMI">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../11-configure-ospf/" class="btn btn-neutral float-left" title="11. Configure OSPF"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../13-stream-telemetry/" class="btn btn-neutral float-right" title="13. Stream Telemetry">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -324,10 +256,10 @@ ip routing
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../08-configure-ns/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../11-configure-ospf/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../10-configure-gnmi/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../13-stream-telemetry/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
