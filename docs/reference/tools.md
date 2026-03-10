@@ -34,3 +34,4 @@ These are used for manual exploration and "reverse engineering" before writing c
 - Jinja2: A templating engine used to separate the structure of YANG-modeled payloads from the variable data (e.g., IP addresses), making the code more modular.
 - xmltodict: Useful for converting XML-based NETCONF responses into Python dictionaries for easier processing.
 - VSCode with YANG extension: Provides syntax highlighting and tree navigation for YANG files, which is critical when browsing large vendor model repositories.
+

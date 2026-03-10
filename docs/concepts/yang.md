@@ -1,6 +1,6 @@
 # YANG
 
-YANG (Yet Another Next Generation) is a data modeling language used to programmatically represent both configuration and operational state data on network devices. It is defined in RFC 6020 and serves as the foundation for modern, model-driven network management and automation.
+YANG (Yet Another Next Generation) ([RFC 7950](https://datatracker.ietf.org/doc/html/rfc7950)) is a data modeling language used to programmatically represent both configuration and operational state data on network devices. It is defined in RFC 6020 and serves as the foundation for modern, model-driven network management and automation.
 
 ## Purpose and Benefits
 

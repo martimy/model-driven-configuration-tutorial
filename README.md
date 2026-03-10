@@ -52,30 +52,13 @@ You will need [Docker](https://docs.docker.com/engine/install/) and [Containerla
 
 ## Further Reading
 
-This tutorial builds on the work of many contributors to the network automation community. The following are primary sources and recommended next steps:
+This tutorial builds on the work of many contributors to the network automation community. The following are some recommended sources:
 
-**Protocols and Standards**
-- [RFC 6241 — NETCONF](https://datatracker.ietf.org/doc/html/rfc6241)
-- [RFC 7950 — YANG 1.1](https://datatracker.ietf.org/doc/html/rfc7950)
-- [gNMI Specification](https://github.com/openconfig/gnmi)
-
-**Vendor Documentation**
-- [Nokia SR Linux documentation](https://documentation.nokia.com/srlinux/)
-- [Nokia SR Linux YANG models](https://github.com/nokia/srlinux-yang-models)
-- [Arista EOS YANG models](https://github.com/aristanetworks/yang)
-- [Arista EOS NETCONF/gNMI documentation](https://www.arista.com/en/support/product-documentation)
-
-**Tools**
-- [Containerlab](https://containerlab.dev) — the network emulation platform this tutorial is built on
-- [gnmic](https://gnmic.openconfig.net) — gNMI CLI client and documentation
-- [pyang](https://github.com/mbj4668/pyang) — YANG validation and tree visualization
-
-**Community and Further Learning**
 - [OpenConfig working group](https://openconfig.net)
 - [YANG models repository](https://github.com/YangModels/yang)
-- [Network to Code blog](https://blog.networktocode.com) — practical network automation writing
-- [Packet Coders](https://www.packetcoders.io) — network automation training and tutorials
+- [Network to Code blog](https://blog.networktocode.com): practical network automation writing
+- [Packet Coders](https://www.packetcoders.io): network automation training and tutorials
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT License, see [LICENSE](LICENSE) for details.

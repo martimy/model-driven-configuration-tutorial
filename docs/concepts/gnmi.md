@@ -2,7 +2,7 @@
 
 gNMI (gRPC Network Management Interface) is a gRPC-based protocol developed by the OpenConfig project for configuration management and streaming telemetry on network devices (routers, switches, etc.). It provides a single, unified, high-performance service for both modifying/retrieving configuration and generating real-time telemetry streams.
 
-Current specification: version 0.10.0 (published 2023), defined via Protocol Buffers (proto3) in the openconfig/gnmi GitHub repository.
+Current [specification](https://github.com/openconfig/gnmi): version 0.14.1 (published 2025), defined via Protocol Buffers (proto3) in the openconfig/gnmi GitHub repository.
 
 It was created to address the need for efficient, model-driven management - combining configuration (like NETCONF) and telemetry (previously handled separately, e.g., via SNMP traps or proprietary mechanisms) into one modern, binary-efficient protocol built on gRPC.
 

@@ -1,6 +1,6 @@
 # NETCONF
 
-NETCONF (Network Configuration Protocol) is an IETF-standardized network management protocol (RFC 6241, RFC 4741) designed to securely install, manipulate, modify, and delete configuration data on network devices such as routers, switches, and firewalls.
+NETCONF (Network Configuration Protocol) is an IETF-standardized network management protocol ([RFC 6241]((https://datatracker.ietf.org/doc/html/rfc6241))) designed to securely install, manipulate, modify, and delete configuration data on network devices such as routers, switches, and firewalls.
 
 It was created to overcome limitations of older approaches like SNMP (which lacks robust configuration control) and manual/automated CLI scripting (which can be insecure, inconsistent, and hard to automate reliably).
 
@@ -39,3 +39,5 @@ Devices maintain separate datastores (e.g., running, candidate, startup), allowi
 - Better suited for large-scale, programmatic network management than SNMP or CLI scraping.
 
 NETCONF has become a foundational protocol for modern network automation, SDN, and intent-based networking, widely supported by vendors like Cisco, Juniper, Nokia, Huawei, and others.
+
+- [RFC 6241 — NETCONF](https://datatracker.ietf.org/doc/html/rfc6241)
