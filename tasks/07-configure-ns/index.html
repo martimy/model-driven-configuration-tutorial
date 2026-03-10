@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>8. Configure Network Instance - Model-Driven Network Configuration Tutorial</title>
+    <title>7. Configure Network Instance - Model-Driven Network Configuration Tutorial</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "8. Configure Network Instance";
-        var mkdocs_page_input_path = "tasks/08-configure-ns.md";
+        var mkdocs_page_name = "7. Configure Network Instance";
+        var mkdocs_page_input_path = "tasks/07-configure-ns.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -83,15 +83,13 @@
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../03-verify-gnmi/">3. Verify gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../05-scripts/">4. Python Scripts</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../04-capabilities/">4. Inspect Capabilities</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../04-capabilities/">5. Inspect Capabilities</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../05-discover-modules/">5. Discover Modules</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../06-discover-modules/">6. Discover Modules</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../06-configure-interface/">6. Configure Interface</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../07-configure-interface/">7. Configure Interface</a>
-                  </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">8. Configure Network Instance</a>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">7. Configure Network Instance</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#network-instance">Network Instance</a>
     </li>
@@ -123,20 +121,22 @@
     </li>
     </ul>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../09-configure-ipv4/">9. Configure IPv4 Address</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../08-configure-ipv4/">8. Configure IPv4 Address</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../10-configure-gnmi/">10. Configure Interfaces with gNMI</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../09-configure-gnmi/">9. Configure Interfaces with gNMI</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../11-configure-ospf/">11. Configure OSPF</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../10-configure-ospf/">10. Configure OSPF</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../12-verify-ospf/">12. Verify OSPF</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../11-verify-ospf/">11. Verify OSPF</a>
                   </li>
-                  <li class="toctree-l1"><a class="reference internal" href="../13-stream-telemetry/">13. Stream Telemetry</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../12-stream-telemetry/">12. Stream Telemetry</a>
                   </li>
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
               <ul>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/network-topology/">Network Topology</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../../reference/scripts/">Python Scripts</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../reference/yang-models/">YANG Models</a>
                   </li>
@@ -164,7 +164,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Tasks</li>
-      <li class="breadcrumb-item active">8. Configure Network Instance</li>
+      <li class="breadcrumb-item active">7. Configure Network Instance</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -173,7 +173,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="bind-interface-to-network-instance">Bind Interface to Network Instance</h1>
+                <h1 id="task-7-bind-interface-to-network-instance">Task 7 - Bind Interface to Network Instance</h1>
 <p>If you have followed all previous tasks successfully, you should have two interfaces enabled:</p>
 <ul>
 <li>Interface <code>ethernet-1/1.0</code> at <code>srl-01</code></li>
@@ -334,8 +334,8 @@
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../07-configure-interface/" class="btn btn-neutral float-left" title="7. Configure Interface"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../09-configure-ipv4/" class="btn btn-neutral float-right" title="9. Configure IPv4 Address">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../06-configure-interface/" class="btn btn-neutral float-left" title="6. Configure Interface"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../08-configure-ipv4/" class="btn btn-neutral float-right" title="8. Configure IPv4 Address">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -358,10 +358,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../07-configure-interface/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../06-configure-interface/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../09-configure-ipv4/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../08-configure-ipv4/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
