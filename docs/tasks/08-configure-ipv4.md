@@ -1,4 +1,4 @@
-# Configure IPv4 Address
+# Task 8 - Configure IPv4 Address
 
 This task involves assigning IPv4 address to the two interfaces we configured thus far. According the topology [diagram](../reference/network-topology.md), the IPv4 addresses required are:
 

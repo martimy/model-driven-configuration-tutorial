@@ -1,4 +1,4 @@
-# Configure Remaining Interfaces with gNMI
+# Task 9 - Configure Remaining Interfaces with gNMI
 
 In the previous task, we used NETCONF to configure the link between `ceos-01` and `srl-01`. Now, we will configure the remaining links in our topology using gNMI (gRPC Network Management Interface). This task will move at a faster pace since you are now familiar with the OpenConfig modules.
 

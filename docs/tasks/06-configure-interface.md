@@ -1,5 +1,5 @@
 
-# Configure an Interface
+# Task 6 - Configure an Interface
 
 In this task, we will configure an interface using NETCONF.
 

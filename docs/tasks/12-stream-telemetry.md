@@ -1,4 +1,4 @@
-# Stream Telemetry with gNMI Subscribe
+# Task 12 - Stream Telemetry with gNMI Subscribe
 
 In the previous tasks, you used the gNMI `Get` RPC to retrieve snapshots of configuration and operational state. This is useful for one-off queries but requires repeated polling to track changes over time. gNMI addresses this with the `Subscribe` RPC, which establishes a long-lived stream from the device to the client — the device pushes updates rather than the client pulling them.
 

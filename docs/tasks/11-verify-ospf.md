@@ -1,10 +1,10 @@
-# Verify OSPF Routing
+# Task 11 - Verify OSPF Routing
 
 In this task, you will use gNMI to retrieve the routing table from the network instance `default` on SR Linux and cEOS to confirm that OSPF is exchanging routes correctly.
 
 ## SR Linux
 
-In [Task 11](../tasks/11-configure-ospf.md) we saw that `+--ro route-table` is one of the read-only containers in the network instance `default`. Therefore, to list all IPv4 unicast routes in the routing table on SR Linux:
+In [Task 10](../tasks/10-configure-ospf.md) we saw that `+--ro route-table` is one of the read-only containers in the network instance `default`. Therefore, to list all IPv4 unicast routes in the routing table on SR Linux:
 
 ```bash
 gnmic --config srl-gnmic.yml get \

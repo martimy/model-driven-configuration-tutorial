@@ -1,4 +1,4 @@
-# Discover YANG Modules
+# Task 5 - Discover YANG Modules
 
 Before starting configuring a devices, you must discover what YANG modules the device supports and understand the shape of the data those moddules describe. This task covers the discovery workflow.
 

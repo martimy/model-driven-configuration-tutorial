@@ -1,4 +1,4 @@
-# Bind Interface to Network Instance
+# Task 7 - Bind Interface to Network Instance
 
 If you have followed all previous tasks successfully, you should have two interfaces enabled:
 

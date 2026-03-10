@@ -1,4 +1,4 @@
-# Configure OSPF
+# Task 10 - Configure OSPF
 
 This task covers configuring OSPF using NETCONF following the typical workflow of module discovery, payload editing, and loading.
 
@@ -130,7 +130,7 @@ pyang -f sample-xml-skeleton --sample-xml-skeleton-path=/network-instances/netwo
 --sample-xml-skeleton-doctype=config -p openconfig openconfig-network-instance.yang -o ospf.xml
 ```
 
-The generated skeleton does not include the network instance name so will add it using what we know from [Task 8](../tasks/08-configure-ns.md).
+The generated skeleton does not include the network instance name so will add it using what we know from [Task 7](../tasks/07-configure-ns.md).
 
 Edit the file `ospf.xml` by filling the mandatory information and remove the nodes that are not required:
 
@@ -290,7 +290,7 @@ module: srl_nokia-ospf
 
 It is worth mentioning that the `!` symbol immediately following a node name (ospf!) indicates that the node is a presence container. A presence container exists in the configuration just by being created, even if it has no child nodes and its existence signifies that OSPF is enabled in the network instance.
 
-Typically, what you could do next is to generate the XML skeleton file that includes the minimum configuration items mentioned above. However, for such complex configuration, we could use the second technique discussed in [Task 7](../tasks/07-configure-interface.md). 
+Typically, what you could do next is to generate the XML skeleton file that includes the minimum configuration items mentioned above. However, for such complex configuration, we could use the second technique discussed in [Task 6](../tasks/06-configure-interface.md). 
 
 Configure OSPF using the CLI on `srl-01`, then retrieve the configuration. 
 
