@@ -5,15 +5,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Troubleshooting - Model-Driven Network Configuration Tutorial</title>
+    <title>YANG Models - Model-Driven Network Configuration Tutorial</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Troubleshooting";
-        var mkdocs_page_input_path = "reference/troubleshooting.md";
+        var mkdocs_page_name = "YANG Models";
+        var mkdocs_page_input_path = "reference/yang-models.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -45,8 +45,6 @@
               </ul>
               <p class="caption"><span class="caption-text">Setup</span></p>
               <ul>
-                  <li class="toctree-l1"><a class="reference internal" href="../../setup/prerequisites/">Prerequisites</a>
-                  </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../setup/docker-images/">Docker Images</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../../setup/pyvirtual/">Python Environment</a>
@@ -108,17 +106,21 @@
               </ul>
               <p class="caption"><span class="caption-text">Reference</span></p>
               <ul class="current">
-                  <li class="toctree-l1"><a class="reference internal" href="../network-topology/">Topology</a>
+                  <li class="toctree-l1"><a class="reference internal" href="../network-topology/">Netwokr Topology</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">YANG Models</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#software-version-and-documentation">Software Version and Documentation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#downloading-yang-models">Downloading YANG models</a>
+    </li>
+    </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../tools/">Tools</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../commands/">Command Quick Reference</a>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../building-payloads/">Configuration Techniques</a>
-                  </li>
-                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Troubleshooting</a>
-    <ul class="current">
-    </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../pyang/">pyang</a>
                   </li>
@@ -138,7 +140,7 @@
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
           <li class="breadcrumb-item">Reference</li>
-      <li class="breadcrumb-item active">Troubleshooting</li>
+      <li class="breadcrumb-item active">YANG Models</li>
     <li class="wy-breadcrumbs-aside">
     </li>
   </ul>
@@ -147,23 +149,86 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="troubleshooting">Troubleshooting</h1>
-<p>To get a schema:</p>
-<pre><code class="language-bash">./nc_wrapper.sh srl-01 --get-schema ietf-interfaces
+                <h1 id="network-topology">Network Topology</h1>
+<p>This tutorial is based on a simple three-node multi-vendor network arranged in a ring topology. The three routers are connected to management network named <code>api-lab</code> using the IPv4 subnet <code>192.168.100.0/24</code>.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Node</th>
+<th>Model</th>
+<th>Management IP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;">ceos-01</td>
+<td>Arista cEOS</td>
+<td>192.168.100.11</td>
+</tr>
+<tr>
+<td style="text-align: center;">srl-01</td>
+<td>Nokia SR Linux node</td>
+<td>192.168.100.12</td>
+</tr>
+<tr>
+<td style="text-align: center;">srl-02</td>
+<td>Nokia SR Linux node</td>
+<td>192.168.100.13</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Topology" src="../../img/topology.drawio.png" /></p>
+<h2 id="software-version-and-documentation">Software Version and Documentation</h2>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Version</th>
+<th>Documentation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Arista cEOSLab</td>
+<td>4.35.1F</td>
+<td>https://www.arista.com/en/support/product-documentation</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Nokia SR Linux</td>
+<td>25.10.1</td>
+<td>https://documentation.nokia.com/srlinux/25-10/</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="downloading-yang-models">Downloading YANG models</h2>
+<p>IETF:</p>
+<pre><code class="language-bash">git clone https://github.com/YangModels/yang ietf
 </code></pre>
-<p>validation:</p>
-<p>yanglint -p ./yang openconfig-interfaces.yang interfaces.xml</p>
-<p>xmllint --noout interfaces.xml</p>
-<p>The <code>--dry</code> option in <code>netconf-console2</code> returns the RPC to be sent, so we can use it verify that the XML file is formatted properly.</p>
-<pre><code class="language-bash">./nc_wrapper.sh srl-01 --edit-config=interface.xml --dry
+<p>OpenConfig</p>
+<pre><code class="language-bash">git clone https://github.com/openconfig/public/ openconfig
 </code></pre>
-<p>./nc_wrapper.sh srl-01 --get-config --filter /interfaces/interface[name=ethernet-1/1] | xmllint --format -</p>
+<p>Arista cEOS:</p>
+<pre><code class="language-bash">git clone https://github.com/aristanetworks/yang/tree/master/EOS-4.35.1F arista
+</code></pre>
+<p>Nokia SR Linux:</p>
+<pre><code class="language-bash">git clone -b v25.10.1 --depth 1 https://github.com/nokia/srlinux-yang-models nokia
+</code></pre>
               
             </div>
           </div><footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
-        <a href="../building-payloads/" class="btn btn-neutral float-left" title="Configuration Techniques"><span class="icon icon-circle-arrow-left"></span> Previous</a>
-        <a href="../pyang/" class="btn btn-neutral float-right" title="pyang">Next <span class="icon icon-circle-arrow-right"></span></a>
+        <a href="../network-topology/" class="btn btn-neutral float-left" title="Netwokr Topology"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../tools/" class="btn btn-neutral float-right" title="Tools">Next <span class="icon icon-circle-arrow-right"></span></a>
     </div>
 
   <hr/>
@@ -186,10 +251,10 @@
   <span class="rst-current-version" data-toggle="rst-current-version">
     
     
-      <span><a href="../building-payloads/" style="color: #fcfcfc">&laquo; Previous</a></span>
+      <span><a href="../network-topology/" style="color: #fcfcfc">&laquo; Previous</a></span>
     
     
-      <span><a href="../pyang/" style="color: #fcfcfc">Next &raquo;</a></span>
+      <span><a href="../tools/" style="color: #fcfcfc">Next &raquo;</a></span>
     
   </span>
 </div>
