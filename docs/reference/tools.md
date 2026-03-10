@@ -1,6 +1,6 @@
-# Tools
+# Recommended Tools
 
-You will need a the following tools (but not all at once):
+These are some of the tools that are used in this tutorial. Other tools are also included for completeness.
 
 ## Infrastructure
 
