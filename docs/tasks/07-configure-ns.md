@@ -10,7 +10,13 @@ Both interfaces face each other according to the [network topology](../reference
 
 ## Network Instance
 
-The OpenConfig data model requires that each subinterface is associated with a network instances (similar to a VRF) to be functional. An interface without an assigned network instance cannot be used for forwarding traffic. In cEOS, interfaces are associated with a `default` network instance. So containerlab must assign the management interface explicitly to `MGMT` instance in the topology file. In SR Linux, the management interface, `mgmt0`, is automatically added to a separate, management network instance `mgmt`. Other interfaces are not associated with any network instance by default, so the interface we created must be associated with a network instance before it can be used in routing. 
+The OpenConfig data model requires that each subinterface is associated with a network instances (similar to a VRF) to be functional. 
+
+> **Note: Control vs. Forwarding Plane**  
+In model-driven networking, the Control Plane is modeled as a *Network Instance* and the Forwarding Plane (is modeled as an *Abstract Forwarding Table* (AFT). While "VRF" is the common industry term, *Network Instance* is the more precise architectural term used in YANG to describe the isolated routing and forwarding environment.
+
+An interface without an assigned network instance cannot be used for forwarding traffic.
+ In cEOS, interfaces are associated with a `default` network instance. So containerlab must assign the management interface explicitly to `MGMT` instance in the topology file. In SR Linux, the management interface, `mgmt0`, is automatically added to a separate, management network instance `mgmt`. Other interfaces are not associated with any network instance by default, so the interface we created must be associated with a network instance before it can be used in routing. 
 
 
 In this task, we will add the interface `ethernet-1/1.0` to the default network instance `default` at `srl-01`.

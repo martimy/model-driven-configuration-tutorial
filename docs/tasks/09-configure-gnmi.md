@@ -131,7 +131,11 @@ Edit the `updates` list in the configuration to match the interfaces table above
 
 The `gnmic` tool uses `set` operation to push the configuration. Let's configure the link between `ceos-01` and `srl-02`, starting from `srl-02`
 
-We use the `Path` and `values` above mostly unchanged, but the path must conform to the gNMI format. Notice also the single quotes that surround the configuration object:  
+> **Note: Update vs. Replace**  
+The `gnmic set --update` operation performs a merge at the specified path, preserving other siblings (like other subinterfaces on the same port). Using `--replace` would perform a "delete-and-insert" at that path, potentially wiping out existing configuration not included in your request. 
+
+We use the `Path` and `values` above mostly unchanged, but the path must conform to the gNMI format.
+ Notice also the single quotes that surround the configuration object:  
 
 ```bash
 gnmic --config srl-gnmic.yml -a srl-02 set \

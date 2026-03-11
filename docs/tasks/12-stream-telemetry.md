@@ -20,9 +20,12 @@ Interface counters are better suited to `SAMPLE` mode because they change with e
 
 Open two terminals. In the first terminal, start a continuous ping between the two routers to generate traffic:
 
+> **Note: Hardware Limitations on Intervals**  
+While we use a `5s` sample interval in this tutorial, be aware that physical ASIC hardware may only update its internal counters every 10–30 seconds. In production, polling or sampling faster than the hardware's internal refresh rate will simply return the same value repeatedly.
+
 ```bash
 # From ceos-01 CLI
-ping 192.168.1.3 repeat 10000 interval 1
+ping 192.168.1.3 repeat 10000 interval 2
 ```
 
 In the second terminal, start a gNMI subscription to interface counters on SR Linux:
