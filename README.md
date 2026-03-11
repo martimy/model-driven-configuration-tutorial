@@ -31,7 +31,8 @@ This tutorial does not replace vendor documentation or the broader network autom
 
 - Networking fundamentals: IP addressing, routing protocols
 - Linux command line basics
-- No prior YANG or NETCONF/gNMI experience required
+- Basic knowledge of YANG
+- No NETCONF/gNMI experience required
 
 ## Quick Start
 
