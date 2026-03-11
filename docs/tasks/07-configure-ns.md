@@ -80,9 +80,9 @@ The `get-config` operation retrieves the running configuration in both cases wit
 
 When configuration is sent using either data model, SR Linux translates it into its internal data model. In practice, OpenConfig is preferred for portable, multi-vendor automation, while the Nokia native module is used when full device capabilities or vendor-specific features are required. As we have seen in the previous task that this is not always the case for all models. 
 
-### Get the XML Skeleton
+### Get the XML Skeleton (Technique 1)
 
-Visualize the Nokia's module:
+We will use **Technique 1: pyang Sample XML Skeleton** to generate the necessary configuration structure. Visualize the Nokia's module first:
 
 ```bash
 pyang -f tree -p nokia --tree-path /network-instance/interface srl_nokia-network-instance.yang

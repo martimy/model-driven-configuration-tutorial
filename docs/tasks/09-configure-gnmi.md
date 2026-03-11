@@ -10,9 +10,9 @@ We need to configure the following remaining links:
 | 2 | ceos-01 | Ethernet2 | 192.168.1.4/31 | srl-02 | ethernet-1/1 | 192.168.1.5/31 |
 | 3 | srl-01 | ethernet-1/2.0 | 192.168.1.6/31 | srl-02 | ethernet-1/2.0 | 192.168.1.7/31` |
 
-## Technique 1: Using Existing Configuration
+## First Approach: Read-Modify-Write (Technique 3)
 
-Unlike NETCONF's XML, gNMI typically uses JSON for its payload. We will use the same OpenConfig `interfaces` model.
+In this step, we will use **Technique 3: Read-Modify-Write**. This involves retrieving an existing configuration, modifying it, and pushing it back to a different path or device.
 
 I recommended that you review [gNMi paths](../concepts/gnmi-paths.md) before proceeding as you will use them extensively in this task.. 
 
@@ -178,9 +178,9 @@ gnmic --config srl-gnmic.yml -a srl-02 get --path /interface[name=ethernet-1/1]/
 You should see the JSON output reflecting the new IP address and interface state.
 
 
-## Technique 2: 
+## Second Approach: gnmic generate (Technique 4)
 
-The previous technique is useful for small changes, like enabling an interface, and when you are familiar with the required payload. More efficient method is needed.
+The previous technique is useful for small changes, but for new features, **Technique 4: gnmic generate** is often faster.
 
 The `gnmic` tool is able to generate configuration payload based on the target YANG data module. The `gnmic` `generate` command takes the target's YANG modules as input and generates:
 

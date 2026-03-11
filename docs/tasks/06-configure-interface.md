@@ -51,10 +51,9 @@ By OpenConfig convention, an interface must have at least one subinterface. More
 OpenConfig also use the convention of using the interface name twice. The first location serves as a key for the list interfaces in the device. The second is where the name is stored in the configuration.
 
 
-## Get the Sample XML Skeleton File
+## Get the Sample XML Skeleton File (Technique 1)
 
-
-To get a XML skeleton you can actually use for NETCONF configuration:
+To get a XML skeleton you can actually use for NETCONF configuration, we will use **Technique 1: pyang Sample XML Skeleton**:
 
 ```bash
 pyang -f sample-xml-skeleton -p openconfig --sample-xml-skeleton-doctype=config openconfig-interfaces.yang
@@ -183,9 +182,9 @@ Verify that the configuration was committed to the running datastore:
 
 The output confirms that the interface was configured properly. Note that the `enable` element must be included to enable the subinterface. The main interface is enabled by default (by containerlab), but the subinterface must be enabled explicitly in SR Linux.
 
-## Alternative Approach
+## Alternative Approach (Technique 2)
 
-A reliable and fast path to a create XML payload is to configure the feature manually via CLI first, then use a NETCONF `get-config` to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native module for the first time:
+A reliable and fast path to a create XML payload is **Technique 2: Configure via CLI, Then Read Back**. This involves configuring the feature manually via CLI first, then using a NETCONF `get-config` to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native module for the first time:
 
 We will use this approach to configure interface `Ethernet1` on `ceos-01`. Note that cEOS creates subinterface `0` and enables it by default.
 

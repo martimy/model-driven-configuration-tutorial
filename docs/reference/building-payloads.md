@@ -74,39 +74,7 @@ Limitations:
 
 Note: This technique is especially valuable when working with native vendor modules for the first time, or when vendor documentation is unclear. It is also the most reliable way to discover how a device encodes a feature that involves complex augmentations or identity references.
 
-
-## Technique 3: gnmic generate
-
-The gnmic tool includes a generate subcommand that produces configuration payload templates directly from the device's advertised YANG modules. Unlike the pyang skeleton, which requires you to have the module files locally, gnmic generate fetches the models from the live device and outputs a ready-to-use set-request file in YAML format.
-
-```bash
-gnmic generate --file openconfig set-request --update /<path> > request.yml
-```
-
-
-The generated YAML file has the structure expected by gnmic `set --request-file`, so after editing the placeholder values it can be pushed directly to the device:
-
-```bash
-gnmic --config <node>-gnmic.yml set --request-file request.yml
-```
-
-
-Strengths:
-
-- Produces JSON-structured output, making it the natural counterpart to pyang sample-xml-skeleton for gNMI workflows.
-- The output is already formatted as a set-request, so no transformation step is needed before pushing.
-- Pulls models from the live device, so the output reflects the exact module version the device is running.
-- Useful for generating path lists as well as payload templates.
-
-Limitations:
-
-- Requires a live device connection.
-- Generated YAML contains placeholder values (empty strings, zeros) and quoted booleans/integers that must be corrected manually before use.
-- Like the pyang skeleton, it does not distinguish mandatory from optional fields.
-- Output can be verbose for large subtrees; scoping the path carefully is important.
-
-
-## Technique 4: Read-Modify-Write
+## Technique 3: Read-Modify-Write
 
 Rather than building a payload from scratch, retrieve the current configuration of the target object, modify only the fields you want to change, and push the result back. This is a natural extension of Technique 2 and works well when you are making incremental changes to an already-configured feature.
 
@@ -142,6 +110,37 @@ Limitations:
 - Requires a live device and an existing configuration to read from.
 - Not suitable for initial configuration of a feature that does not yet exist on the device.
 - When using replace instead of the default merge operation, the full subtree must be included in the payload, or unspecified fields will be deleted.
+
+
+## Technique 4: gnmic generate
+
+The gnmic tool includes a generate subcommand that produces configuration payload templates directly from the device's advertised YANG modules. Unlike the pyang skeleton, which requires you to have the module files locally, gnmic generate fetches the models from the live device and outputs a ready-to-use set-request file in YAML format.
+
+```bash
+gnmic generate --file openconfig set-request --update /<path> > request.yml
+```
+
+
+The generated YAML file has the structure expected by gnmic `set --request-file`, so after editing the placeholder values it can be pushed directly to the device:
+
+```bash
+gnmic --config <node>-gnmic.yml set --request-file request.yml
+```
+
+
+Strengths:
+
+- Produces JSON-structured output, making it the natural counterpart to pyang sample-xml-skeleton for gNMI workflows.
+- The output is already formatted as a set-request, so no transformation step is needed before pushing.
+- Pulls models from the live device, so the output reflects the exact module version the device is running.
+- Useful for generating path lists as well as payload templates.
+
+Limitations:
+
+- Requires a live device connection.
+- Generated YAML contains placeholder values (empty strings, zeros) and quoted booleans/integers that must be corrected manually before use.
+- Like the pyang skeleton, it does not distinguish mandatory from optional fields.
+- Output can be verbose for large subtrees; scoping the path carefully is important.
 
 
 ## Technique 5: Payload Generation from a pyang JSON Driver (jtox)

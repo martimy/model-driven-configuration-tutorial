@@ -70,7 +70,7 @@ To get this branch using `--tree-path` we have to include all the top modules:
 pyang -f tree -p openconfig --tree-path /interfaces/interface/subinterfaces/subinterface/ipv4 openconfig/release/models/interfaces/*.yang
 ```
 
-Similarly, to get the XML skeleton (this time we need to include the interface):
+Similarly, to get the XML skeleton using **Technique 1: pyang Sample XML Skeleton** (this time we need to include the interface):
 
 ```bash
 pyang -f sample-xml-skeleton -p openconfig \
