@@ -18,7 +18,6 @@ In this tutorial, you will:
 - Understand the core concepts of YANG data modeling and XML/JSON representations.
 - Interact with network devices using modern protocols: NETCONF and gNMI.
 - Explore device capabilities and download YANG modules directly from routers.
-- Automate configuration tasks using Python scripts and unified tools.
 - Configure interfaces, network instances, and IPv4 addressing via model-driven APIs.
 
 ## Tasks
