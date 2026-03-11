@@ -97,7 +97,7 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#find-the-yang-module">Find the YANG Module</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-the-xml-skeleton">Get the XML Skeleton</a>
+    <li class="toctree-l3"><a class="reference internal" href="#get-the-xml-skeleton-technique-1">Get the XML Skeleton (Technique 1)</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#edit-the-xml-file">Edit the XML File</a>
     </li>
@@ -109,7 +109,7 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#visualize-the-module">Visualize the Module</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#get-the-xml-skeleton_1">Get the XML Skeleton</a>
+    <li class="toctree-l3"><a class="reference internal" href="#get-the-xml-skeleton">Get the XML Skeleton</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#edit-the-xml-file_1">Edit the XML file</a>
     </li>
@@ -181,7 +181,13 @@
 </ul>
 <p>Both interfaces face each other according to the <a href="../../reference/network-topology/">network topology</a>. </p>
 <h2 id="network-instance">Network Instance</h2>
-<p>The OpenConfig data model requires that each subinterface is associated with a network instances (similar to a VRF) to be functional. An interface without an assigned network instance cannot be used for forwarding traffic. In cEOS, interfaces are associated with a <code>default</code> network instance. So containerlab must assign the management interface explicitly to <code>MGMT</code> instance in the topology file. In SR Linux, the management interface, <code>mgmt0</code>, is automatically added to a separate, management network instance <code>mgmt</code>. Other interfaces are not associated with any network instance by default, so the interface we created must be associated with a network instance before it can be used in routing. </p>
+<p>The OpenConfig data model requires that each subinterface is associated with a network instances (similar to a VRF) to be functional. </p>
+<blockquote>
+<p><strong>Note: Control vs. Forwarding Plane</strong><br />
+In model-driven networking, the Control Plane is modeled as a <em>Network Instance</em> and the Forwarding Plane (is modeled as an <em>Abstract Forwarding Table</em> (AFT). While "VRF" is the common industry term, <em>Network Instance</em> is the more precise architectural term used in YANG to describe the isolated routing and forwarding environment.</p>
+</blockquote>
+<p>An interface without an assigned network instance cannot be used for forwarding traffic.
+ In cEOS, interfaces are associated with a <code>default</code> network instance. So containerlab must assign the management interface explicitly to <code>MGMT</code> instance in the topology file. In SR Linux, the management interface, <code>mgmt0</code>, is automatically added to a separate, management network instance <code>mgmt</code>. Other interfaces are not associated with any network instance by default, so the interface we created must be associated with a network instance before it can be used in routing. </p>
 <p>In this task, we will add the interface <code>ethernet-1/1.0</code> to the default network instance <code>default</code> at <code>srl-01</code>.</p>
 <h2 id="configuration-workflow">Configuration Workflow</h2>
 <p>For SR Linux, we will follow the same workflow as in the previous task:</p>
@@ -220,8 +226,8 @@
 &lt;/data&gt;
 </code></pre>
 <p>When configuration is sent using either data model, SR Linux translates it into its internal data model. In practice, OpenConfig is preferred for portable, multi-vendor automation, while the Nokia native module is used when full device capabilities or vendor-specific features are required. As we have seen in the previous task that this is not always the case for all models. </p>
-<h3 id="get-the-xml-skeleton">Get the XML Skeleton</h3>
-<p>Visualize the Nokia's module:</p>
+<h3 id="get-the-xml-skeleton-technique-1">Get the XML Skeleton (Technique 1)</h3>
+<p>We will use <strong>Technique 1: pyang Sample XML Skeleton</strong> to generate the necessary configuration structure. Visualize the Nokia's module first:</p>
 <pre><code class="language-bash">pyang -f tree -p nokia --tree-path /network-instance/interface srl_nokia-network-instance.yang
 </code></pre>
 <pre><code class="language-xml">module: srl_nokia-network-instance
@@ -301,7 +307,7 @@
                  +--ro mac-pinning?                   boolean
                  +--ro irb-anycast-gateway?           enumeration
 </code></pre>
-<h3 id="get-the-xml-skeleton_1">Get the XML Skeleton</h3>
+<h3 id="get-the-xml-skeleton">Get the XML Skeleton</h3>
 <pre><code class="language-bash">pyang -f sample-xml-skeleton -p nokia openconfig-network-instance.yang
 </code></pre>
 <h3 id="edit-the-xml-file_1">Edit the XML file</h3>

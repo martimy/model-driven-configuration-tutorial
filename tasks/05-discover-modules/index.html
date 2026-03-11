@@ -95,6 +95,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#step-4-determining-configuration-modules">Step 4: Determining Configuration Modules</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../06-configure-interface/">6. Configure Interface</a>
@@ -266,7 +268,15 @@ Schema saved to openconfig-interfaces.yang
         ...
 </code></pre>
 <p><strong>Reading the Tree</strong></p>
-<p>The <code>+--rw</code> prefix means read-write (configurable). <code>+--ro</code> means read-only (operational state). A <code>*</code> after the node name means it is a list (multiple entries). A <code>?</code> means the field is optional. These symbols tell you exactly what your payload must and can include.</p>
+<p>To build a valid configuration payload, you must understand the symbols in the tree output:</p>
+<ul>
+<li><code>+--rw</code>: Read-Write. These are nodes you can configure (e.g., setting a description).</li>
+<li><code>+--ro</code>: Read-Only. These are operational state or statistics nodes (e.g., packet counters).</li>
+<li><code>*</code>: Indicates a List. Think of this like a database table (e.g., a list of many interfaces).</li>
+<li><code>?</code>: Indicates an Optional field. If it is missing, the field is mandatory for that container.</li>
+<li><code>-&gt;</code>: Indicates a Leafref. This is a pointer to another value elsewhere in the configuration, ensuring consistency (like a foreign key in SQL).</li>
+</ul>
+<p>These symbols tell you exactly what your payload must and can include.</p>
 <p>Notices that both YANG modules sperate the configuration fields from the state fields but using two different conventions. OpenConfig's style is generally considered more operator-friendly for automation and streaming telemetry, which is why it became very popular despite not being the original IETF approach. (Later IETF NMDA work moved closer to unified views in many newer modules.)</p>
 <p>We will focus out interest in configuration for now. To show only the configuration nodes:</p>
 <pre><code class="language-bash">pyang -f tree --tree-path /interfaces/interface ietf-interfaces.yang
@@ -299,6 +309,8 @@ Schema saved to openconfig-interfaces.yang
   &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
   ...
 </code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>Discovering and fetching YANG modules is a critical "Day 0" task in network automation. By retrieving the schemas directly from the devices and visualizing them with <code>pyang</code>, you have established a "source of truth" for building configuration payloads. You now know exactly what data nodes are available and how they are structured.</p>
               
             </div>
           </div><footer>

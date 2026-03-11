@@ -120,9 +120,9 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#technique-2-configure-via-cli-then-read-back">Technique 2: Configure via CLI, Then Read Back</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#technique-3-gnmic-generate">Technique 3: gnmic generate</a>
+    <li class="toctree-l2"><a class="reference internal" href="#technique-3-read-modify-write">Technique 3: Read-Modify-Write</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#technique-4-read-modify-write">Technique 4: Read-Modify-Write</a>
+    <li class="toctree-l2"><a class="reference internal" href="#technique-4-gnmic-generate">Technique 4: gnmic generate</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#technique-5-payload-generation-from-a-pyang-json-driver-jtox">Technique 5: Payload Generation from a pyang JSON Driver (jtox)</a>
     </li>
@@ -212,28 +212,7 @@ openconfig/release/models/interfaces/*.yang
 <li>Does not teach you the underlying YANG structure; it is a shortcut, not a substitute for understanding the model.</li>
 </ul>
 <p>Note: This technique is especially valuable when working with native vendor modules for the first time, or when vendor documentation is unclear. It is also the most reliable way to discover how a device encodes a feature that involves complex augmentations or identity references.</p>
-<h2 id="technique-3-gnmic-generate">Technique 3: gnmic generate</h2>
-<p>The gnmic tool includes a generate subcommand that produces configuration payload templates directly from the device's advertised YANG modules. Unlike the pyang skeleton, which requires you to have the module files locally, gnmic generate fetches the models from the live device and outputs a ready-to-use set-request file in YAML format.</p>
-<pre><code class="language-bash">gnmic generate --file openconfig set-request --update /&lt;path&gt; &gt; request.yml
-</code></pre>
-<p>The generated YAML file has the structure expected by gnmic <code>set --request-file</code>, so after editing the placeholder values it can be pushed directly to the device:</p>
-<pre><code class="language-bash">gnmic --config &lt;node&gt;-gnmic.yml set --request-file request.yml
-</code></pre>
-<p>Strengths:</p>
-<ul>
-<li>Produces JSON-structured output, making it the natural counterpart to pyang sample-xml-skeleton for gNMI workflows.</li>
-<li>The output is already formatted as a set-request, so no transformation step is needed before pushing.</li>
-<li>Pulls models from the live device, so the output reflects the exact module version the device is running.</li>
-<li>Useful for generating path lists as well as payload templates.</li>
-</ul>
-<p>Limitations:</p>
-<ul>
-<li>Requires a live device connection.</li>
-<li>Generated YAML contains placeholder values (empty strings, zeros) and quoted booleans/integers that must be corrected manually before use.</li>
-<li>Like the pyang skeleton, it does not distinguish mandatory from optional fields.</li>
-<li>Output can be verbose for large subtrees; scoping the path carefully is important.</li>
-</ul>
-<h2 id="technique-4-read-modify-write">Technique 4: Read-Modify-Write</h2>
+<h2 id="technique-3-read-modify-write">Technique 3: Read-Modify-Write</h2>
 <p>Rather than building a payload from scratch, retrieve the current configuration of the target object, modify only the fields you want to change, and push the result back. This is a natural extension of Technique 2 and works well when you are making incremental changes to an already-configured feature.</p>
 <p>NETCONF</p>
 <p>The default edit-config operation is merge, meaning the device merges your payload into the existing configuration. You only need to include the fields you want to change, plus any key fields required to identify the list entry.</p>
@@ -257,6 +236,27 @@ openconfig/release/models/interfaces/*.yang
 - Requires a live device and an existing configuration to read from.
 - Not suitable for initial configuration of a feature that does not yet exist on the device.
 - When using replace instead of the default merge operation, the full subtree must be included in the payload, or unspecified fields will be deleted.</p>
+<h2 id="technique-4-gnmic-generate">Technique 4: gnmic generate</h2>
+<p>The gnmic tool includes a generate subcommand that produces configuration payload templates directly from the device's advertised YANG modules. Unlike the pyang skeleton, which requires you to have the module files locally, gnmic generate fetches the models from the live device and outputs a ready-to-use set-request file in YAML format.</p>
+<pre><code class="language-bash">gnmic generate --file openconfig set-request --update /&lt;path&gt; &gt; request.yml
+</code></pre>
+<p>The generated YAML file has the structure expected by gnmic <code>set --request-file</code>, so after editing the placeholder values it can be pushed directly to the device:</p>
+<pre><code class="language-bash">gnmic --config &lt;node&gt;-gnmic.yml set --request-file request.yml
+</code></pre>
+<p>Strengths:</p>
+<ul>
+<li>Produces JSON-structured output, making it the natural counterpart to pyang sample-xml-skeleton for gNMI workflows.</li>
+<li>The output is already formatted as a set-request, so no transformation step is needed before pushing.</li>
+<li>Pulls models from the live device, so the output reflects the exact module version the device is running.</li>
+<li>Useful for generating path lists as well as payload templates.</li>
+</ul>
+<p>Limitations:</p>
+<ul>
+<li>Requires a live device connection.</li>
+<li>Generated YAML contains placeholder values (empty strings, zeros) and quoted booleans/integers that must be corrected manually before use.</li>
+<li>Like the pyang skeleton, it does not distinguish mandatory from optional fields.</li>
+<li>Output can be verbose for large subtrees; scoping the path carefully is important.</li>
+</ul>
 <h2 id="technique-5-payload-generation-from-a-pyang-json-driver-jtox">Technique 5: Payload Generation from a pyang JSON Driver (jtox)</h2>
 <p><code>pyang</code> supports a jtox output format that generates a JSON driver file describing the YANG module structure. This driver file can then be used with the <code>json2xml</code> tool (part of the <code>pyang</code> package) to convert between JSON and XML representations of the same data. This is particularly useful when you want to work in JSON (e.g. when constructing gNMI payloads), but your reference is the XML skeleton from Technique 1.</p>
 <pre><code class="language-bash"># Step 1: Generate the JSON driver file

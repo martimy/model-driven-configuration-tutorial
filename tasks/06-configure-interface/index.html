@@ -89,13 +89,15 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">6. Configure Interface</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#get-the-sample-xml-skeleton-file">Get the Sample XML Skeleton File</a>
+    <li class="toctree-l2"><a class="reference internal" href="#get-the-sample-xml-skeleton-file-technique-1">Get the Sample XML Skeleton File (Technique 1)</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#edit-the-xml-file">Edit the XML File</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#load-the-configuration">Load the Configuration</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#alternative-approach">Alternative Approach</a>
+    <li class="toctree-l2"><a class="reference internal" href="#alternative-approach-technique-2">Alternative Approach (Technique 2)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a>
     </li>
     </ul>
                   </li>
@@ -189,8 +191,8 @@
 <p>The description of each item in the tree can be found <a href="https://openconfig.net/projects/models/schemadocs/yangdoc/openconfig-interfaces.html">here</a></p>
 <p>By OpenConfig convention, an interface must have at least one subinterface. More subinterfaces can be configured if VLANs are used. The IP addresses (if any) are assigned to the subinterface. Both the main interface and subinterface(s) must be enabled. </p>
 <p>OpenConfig also use the convention of using the interface name twice. The first location serves as a key for the list interfaces in the device. The second is where the name is stored in the configuration.</p>
-<h2 id="get-the-sample-xml-skeleton-file">Get the Sample XML Skeleton File</h2>
-<p>To get a XML skeleton you can actually use for NETCONF configuration:</p>
+<h2 id="get-the-sample-xml-skeleton-file-technique-1">Get the Sample XML Skeleton File (Technique 1)</h2>
+<p>To get a XML skeleton you can actually use for NETCONF configuration, we will use <strong>Technique 1: pyang Sample XML Skeleton</strong>:</p>
 <pre><code class="language-bash">pyang -f sample-xml-skeleton -p openconfig --sample-xml-skeleton-doctype=config openconfig-interfaces.yang
 </code></pre>
 <pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
@@ -227,8 +229,12 @@
 <p>Note:</p>
 <ul>
 <li>From the topology file, we know that SR Linux interface name convention is <code>ethernet-x/y</code>.</li>
-<li>The interface type has to include the name space as well <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type></li>
+<li>The interface type has a very specific value: <code>&lt;type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type"&gt;ianaift:ethernetCsmacd&lt;/type&gt;</code>. </li>
 </ul>
+<blockquote>
+<p>What is <code>ethernetCsmacd</code>?<br />
+This string is the official IANA (Internet Assigned Numbers Authority) identifier for "regular" Ethernet (10/100/1000 Mbps). <code>Csmacd</code> stands for <em>Carrier Sense Multiple Access with Collision Detection</em>, the foundational technology behind traditional Ethernet.</p>
+</blockquote>
 <pre><code class="language-xml">&lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
 &lt;interface&gt;
     &lt;name&gt;ethernet-1/1&lt;/name&gt;
@@ -290,8 +296,8 @@
 &lt;/data&gt;
 </code></pre>
 <p>The output confirms that the interface was configured properly. Note that the <code>enable</code> element must be included to enable the subinterface. The main interface is enabled by default (by containerlab), but the subinterface must be enabled explicitly in SR Linux.</p>
-<h2 id="alternative-approach">Alternative Approach</h2>
-<p>A reliable and fast path to a create XML payload is to configure the feature manually via CLI first, then use a NETCONF <code>get-config</code> to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native module for the first time:</p>
+<h2 id="alternative-approach-technique-2">Alternative Approach (Technique 2)</h2>
+<p>A reliable and fast path to a create XML payload is <strong>Technique 2: Configure via CLI, Then Read Back</strong>. This involves configuring the feature manually via CLI first, then using a NETCONF <code>get-config</code> to read back exactly how the device represents that configuration in YANG. This approach is especially valuable when vendor documentation is unclear or when you are working with a native module for the first time:</p>
 <p>We will use this approach to configure interface <code>Ethernet1</code> on <code>ceos-01</code>. Note that cEOS creates subinterface <code>0</code> and enables it by default.</p>
 <p>Use the CLI to set the description on interface <code>Ethernet1</code> and enable it:</p>
 <pre><code>interface Ethernet1
@@ -372,6 +378,8 @@
   &lt;/interface&gt;
 &lt;/interfaces&gt;
 </code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>You have successfully performed your first model-driven configuration using NETCONF. By following the workflow of generating a skeleton, editing it into a valid payload, and committing the change, you've moved beyond CLI-based management. This same process will be used for more complex features in the upcoming tasks.</p>
               
             </div>
           </div><footer>

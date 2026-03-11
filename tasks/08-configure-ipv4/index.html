@@ -208,12 +208,15 @@
     +--rw ipv6
 (.pyenv) automan@autobook:~/tutorial$
 </code></pre>
-<p>The command produces only the empty elements because <code>openconfig-if-ip.yang</code> is an augmentation-only module. It does not define any top-level data nodes itself (no container, list, leaf etc. at the root level of its own module). It only adds structure underneath nodes defined in other modules (mainly <code>openconfig-interfaces.yang</code>).</p>
-<p>When <code>pyang</code> generates the tree (or sample skeleton), it starts from the data tree of the module(s) you give it on the command line. Since <code>openconfig-if-ip</code> contributes nothing at the top, you get an empty elements.</p>
+<p>The command produces only the empty elements because <code>openconfig-if-ip.yang</code> is <em>an augmentation-only</em> module. </p>
+<blockquote>
+<p>Note: "The Plugin Analogy"<br />
+Think of <code>openconfig-if-ip</code> like a plugin. It doesn't create the interface list itself; it "plugs into" the existing <code>/interfaces/interface</code> module to add IPv4 and IPv6 address capabilities. If you don't include the base module on the <code>pyang</code> command line, the plugin has nothing to "plug into," and you get an empty tree.</p>
+</blockquote>
 <p>To get this branch using <code>--tree-path</code> we have to include all the top modules:</p>
 <pre><code class="language-bash">pyang -f tree -p openconfig --tree-path /interfaces/interface/subinterfaces/subinterface/ipv4 openconfig/release/models/interfaces/*.yang
 </code></pre>
-<p>Similarly, to get the XML skeleton (this time we need to include the interface):</p>
+<p>Similarly, to get the XML skeleton using <strong>Technique 1: pyang Sample XML Skeleton</strong> (this time we need to include the interface):</p>
 <pre><code class="language-bash">pyang -f sample-xml-skeleton -p openconfig \
  --sample-xml-skeleton-path=/interfaces/interface --sample-xml-skeleton-doctype=config openconfig/release/models/interfaces/*.yang
 </code></pre>

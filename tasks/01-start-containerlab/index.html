@@ -85,6 +85,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#3-end-the-lab">3. End the lab</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#conclusion">Conclusion</a>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../02-verify-netconf/">2. Verify NETCONF</a>
@@ -224,6 +226,8 @@ docker exec -it srl-01 bash
 <p>The local <code>--cleanup | -c</code> flag instructs containerlab to remove the lab directory <code>topology/clab-lab</code> and all its content. Without this flag present, containerlab will keep the lab directory. Do not use this flag if you want to keep the configuration you saved in the routers.</p>
 </blockquote>
 <p>Containerlab CLI has a large set of commands and flags. Check out the <a href="https://containerlab.dev/cmd/deploy/">Command reference</a> section to get familiar with all the commands and their usage.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>You have successfully deployed your multi-vendor network topology using Containerlab. By accessing the nodes via SSH and Docker, you've confirmed that the virtual network is ready for management operations. In the next tasks, we will start interacting with these devices using model-driven protocols.</p>
               
             </div>
           </div><footer>

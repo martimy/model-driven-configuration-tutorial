@@ -238,7 +238,7 @@ openconfig-network-instance.yang --tree-depth=11
                        |     |  +--rw passive?                        boolean
                        |     |  +--rw hide-network?                   boolean
 </code></pre>
-<p>Generate a XML skeleton at a subtree: </p>
+<p>Generate a XML skeleton using <strong>Technique 1: pyang Sample XML Skeleton</strong> at a subtree:</p>
 <pre><code class="language-bash">pyang -f sample-xml-skeleton --sample-xml-skeleton-path=/network-instances/network-instance/protocols/protocol \
 --sample-xml-skeleton-doctype=config -p openconfig openconfig-network-instance.yang -o ospf.xml
 </code></pre>
@@ -375,7 +375,7 @@ openconfig-network-instance.yang --tree-depth=11
           +--rw asbr!
 </code></pre>
 <p>It is worth mentioning that the <code>!</code> symbol immediately following a node name (ospf!) indicates that the node is a presence container. A presence container exists in the configuration just by being created, even if it has no child nodes and its existence signifies that OSPF is enabled in the network instance.</p>
-<p>Typically, what you could do next is to generate the XML skeleton file that includes the minimum configuration items mentioned above. However, for such complex configuration, we could use the second technique discussed in <a href="../06-configure-interface/">Task 6</a>. </p>
+<p>Typically, what you could do next is to generate the XML skeleton file that includes the minimum configuration items mentioned above. However, for such complex configuration, we can use <strong>Technique 2: Configure via CLI, Then Read Back</strong>, similar to what we did in <a href="../06-configure-interface/">Task 6</a>. </p>
 <p>Configure OSPF using the CLI on <code>srl-01</code>, then retrieve the configuration. </p>
 <p>For this configuration, we assign the router id to <code>2.2.2.2</code> in <code>srl-01</code> and <code>3.3.3.3</code> in <code>srl-02</code>. We also create area <code>0.0.0.0</code> and assign both interfaces to it.  </p>
 <ul>

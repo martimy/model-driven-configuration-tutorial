@@ -95,7 +95,7 @@
                   </li>
                   <li class="toctree-l1 current"><a class="reference internal current" href="#">9. Configure Interfaces with gNMI</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#technique-1-using-existing-configuration">Technique 1: Using Existing Configuration</a>
+    <li class="toctree-l2"><a class="reference internal" href="#first-approach-read-modify-write-technique-3">First Approach: Read-Modify-Write (Technique 3)</a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#get-existing-configuration">Get Existing Configuration</a>
     </li>
@@ -107,7 +107,7 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#technique-2">Technique 2:</a>
+    <li class="toctree-l2"><a class="reference internal" href="#second-approach-gnmic-generate-technique-4">Second Approach: gnmic generate (Technique 4)</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#complete-link-3">Complete Link 3</a>
     </li>
@@ -199,8 +199,8 @@
 </tr>
 </tbody>
 </table>
-<h2 id="technique-1-using-existing-configuration">Technique 1: Using Existing Configuration</h2>
-<p>Unlike NETCONF's XML, gNMI typically uses JSON for its payload. We will use the same OpenConfig <code>interfaces</code> model.</p>
+<h2 id="first-approach-read-modify-write-technique-3">First Approach: Read-Modify-Write (Technique 3)</h2>
+<p>In this step, we will use <strong>Technique 3: Read-Modify-Write</strong>. This involves retrieving an existing configuration, modifying it, and pushing it back to a different path or device.</p>
 <p>I recommended that you review <a href="../../concepts/gnmi-paths/">gNMi paths</a> before proceeding as you will use them extensively in this task.. </p>
 <h3 id="get-existing-configuration">Get Existing Configuration</h3>
 <p>The easiest way to configure the interfaces is to get the configuration of the interface that we already completed:</p>
@@ -297,7 +297,12 @@
 </code></pre>
 <h3 id="push-configuration-using-gnmic">Push Configuration using <code>gnmic</code></h3>
 <p>The <code>gnmic</code> tool uses <code>set</code> operation to push the configuration. Let's configure the link between <code>ceos-01</code> and <code>srl-02</code>, starting from <code>srl-02</code></p>
-<p>We use the <code>Path</code> and <code>values</code> above mostly unchanged, but the path must conform to the gNMI format. Notice also the single quotes that surround the configuration object:  </p>
+<blockquote>
+<p><strong>Note: Update vs. Replace</strong><br />
+The <code>gnmic set --update</code> operation performs a merge at the specified path, preserving other siblings (like other subinterfaces on the same port). Using <code>--replace</code> would perform a "delete-and-insert" at that path, potentially wiping out existing configuration not included in your request. </p>
+</blockquote>
+<p>We use the <code>Path</code> and <code>values</code> above mostly unchanged, but the path must conform to the gNMI format.
+ Notice also the single quotes that surround the configuration object:  </p>
 <pre><code class="language-bash">gnmic --config srl-gnmic.yml -a srl-02 set \
 --update-path /interface[name=ethernet-1/1]/subinterface[index=0] \
 --update-value '{&quot;admin-state&quot;: &quot;enable&quot;,&quot;ipv4&quot;: {&quot;address&quot;: [{&quot;ip-prefix&quot;: &quot;192.168.1.5/31&quot;}],&quot;admin-state&quot;: &quot;enable&quot;}}'
@@ -325,8 +330,8 @@
 <pre><code class="language-bash">gnmic --config srl-gnmic.yml -a srl-02 get --path /interface[name=ethernet-1/1]/subinterface[index=0] -t config
 </code></pre>
 <p>You should see the JSON output reflecting the new IP address and interface state.</p>
-<h2 id="technique-2">Technique 2:</h2>
-<p>The previous technique is useful for small changes, like enabling an interface, and when you are familiar with the required payload. More efficient method is needed.</p>
+<h2 id="second-approach-gnmic-generate-technique-4">Second Approach: gnmic generate (Technique 4)</h2>
+<p>The previous technique is useful for small changes, but for new features, <strong>Technique 4: gnmic generate</strong> is often faster.</p>
 <p>The <code>gnmic</code> tool is able to generate configuration payload based on the target YANG data module. The <code>gnmic</code> <code>generate</code> command takes the target's YANG modules as input and generates:</p>
 <ul>
 <li>Paths in xpath or gNMI formats.</li>
