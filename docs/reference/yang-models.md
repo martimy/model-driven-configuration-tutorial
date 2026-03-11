@@ -1,4 +1,4 @@
-## Downloading YANG models
+# Downloading YANG models
 
 IETF:
 

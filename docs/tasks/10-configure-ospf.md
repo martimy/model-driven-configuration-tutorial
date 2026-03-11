@@ -348,5 +348,5 @@ You can verify by reading the configuration back:
 
 ## Conclusion 
 
-As this point, you have successfully configured a functioning, yet simple, network using YANG models with NETCONF and gNMi.
+As this point, you have successfully configured a functioning, yet simple, network using YANG models with NETCONF and gNMI.
  

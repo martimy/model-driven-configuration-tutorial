@@ -21,7 +21,6 @@ gnmic --config srl-gnmic.yml get \
 The output confirms that the routing table contains entries from multiple sources:
 
 ```json
-```json
 [
   {
     "source": "srl-01:57400",
