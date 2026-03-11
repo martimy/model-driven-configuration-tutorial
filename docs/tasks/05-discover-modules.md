@@ -172,7 +172,15 @@ module: openconfig-interfaces
 
 **Reading the Tree**
 
-The `+--rw` prefix means read-write (configurable). `+--ro` means read-only (operational state). A `*` after the node name means it is a list (multiple entries). A `?` means the field is optional. These symbols tell you exactly what your payload must and can include.
+To build a valid configuration payload, you must understand the symbols in the tree output:
+
+- `+--rw`: Read-Write. These are nodes you can configure (e.g., setting a description).
+- `+--ro`: Read-Only. These are operational state or statistics nodes (e.g., packet counters).
+- `*`: Indicates a List. Think of this like a database table (e.g., a list of many interfaces).
+- `?`: Indicates an Optional field. If it is missing, the field is mandatory for that container.
+- `->`: Indicates a Leafref. This is a pointer to another value elsewhere in the configuration, ensuring consistency (like a foreign key in SQL).
+
+These symbols tell you exactly what your payload must and can include.
 
 
 Notices that both YANG modules sperate the configuration fields from the state fields but using two different conventions. OpenConfig's style is generally considered more operator-friendly for automation and streaming telemetry, which is why it became very popular despite not being the original IETF approach. (Later IETF NMDA work moved closer to unified views in many newer modules.)

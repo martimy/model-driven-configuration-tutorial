@@ -98,7 +98,10 @@ Create a file `interface.xml` and use the skeleton above to fill the required el
 Note:
 
 - From the topology file, we know that SR Linux interface name convention is `ethernet-x/y`.
-- The interface type has to include the name space as well <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+- The interface type has a very specific value: `<type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>`. 
+
+> What is `ethernetCsmacd`?  
+This string is the official IANA (Internet Assigned Numbers Authority) identifier for "regular" Ethernet (10/100/1000 Mbps). `Csmacd` stands for *Carrier Sense Multiple Access with Collision Detection*, the foundational technology behind traditional Ethernet.
 
 ```xml
 <interfaces xmlns="http://openconfig.net/yang/interfaces">

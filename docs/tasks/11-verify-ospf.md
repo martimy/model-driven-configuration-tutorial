@@ -83,7 +83,12 @@ Note that the path used here `/network-instance[name=default]/route-table/...` i
 
 ## cEOS
 
-Retrieving the routing table from cEOS presents a different challenge. OpenConfig does not define a single unified operational model for the merged routing table. Instead, it models routing information in a per-protocol, per-address-family way through separate RIBs (Routing Information Bases) defined in `openconfig-rib-bgp` and related modules. These modules are not fully implemented on this version of cEOS.
+Retrieving the routing table from cEOS presents a different challenge. OpenConfig does not define a single unified operational model for the merged routing table. Instead, it models routing information in two ways:
+
+1. RIB (Routing Information Base): The "brain" of the control plane, where each protocol (OSPF, BGP, Static) keeps its own table.
+2. AFT (Abstract Forwarding Table): The "forwarding table" used by the hardware, which merges the best routes from all protocols.
+
+OpenConfig defines these separately in `openconfig-rib-bgp` and related modules. These modules are not fully implemented on this version of cEOS.
 
 The native EOS YANG model also does not expose a clean routing table path via gNMI in this cEOS version. Retrieving routing state programmatically on cEOS currently requires either the eAPI (Arista's HTTP-based API) or the CLI.
 

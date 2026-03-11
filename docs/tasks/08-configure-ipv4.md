@@ -58,9 +58,10 @@ module: openconfig-if-ip
 ```
 
 
-The command produces only the empty elements because `openconfig-if-ip.yang` is an augmentation-only module. It does not define any top-level data nodes itself (no container, list, leaf etc. at the root level of its own module). It only adds structure underneath nodes defined in other modules (mainly `openconfig-interfaces.yang`).
+The command produces only the empty elements because `openconfig-if-ip.yang` is *an augmentation-only* module. 
 
-When `pyang` generates the tree (or sample skeleton), it starts from the data tree of the module(s) you give it on the command line. Since `openconfig-if-ip` contributes nothing at the top, you get an empty elements.
+> Note: "The Plugin Analogy"  
+Think of `openconfig-if-ip` like a plugin. It doesn't create the interface list itself; it "plugs into" the existing `/interfaces/interface` module to add IPv4 and IPv6 address capabilities. If you don't include the base module on the `pyang` command line, the plugin has nothing to "plug into," and you get an empty tree.
 
 
 To get this branch using `--tree-path` we have to include all the top modules:
