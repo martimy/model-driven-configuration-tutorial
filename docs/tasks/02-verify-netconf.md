@@ -29,3 +29,7 @@ Moving forwards, you can avoid adding credentials to the `netconf-console2` comm
 ```bash
 ./nc_wrapper.sh ceos-01 --hello
 ```
+
+## Conclusion
+
+Successfully receiving a `<hello>` message confirms that the NETCONF protocol is active and reachable on your devices. This message is the foundation of model-driven management, as it tells the client exactly which features and YANG modules the device supports.

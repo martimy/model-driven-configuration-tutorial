@@ -37,3 +37,7 @@ To override the target device in the configuration file:
 ```bash
 gnmic --config srl-gnmic.yml -a srl-02 capabilities
 ```
+
+## Conclusion
+
+With `gnmic` successfully communicating with both SR Linux and cEOS, you have verified that the gNMI service is operational. Unlike NETCONF, which uses XML over SSH, gNMI uses a more modern gRPC transport, providing a different set of capabilities that we will explore in the coming tasks.

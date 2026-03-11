@@ -83,3 +83,7 @@ sudo clab destroy [--cleanup]
 
 
 Containerlab CLI has a large set of commands and flags. Check out the [Command reference](https://containerlab.dev/cmd/deploy/) section to get familiar with all the commands and their usage.
+
+## Conclusion
+
+You have successfully deployed your multi-vendor network topology using Containerlab. By accessing the nodes via SSH and Docker, you've confirmed that the virtual network is ready for management operations. In the next tasks, we will start interacting with these devices using model-driven protocols.

@@ -234,3 +234,7 @@ And so does cEOS:
   <interfaces xmlns="http://openconfig.net/yang/interfaces">
   ...
 ```
+
+## Conclusion
+
+Discovering and fetching YANG modules is a critical "Day 0" task in network automation. By retrieving the schemas directly from the devices and visualizing them with `pyang`, you have established a "source of truth" for building configuration payloads. You now know exactly what data nodes are available and how they are structured.

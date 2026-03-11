@@ -279,3 +279,7 @@ The default behavior of the `edit-config` operation is to `merge` the new data i
   </interface>
 </interfaces>
 ```
+
+## Conclusion
+
+You have successfully performed your first model-driven configuration using NETCONF. By following the workflow of generating a skeleton, editing it into a valid payload, and committing the change, you've moved beyond CLI-based management. This same process will be used for more complex features in the upcoming tasks.
