@@ -6,7 +6,7 @@ These are some of the tools that are used in this tutorial. Other tools are also
 
 - Linux Environment: A native Linux system or WSL2 on Windows is necessary to run Containerlab and Docker.
 - [Docker](https://docs.docker.com/engine/install/): Required to run the containerized router images.
-- [Containerlab](https://containerlab.dev/install/): This is esential to create the lab environment.
+- [Containerlab](https://containerlab.dev/install/): This is essential to create the lab environment.
 
 ## Protocol Transport Libraries (Python)
 

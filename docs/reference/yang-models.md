@@ -1,5 +1,7 @@
 # Downloading YANG models
 
+Here are the GitHub repositories for the YANG models needed in this tutorial:
+
 IETF:
 
 ```bash
