@@ -1,0 +1,23 @@
+name: nokia-two
+prefix: ""
+
+mgmt:
+  network: api-lab
+  ipv4-subnet: 192.168.100.0/24
+
+topology:
+  nodes:
+    srl-01:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux
+      type: ixr-d1
+      mgmt-ipv4: 192.168.100.12
+
+    srl-02:
+      kind: nokia_srlinux
+      image: ghcr.io/nokia/srlinux
+      type: ixr-d1
+      mgmt-ipv4: 192.168.100.13
+
+  links:
+    - endpoints: ["srl-01:e1-1", "srl-02:e1-1"]
