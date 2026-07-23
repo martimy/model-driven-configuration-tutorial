@@ -1,10 +1,16 @@
 mkdocs.yml
 .pyenv/
+.venv/
+__pycache__/
+*.py[cod]
 /labs/
 /site/
 clab-lab/
+clab-*/
+topology/clab-*/
 /ietf/
 /openconfig/
 /arista/
 /nokia/
 /tmp/
+/artifacts/
