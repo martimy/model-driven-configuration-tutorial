@@ -26,3 +26,5 @@ Nokia SR Linux follows a free and open distribution model. You can pull SR Linux
 ```
 docker pull ghcr.io/nokia/srlinux
 ```
+
+The latest tested image is `v26.7`.
