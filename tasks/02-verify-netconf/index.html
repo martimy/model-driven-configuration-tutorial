@@ -149,15 +149,15 @@
               
                 <h1 id="task-2-verify-netconf-connectivity">Task 2 - Verify NETCONF Connectivity</h1>
 <p>The goal of this task is to initiate a connection to each device and retrieve the HELLO message exchanged at the start of a NETCONF session. This message advertises the device capabilities (such as supported YANG models and protocol features). The NETCONF protocol is designed to run securely over SSH, and port 830 is assigned as the standard default port for this connection.</p>
-<p>If you have not done so already, install <code>netconf-console2</code>, preferably in <a href="../../setup/pyvirtual/">Python virtual environment</a>.</p>
-<p>Once the lab is running, verify that NETCONF is reachable on port 830 using netconf-console2:</p>
-<pre><code class="language-bash">netconf-console2 --host=srl-01 --port 830 -u admin -p NokiaSrl1! --hello
+<p>Once the lab is running, verify that NETCONF is reachable on port 830 using raw ssh connection:</p>
+<pre><code class="language-bash">ssh admin@ceos-01 -p 830 -s netconf
 </code></pre>
+<p>Alternativly, using netconf-console2. If you have not done so already, install <code>netconf-console2</code>, preferably in <a href="../../setup/pyvirtual/">Python virtual environment</a>.</p>
+<p>using netconf-console2:</p>
 <blockquote>
 <p>Install netconf-console2 using <code>pip install netconf-console2</code></p>
 </blockquote>
-<p>Alternatively, you may use raw ssh connection:</p>
-<pre><code class="language-bash">ssh admin@ceos-01 -p 830 -s netconf
+<pre><code class="language-bash">netconf-console2 --host=srl-01 --port 830 -u admin -p NokiaSrl1! --hello
 </code></pre>
 <blockquote>
 <p><strong>What Both Commands Are Actually Doing</strong><br />
@@ -167,6 +167,7 @@
 <p>Moving forwards, you can avoid adding credentials to the <code>netconf-console2</code> command line by using a wrapper script. For example:</p>
 <pre><code class="language-bash">./nc_wrapper.sh ceos-01 --hello
 </code></pre>
+<p><strong>Note:</strong> Containerlab configures the NetConf server running over port 830 on Nokia SR Linux. But if the tet fails, you can configure the server following these <a href="https://documentation.nokia.com/srlinux/26-7/books/system-mgmt/netconf.html#netconf-configuration">instructions</a>.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>Successfully receiving a <code>&lt;hello&gt;</code> message confirms that the NETCONF protocol is active and reachable on your devices. This message is the foundation of model-driven management, as it tells the client exactly which features and YANG modules the device supports.</p>
               
