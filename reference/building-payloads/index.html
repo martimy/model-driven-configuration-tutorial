@@ -223,6 +223,9 @@ openconfig/release/models/interfaces/*.yang
 ./nc_wrapper.sh &lt;node&gt; --edit-config=changes.xml --db=candidate --commit
 </code></pre>
 <p>gNMI</p>
+<p>Reterive the current configuration:</p>
+<pre><code class="language-bash">gnmic --config &lt;node&gt;-gnmic.yml get --path /&lt;path&gt; --type config
+</code></pre>
 <p>The gnmic set command with <code>--update-path</code> also performs a merge operation, updating only the specified path while leaving the rest of the configuration intact.</p>
 <pre><code class="language-bash">gnmic --config &lt;node&gt;-gnmic.yml set --update-path /&lt;path&gt; --update-value '{&lt;json&gt;}'
 </code></pre>

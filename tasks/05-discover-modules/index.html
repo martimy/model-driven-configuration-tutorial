@@ -176,7 +176,7 @@
 <pre><code class="language-bash">urn:ietf:params:xml:ns:yang:ietf-interfaces?module=ietf-interfaces&amp;revision=2014-05-08
 </code></pre>
 <p>or, for cEOS</p>
-<pre><code>urn:ietf:params:xml:ns:yang:ietf-interfaces?module=ietf-interfaces&amp;revision=2018-02-20
+<pre><code class="language-bash">urn:ietf:params:xml:ns:yang:ietf-interfaces?module=ietf-interfaces&amp;revision=2018-02-20
 </code></pre>
 <p>The URN identifies the IETF model for configuring and monitoring network interfaces.</p>
 <ul>
@@ -234,7 +234,7 @@ Schema saved to openconfig-interfaces.yang
 <p>Raw YANG source is verbose and difficult to read. The pyang tool renders any YANG model as a concise indented tree that shows every configuration path, its data type, and whether it is mandatory. This tree is your primary reference when building payloads:</p>
 <pre><code class="language-bash">pyang -f tree ietf-interfaces.yang
 </code></pre>
-<pre><code>module: ietf-interfaces
+<pre><code class="language-bash">module: ietf-interfaces
   +--rw interfaces
   |  +--rw interface* [name]
   |     +--rw name                        string
@@ -251,7 +251,7 @@ Schema saved to openconfig-interfaces.yang
 <p>For OpenConfig (ignore the output errors for now):</p>
 <pre><code class="language-bash">pyang -f tree openconfig-interfaces.yang
 </code></pre>
-<pre><code>module: openconfig-interfaces
+<pre><code class="language-bash">module: openconfig-interfaces
   +--rw interfaces
      +--rw interface* [name]
         +--rw name                  -&gt; ../config/name
@@ -281,7 +281,7 @@ Schema saved to openconfig-interfaces.yang
 <p>We will focus out interest in configuration for now. To show only the configuration nodes:</p>
 <pre><code class="language-bash">pyang -f tree --tree-path /interfaces/interface ietf-interfaces.yang
 </code></pre>
-<pre><code>module: ietf-interfaces
+<pre><code class="language-bash">module: ietf-interfaces
   +--rw interfaces
      +--rw interface* [name]
         +--rw name                        string
@@ -298,13 +298,13 @@ Schema saved to openconfig-interfaces.yang
 <pre><code class="language-bash">./nc_wrapper.sh srl-01 intf.xml
 </code></pre>
 <p>The result clearly indicate that SR Linux uses the OpenConfig module for interface configuration.</p>
-<pre><code>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
 &lt;data xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; xmlns:nc=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot;&gt;
         &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
         ...
 </code></pre>
 <p>And so does cEOS:</p>
-<pre><code>&lt;?xml version='1.0' encoding='UTF-8'?&gt;
+<pre><code class="language-xml">&lt;?xml version='1.0' encoding='UTF-8'?&gt;
 &lt;data xmlns:netconf=&quot;http://arista.com/yang/rpc/netconf&quot; xmlns=&quot;urn:ietf:params:xml:ns:netconf:base:1.0&quot; netconf:time-modified=&quot;2026-03-05T17:12:16.876169374Z&quot;&gt;
   &lt;interfaces xmlns=&quot;http://openconfig.net/yang/interfaces&quot;&gt;
   ...
