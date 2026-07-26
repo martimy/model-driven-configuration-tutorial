@@ -94,6 +94,13 @@ The default edit-config operation is merge, meaning the device merges your paylo
 
 gNMI
 
+
+Reterive the current configuration:
+
+```bash
+gnmic --config <node>-gnmic.yml get --path /<path> --type config
+```
+
 The gnmic set command with `--update-path` also performs a merge operation, updating only the specified path while leaving the rest of the configuration intact.
 
 ```bash

@@ -33,7 +33,7 @@ Moving forwards, you can avoid adding credentials to the `netconf-console2` comm
 ```
 
 
-**Note:** Containerlab configures the NetConf server running over port 830 on Nokia SR Linux. But if the tet fails, you can configure the server following these [instructions](https://documentation.nokia.com/srlinux/26-7/books/system-mgmt/netconf.html#netconf-configuration).
+**Note:** Containerlab configures the NetConf server running over port 830 on Nokia SR Linux. But if the test fails, you can configure the server following these [instructions](https://documentation.nokia.com/srlinux/26-7/books/system-mgmt/netconf.html#netconf-configuration).
 
 
 ## Conclusion

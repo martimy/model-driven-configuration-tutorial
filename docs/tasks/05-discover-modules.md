@@ -37,7 +37,7 @@ urn:ietf:params:xml:ns:yang:ietf-interfaces?module=ietf-interfaces&revision=2014
 
 or, for cEOS
 
-```
+```bash
 urn:ietf:params:xml:ns:yang:ietf-interfaces?module=ietf-interfaces&revision=2018-02-20
 ```
 
@@ -130,7 +130,7 @@ Raw YANG source is verbose and difficult to read. The pyang tool renders any YAN
 pyang -f tree ietf-interfaces.yang
 ```
 
-```
+```bash
 module: ietf-interfaces
   +--rw interfaces
   |  +--rw interface* [name]
@@ -152,7 +152,7 @@ For OpenConfig (ignore the output errors for now):
 pyang -f tree openconfig-interfaces.yang
 ```
 
-```
+```bash
 module: openconfig-interfaces
   +--rw interfaces
      +--rw interface* [name]
@@ -191,7 +191,7 @@ We will focus out interest in configuration for now. To show only the configurat
 pyang -f tree --tree-path /interfaces/interface ietf-interfaces.yang
 ```
 
-```
+```bash
 module: ietf-interfaces
   +--rw interfaces
      +--rw interface* [name]
@@ -219,7 +219,7 @@ Or
 
 The result clearly indicate that SR Linux uses the OpenConfig module for interface configuration.
 
-```
+```xml
 <?xml version='1.0' encoding='UTF-8'?>
 <data xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" xmlns:nc="urn:ietf:params:xml:ns:netconf:base:1.0">
         <interfaces xmlns="http://openconfig.net/yang/interfaces">
@@ -228,7 +228,7 @@ The result clearly indicate that SR Linux uses the OpenConfig module for interfa
 
 And so does cEOS:
 
-```
+```xml
 <?xml version='1.0' encoding='UTF-8'?>
 <data xmlns:netconf="http://arista.com/yang/rpc/netconf" xmlns="urn:ietf:params:xml:ns:netconf:base:1.0" netconf:time-modified="2026-03-05T17:12:16.876169374Z">
   <interfaces xmlns="http://openconfig.net/yang/interfaces">
